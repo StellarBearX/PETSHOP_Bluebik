@@ -6,10 +6,10 @@ export default function Navbar(){
 
             {/* linkpage */}
                 <ul>
-                    <Link href="/">Home</Link>
-                    <Link href="/notifications">Notification</Link>
-                    <Link href="/cart">Cart</Link>
-                    <Link href="/favorite">Favorite</Link>
+                    <Link href="/"></Link>
+                    <Link href="/notifications"></Link>
+                    <Link href="/cart"></Link>
+                    <Link href="/favorite"></Link>
                 </ul>
             {/* search */}
 

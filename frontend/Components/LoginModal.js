@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { setToken } from "@/lib/auth";
 
+const USERS_KEY = "petshop_users";
+
 export default function LoginModal({ isOpen, onRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +18,17 @@ export default function LoginModal({ isOpen, onRegister }) {
 
     if (!email.trim() || !password.trim()) {
       setError("กรุณากรอกอีเมลและรหัสผ่าน");
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+
+    const found = users.find(
+      (u) => u.email === email.trim() && u.password === password
+    );
+
+    if (!found) {
+      setError("อีเมลหรือรหัสผ่านไม่ถูกต้อง (ต้องสมัครสมาชิกก่อน)");
       return;
     }
 
@@ -57,14 +70,9 @@ export default function LoginModal({ isOpen, onRegister }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="อีเมล"
-              className="
-                w-full
-                text-[16px]
-                outline-none
-                placeholder:text-[#BDBDBD]
-              "
+              className="w-full text-[16px] outline-none placeholder:text-[#BDBDBD]"
             />
-            <div className="w-[250px] h-[1px] bg-[#BDBDBD] mt-[6px]" />
+            <div className="w-[250px] h-px bg-[#BDBDBD] mt-[6px]" />
           </div>
         </div>
 
@@ -81,23 +89,16 @@ export default function LoginModal({ isOpen, onRegister }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="รหัสผ่าน"
-              className="
-                w-full
-                text-[16px]
-                outline-none
-                placeholder:text-[#BDBDBD]
-              "
+              className="w-full text-[16px] outline-none placeholder:text-[#BDBDBD]"
             />
-            <div className="w-[250px] h-[1px] bg-[#BDBDBD] mt-[6px]" />
+            <div className="w-[250px] h-px bg-[#BDBDBD] mt-[6px]" />
           </div>
         </div>
 
-        {error && (
-          <p className="text-red-500 text-sm pt-[4px]">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-sm pt-[4px]">{error}</p>}
 
         {/* BUTTONS */}
-        <div className="pt-[26px] space-y-[16px]">
+        <div className="pt-[26px] space-y-[16px] flex flex-col items-center">
           <button
             type="submit"
             className="

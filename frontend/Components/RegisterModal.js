@@ -1,16 +1,36 @@
 "use client";
 import { useState } from "react";
 
+const USERS_KEY = "petshop_users";
+
 export default function RegisterModal({ isOpen, onSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) return;
-    onSuccess();
+    setError("");
+
+    if (!email.trim() || !password.trim()) {
+      setError("กรุณากรอกอีเมลและรหัสผ่าน");
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+
+    const exists = users.some((u) => u.email === email.trim());
+    if (exists) {
+      setError("อีเมลนี้ถูกสมัครแล้ว");
+      return;
+    }
+
+    users.push({ email: email.trim(), password });
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+    onSuccess?.();
   };
 
   return (
@@ -45,16 +65,11 @@ export default function RegisterModal({ isOpen, onSuccess }) {
           <div className="flex-1">
             <input
               placeholder="อีเมล"
-              className="
-                w-full
-                text-[16px]
-                outline-none
-                placeholder:text-[#BDBDBD]
-              "
+              className="w-full text-[16px] outline-none placeholder:text-[#BDBDBD]"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <div className="w-[250px] h-[1px] bg-[#BDBDBD] mt-[6px]" />
+            <div className="w-[250px] h-px bg-[#BDBDBD] mt-[6px]" />
           </div>
         </div>
 
@@ -70,18 +85,15 @@ export default function RegisterModal({ isOpen, onSuccess }) {
             <input
               type="password"
               placeholder="รหัสผ่าน"
-              className="
-                w-full
-                text-[16px]
-                outline-none
-                placeholder:text-[#BDBDBD]
-              "
+              className="w-full text-[16px] outline-none placeholder:text-[#BDBDBD]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <div className="w-[250px] h-[1px] bg-[#BDBDBD] mt-[6px]" />
+            <div className="w-[250px] h-px bg-[#BDBDBD] mt-[6px]" />
           </div>
         </div>
+
+        {error && <p className="text-red-500 text-sm pt-1">{error}</p>}
 
         {/* BUTTON */}
         <div className="flex justify-center pt-[30px]">
@@ -92,8 +104,7 @@ export default function RegisterModal({ isOpen, onSuccess }) {
               rounded-full
               bg-gradient-to-r from-[#FF4D00] to-[#FF7A00]
               text-white text-[18px]
-              hover:opacity-90
-              transition
+              hover:opacity-90 transition
             "
           >
             ลงทะเบียน

@@ -14,7 +14,6 @@ export default function SuccessModal({ isOpen, onClose, message }) {
           shadow-[0_18px_45px_rgba(0,0,0,0.18)]
         "
       >
-        {/* Icon */}
         <div className="mt-[62px]">
           <img
             src="/images/auth/icon-success.png"
@@ -23,12 +22,10 @@ export default function SuccessModal({ isOpen, onClose, message }) {
           />
         </div>
 
-        {/* Text */}
         <p className="mt-[30px] text-[#FF4D00] text-[22px] font-normal">
           {message || "ลงทะเบียนสำเร็จ"}
         </p>
 
-        {/* Button */}
         <button
           onClick={onClose}
           className="

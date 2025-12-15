@@ -1,68 +1,116 @@
 "use client"
 import { useState } from 'react'
+import Link from 'next/link'
 
 export default function ProfileDropdown({ isOpen, onClose }) {
+    const [language, setLanguage] = useState('TH')
+
     if (!isOpen) return null
 
     return (
         <>
             <div className="fixed inset-0 z-40" onClick={onClose}></div>
-            <div className="absolute top-20 right-4 w-[432px] bg-white rounded-lg shadow-xl z-50 p-5">
+            <div className="absolute top-[85px] right-[50px] w-[432px] bg-white rounded-lg shadow-xl z-50">
                 {/* Profile Header */}
-                <div className="flex items-center gap-4 pb-5 border-b border-gray-200">
+                <div className="flex items-center gap-6 p-5 border-b border-gray-200">
                     <img 
                         src="https://api.builder.io/api/v1/image/assets/TEMP/e1117d6a428387a10894e9853f8d501e255f2faa" 
                         alt="Profile" 
-                        className="w-12 h-12 rounded-full"
+                        className="w-[47px] h-[47px] rounded-full"
                     />
-                    <span className="text-black text-[15px] font-bold">Meow Meow</span>
+                    <span className="text-black text-[15px] font-bold font-['Inter'] leading-normal -tracking-[0.333px]">
+                        Meow Meow
+                    </span>
                 </div>
 
                 {/* Menu Items */}
-                <div className="pt-2">
+                <div className="py-2">
                     {/* บัญชี */}
-                    <div className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded">
-                        <span className="text-black text-[15px]">บัญชี</span>
-                        <img 
-                            src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
-                            alt="" 
-                            className="w-4 h-4 transform -rotate-90"
-                        />
-                    </div>
+                    <Link href="/profile" onClick={onClose}>
+                        <div className="flex items-center justify-between py-3 px-5 cursor-pointer hover:bg-gray-50">
+                            <span className="text-black text-[15px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                                บัญชี
+                            </span>
+                            <img 
+                                src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
+                                alt="" 
+                                className="w-[15px] h-[15px] transform -rotate-90"
+                            />
+                        </div>
+                    </Link>
 
                     {/* การสั่งซื้อล่าสุด */}
-                    <div className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded">
-                        <span className="text-black text-[14px]">การสั่งซื้อล่าสุด</span>
-                        <img 
-                            src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
-                            alt="" 
-                            className="w-4 h-4 transform -rotate-90"
-                        />
-                    </div>
+                    <Link href="/profile-orders" onClick={onClose}>
+                        <div className="flex items-center justify-between py-3 px-5 cursor-pointer hover:bg-gray-50">
+                            <span className="text-black text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                                การสั่งซื้อล่าสุด
+                            </span>
+                            <img 
+                                src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
+                                alt="" 
+                                className="w-[15px] h-[15px] transform -rotate-90"
+                            />
+                        </div>
+                    </Link>
 
                     {/* ที่อยู่ที่บันทึกไว้ */}
-                    <div className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded">
-                        <span className="text-black text-[14px]">ที่อยู่ที่บันทึกไว้</span>
+                    <Link href="/profile-address" onClick={onClose}>
+                        <div className="flex items-center justify-between py-3 px-5 cursor-pointer hover:bg-gray-50">
+                            <span className="text-black text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                                ที่อยู่ที่บันทึกไว้
+                            </span>
+                            <img 
+                                src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
+                                alt="" 
+                                className="w-[15px] h-[15px] transform -rotate-90"
+                            />
+                        </div>
+                    </Link>
+
+                    {/* บัตรเครดิต / บัตรเดบิต */}
+                    <div className="flex items-center justify-between py-3 px-5 cursor-pointer hover:bg-gray-50">
+                        <span className="text-black text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                            บัตรเครดิต / บัตรเดบิต
+                        </span>
                         <img 
                             src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
                             alt="" 
-                            className="w-4 h-4 transform -rotate-90"
+                            className="w-[15px] h-[15px] transform -rotate-90"
                         />
                     </div>
 
                     {/* Language Toggle */}
-                    <div className="flex items-center justify-between py-3 px-2">
-                        <span className="text-black text-[14px]">เปลี่ยนภาษา / Languages</span>
-                        <div className="relative w-[75px] h-[22px] bg-gradient-to-r from-[#FF4D00] to-[#FF7A00] rounded-full shadow-inner">
-                            <div className="absolute left-0 top-0 w-[41px] h-[22px] bg-[#FF4D00] rounded-full shadow-inner"></div>
-                            <span className="absolute left-3 top-0.5 text-white text-[13px]">TH</span>
-                            <span className="absolute right-3 top-0.5 text-[#FD560B] text-[13px]">EN</span>
-                        </div>
+                    <div className="flex items-center justify-between py-3 px-5">
+                        <span className="text-black text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                            เปลี่ยนภาษา / Languages
+                        </span>
+                        <button 
+                            onClick={() => setLanguage(language === 'TH' ? 'EN' : 'TH')}
+                            className="relative w-[75px] h-[22px] rounded-[36px] shadow-[0_2px_4px_0_rgba(0,0,0,0.25)_inset,-2px_-2px_4px_0_rgba(0,0,0,0.10)_inset] overflow-hidden"
+                        >
+                            <div 
+                                className={`absolute top-0 h-[22px] w-[41px] rounded-[36px] shadow-[0_-4px_10px_0_rgba(0,0,0,0.10)_inset] bg-[#FF4D00] transition-all duration-300 ${
+                                    language === 'TH' ? 'left-0' : 'left-[34px]'
+                                }`}
+                            ></div>
+                            <span className={`absolute left-3 top-0.5 text-[13px] font-['Mitr'] leading-[18px] transition-colors ${
+                                language === 'TH' ? 'text-white' : 'text-[#FD560B]'
+                            }`}>
+                                TH
+                            </span>
+                            <span className={`absolute right-3 top-0.5 text-[13px] font-['Mitr'] leading-[18px] transition-colors ${
+                                language === 'EN' ? 'text-white' : 'text-[#FD560B]'
+                            }`}>
+                                EN
+                            </span>
+                        </button>
                     </div>
 
                     {/* ออกจากระบบ */}
-                    <div className="py-3 cursor-pointer hover:bg-gray-50 px-2 rounded">
-                        <span className="text-black text-[14px]">ออกจากระบบ</span>
+                    <div className="py-3 px-5 cursor-pointer hover:bg-gray-50">
+                        <span className="text-[#FF4D00] text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                            ออกจากระบบ
+                        </span>
                     </div>
                 </div>
             </div>

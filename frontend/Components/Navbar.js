@@ -38,6 +38,15 @@ export default function Navbar(){
                         <span className="text-white text-[15px] font-bold">Notification</span>
                     </Link>
 
+                    <Link href="/coupons" className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity">
+                        <img
+                            src="https://api.builder.io/api/v1/image/assets/TEMP/5bd10c6b52e96ab682118e91c3fa2c5c3f9b7574"
+                            alt=""
+                            className="w-8 h-8"
+                        />
+                        <span className="text-white text-[15px] font-bold">Coupon</span>
+                    </Link>
+
                     <Link href="/cart" className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity">
                         <img
                             src="https://api.builder.io/api/v1/image/assets/TEMP/2901bf89fcba411386dac60c3d561a559f5223b6"

@@ -26,3 +26,26 @@ body {
   }
 }
 
+nav{
+  background-color: #ededed;
+  margin: auto;
+  padding: auto;
+  border: #ededed;
+  text-align: center;
+}
+nav a{
+  color: #171717;
+  text-decoration: none;
+  margin: 15px;
+  padding: 15px;
+}
+
+footer{
+  color: #ededed;
+  text-align: center;
+}
+
+footer.hr{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+APP_HOME=$( cd "${0%/*}" && pwd -P ) || exit
+GRADLE_USER_HOME="${GRADLE_USER_HOME:-${HOME}/.gradle}"
+
+WRAPPER_JAR="${APP_HOME}/gradle/wrapper/gradle-wrapper.jar"
+
+if [ ! -f "$WRAPPER_JAR" ]; then
+    echo "Gradle wrapper JAR not found. Please run 'gradle wrapper' first if you have Gradle installed."
+    echo "Or download gradle-wrapper.jar from https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar"
+    echo "and place it in gradle/wrapper/ directory"
+    exit 1
+fi
+
+exec java -jar "$WRAPPER_JAR" "$@"
+

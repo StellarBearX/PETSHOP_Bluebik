@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-[#F5F5F5]">
         <Navbar />
         {children}
         <Footer />
@@ -23,4 +23,3 @@ export default function RootLayout({
     </html>
   );
 }
-

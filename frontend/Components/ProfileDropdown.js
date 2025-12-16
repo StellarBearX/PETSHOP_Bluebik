@@ -1,8 +1,41 @@
 "use client"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function ProfileDropdown({ isOpen, onClose }) {
+    const router = useRouter()
+    const [userName, setUserName] = useState('Meow Meow')
+
+    // Load user name from localStorage (must be before conditional return)
+    useEffect(() => {
+        const savedProfile = localStorage.getItem('userProfile')
+        if (savedProfile) {
+            try {
+                const profile = JSON.parse(savedProfile)
+                const fullName = `${profile.firstName || 'Meow'} ${profile.lastName || 'Meow'}`.trim() || 'Meow Meow'
+                setUserName(fullName)
+            } catch (error) {
+                console.error('Error loading profile:', error)
+            }
+        }
+    }, [isOpen])
+    
     if (!isOpen) return null
+
+    const handleAccountClick = () => {
+        router.push('/profile')
+        onClose()
+    }
+
+    const handleOrdersClick = () => {
+        router.push('/orders')
+        onClose()
+    }
+
+    const handleAddressesClick = () => {
+        router.push('/addresses')
+        onClose()
+    }
 
     return (
         <>
@@ -15,38 +48,47 @@ export default function ProfileDropdown({ isOpen, onClose }) {
                         alt="Profile" 
                         className="w-12 h-12 rounded-full"
                     />
-                    <span className="text-black text-[15px] font-bold">Meow Meow</span>
+                    <span className="text-black text-[15px] font-bold">{userName}</span>
                 </div>
 
                 {/* Menu Items */}
                 <div className="pt-2">
                     {/* บัญชี */}
-                    <div className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded">
+                    <div 
+                        onClick={handleAccountClick}
+                        className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded"
+                    >
                         <span className="text-black text-[15px]">บัญชี</span>
                         <img 
                             src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
                             alt="" 
-                            className="w-4 h-4 transform -rotate-90"
+                            className="w-4 h-4"
                         />
                     </div>
 
                     {/* การสั่งซื้อล่าสุด */}
-                    <div className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded">
+                    <div 
+                        onClick={handleOrdersClick}
+                        className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded"
+                    >
                         <span className="text-black text-[14px]">การสั่งซื้อล่าสุด</span>
                         <img 
                             src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
                             alt="" 
-                            className="w-4 h-4 transform -rotate-90"
+                            className="w-4 h-4"
                         />
                     </div>
 
                     {/* ที่อยู่ที่บันทึกไว้ */}
-                    <div className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded">
+                    <div 
+                        onClick={handleAddressesClick}
+                        className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 px-2 rounded"
+                    >
                         <span className="text-black text-[14px]">ที่อยู่ที่บันทึกไว้</span>
                         <img 
                             src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
                             alt="" 
-                            className="w-4 h-4 transform -rotate-90"
+                            className="w-4 h-4"
                         />
                     </div>
 

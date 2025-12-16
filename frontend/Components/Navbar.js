@@ -1,10 +1,27 @@
 "use client"
 import Link from "next/link"
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import ProfileDropdown from './ProfileDropdown'
 
 export default function Navbar(){
+    const pathname = usePathname()
     const [showProfileDropdown, setShowProfileDropdown] = useState(false)
+
+    // Check for unsaved changes before navigation
+    const handleLinkClick = (e, href) => {
+        // Only check if we're on profile page
+        if (pathname === '/profile') {
+            const hasUnsaved = localStorage.getItem('profileHasUnsavedChanges') === 'true'
+            if (hasUnsaved) {
+                e.preventDefault()
+                // Dispatch custom event to profile page
+                const event = new CustomEvent('navbarNavigation', { detail: { path: href } })
+                window.dispatchEvent(event)
+                return false
+            }
+        }
+    }
 
     return(
         <nav className="bg-gradient-to-r from-[#E8954F] to-[#F7A961] h-[105px] flex items-center px-2.5 relative">
@@ -20,7 +37,11 @@ export default function Navbar(){
 
                 {/* Navigation Links */}
                 <div className="flex items-center gap-8">
-                    <Link href="/" className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity">
+                    <Link 
+                        href="/" 
+                        onClick={(e) => handleLinkClick(e, '/')}
+                        className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
+                    >
                         <img
                             src="https://api.builder.io/api/v1/image/assets/TEMP/a4d5c457cadca55671963e132cba2bdd395881a9"
                             alt=""
@@ -29,7 +50,11 @@ export default function Navbar(){
                         <span className="text-white text-[15px] font-bold">Home</span>
                     </Link>
 
-                    <Link href="/notifications" className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity">
+                    <Link 
+                        href="/notifications" 
+                        onClick={(e) => handleLinkClick(e, '/notifications')}
+                        className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
+                    >
                         <img
                             src="https://api.builder.io/api/v1/image/assets/TEMP/f34acdfaa4d915c3708eed128c269e53490186e0"
                             alt=""
@@ -38,7 +63,11 @@ export default function Navbar(){
                         <span className="text-white text-[15px] font-bold">Notification</span>
                     </Link>
 
-                    <Link href="/cart" className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity">
+                    <Link 
+                        href="/cart" 
+                        onClick={(e) => handleLinkClick(e, '/cart')}
+                        className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
+                    >
                         <img
                             src="https://api.builder.io/api/v1/image/assets/TEMP/2901bf89fcba411386dac60c3d561a559f5223b6"
                             alt=""
@@ -47,7 +76,11 @@ export default function Navbar(){
                         <span className="text-white text-[15px] font-bold">Cart</span>
                     </Link>
 
-                    <Link href="/favorite" className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity">
+                    <Link 
+                        href="/favorite" 
+                        onClick={(e) => handleLinkClick(e, '/favorite')}
+                        className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
+                    >
                         <img
                             src="https://api.builder.io/api/v1/image/assets/TEMP/b80de9f65b94d83c27755ef14a0def9a5307a069"
                             alt=""

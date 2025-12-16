@@ -1,5 +1,6 @@
 "use client"
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface CartItem {
     id: string
@@ -13,6 +14,7 @@ interface CartItem {
 }
 
 export default function CartPage() {
+    const router = useRouter()
     const [cartItems, setCartItems] = useState<CartItem[]>([
         {
             id: '1',
@@ -210,7 +212,16 @@ export default function CartPage() {
                         <span className="text-black text-[16px]">ยอดรวม</span>
                         <span className="text-[#FF4D00] text-[20px] font-bold">฿{totalSum.toLocaleString()}</span>
                     </div>
-                    <button className="bg-gradient-to-r from-[#FF4D00] to-[#FF7A00] text-white px-8 py-3 rounded-lg text-[16px] font-bold hover:opacity-90 transition-opacity w-full md:w-auto">
+                    <button 
+                        onClick={() => {
+                            if (selectedItems.length === 0) {
+                                alert('กรุณาเลือกสินค้าที่ต้องการซื้อ')
+                                return
+                            }
+                            router.push('/checkout')
+                        }}
+                        className="bg-gradient-to-r from-[#FF4D00] to-[#FF7A00] text-white px-8 py-3 rounded-lg text-[16px] font-bold hover:opacity-90 transition-opacity w-full md:w-auto"
+                    >
                         Buy Now
                     </button>
                 </div>

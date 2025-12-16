@@ -16,6 +16,8 @@ export default function CheckoutPage() {
     const router = useRouter()
     const [paymentMethod, setPaymentMethod] = useState('cash_on_delivery')
     const [agreeToPolicy, setAgreeToPolicy] = useState(false)
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+    const [showSuccessModal, setShowSuccessModal] = useState(false)
 
     // Mock data - ในอนาคตควรดึงจาก cart หรือ state management
     const checkoutItems: CheckoutItem[] = [
@@ -54,8 +56,22 @@ export default function CheckoutPage() {
             alert('กรุณายอมรับข้อตกลงนโยบายการคืนเงินและสินค้าก่อนดำเนินการต่อ')
             return
         }
+        setShowConfirmModal(true)
+    }
+
+    const handleConfirmOrder = () => {
         // Handle checkout logic here
         console.log('Processing checkout...')
+        setShowConfirmModal(false)
+        setShowSuccessModal(true)
+    }
+
+    const handleCancelOrder = () => {
+        setShowConfirmModal(false)
+    }
+
+    const handleCloseSuccess = () => {
+        setShowSuccessModal(false)
         // router.push('/orders') // Navigate to orders page after checkout
     }
 
@@ -213,6 +229,73 @@ export default function CheckoutPage() {
                 {/* Spacer for fixed bottom bar */}
                 <div className="h-24"></div>
             </div>
+
+            {/* Confirmation Modal */}
+            {showConfirmModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={handleCancelOrder}>
+                    <div className="bg-white rounded-xl p-8 w-[500px] max-w-[90vw] flex flex-col items-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                        {/* Bell Icon with Exclamation */}
+                        <div className="mb-6">
+                            <div className="w-24 h-24 bg-gradient-to-r from-[#FF4D00] to-[#FF7A00] rounded-full flex items-center justify-center relative">
+                                <svg className="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                <span className="absolute text-white text-2xl font-bold">!</span>
+                            </div>
+                        </div>
+
+                        {/* Confirmation Message */}
+                        <p className="text-black text-[18px] font-medium text-center mb-8">
+                            คุณแน่ใจที่จะทำรายการสั่งซื้อ ใช่หรือไม่
+                        </p>
+
+                        {/* Buttons */}
+                        <div className="flex items-center gap-4 w-full">
+                            <button 
+                                onClick={handleCancelOrder}
+                                className="flex-1 px-6 py-3 rounded-lg border-2 border-[#FF4D00] text-[#FF4D00] text-[16px] font-medium hover:bg-gray-50 transition-colors"
+                            >
+                                ยกเลิก
+                            </button>
+                            <button 
+                                onClick={handleConfirmOrder}
+                                className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-[#FF4D00] to-[#FF7A00] text-white text-[16px] font-medium hover:opacity-90 transition-opacity"
+                            >
+                                ตกลง
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Success Modal */}
+            {showSuccessModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl p-12 w-[500px] max-w-[90vw] flex flex-col items-center shadow-2xl">
+                        {/* Success Icon */}
+                        <div className="mb-8">
+                            <div className="w-24 h-24 bg-gradient-to-r from-[#FF4D00] to-[#FF7A00] rounded-full flex items-center justify-center">
+                                <svg className="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        {/* Success Message */}
+                        <p className="text-black text-[24px] font-bold text-center mb-12">
+                            ทำรายการสั่งซื้อสำเร็จ
+                        </p>
+
+                        {/* Close Button */}
+                        <button 
+                            onClick={handleCloseSuccess}
+                            className="px-12 py-3 rounded-full border-2 border-[#FF4D00] text-[#FF4D00] text-[16px] font-medium hover:bg-[#FF4D00] hover:text-white transition-all"
+                        >
+                            ปิด
+                        </button>
+                    </div>
+                </div>
+            )}
         </main>
     )
 }

@@ -1,6 +1,7 @@
 "use client"
 import { useState } from 'react'
 import Link from 'next/link'
+import styles from './ProfileDropdown.module.css'
 
 export default function ProfileDropdown({ isOpen, onClose }) {
     const [language, setLanguage] = useState('TH')
@@ -9,106 +10,98 @@ export default function ProfileDropdown({ isOpen, onClose }) {
 
     return (
         <>
-            <div className="fixed inset-0 z-40" onClick={onClose}></div>
-            <div className="absolute top-[85px] right-[50px] w-[432px] bg-white rounded-lg shadow-xl z-50">
+            <div className={styles.overlay} onClick={onClose}></div>
+            <div className={styles.dropdown}>
                 {/* Profile Header */}
-                <div className="flex items-center gap-6 p-5 border-b border-gray-200">
+                <div className={styles.header}>
                     <img 
                         src="https://api.builder.io/api/v1/image/assets/TEMP/e1117d6a428387a10894e9853f8d501e255f2faa" 
                         alt="Profile" 
-                        className="w-[47px] h-[47px] rounded-full"
+                        className={styles.profileImage}
                     />
-                    <span className="text-black text-[15px] font-bold font-['Inter'] leading-normal -tracking-[0.333px]">
+                    <span className={styles.username}>
                         Meow Meow
                     </span>
                 </div>
 
                 {/* Menu Items */}
-                <div className="py-2">
+                <div className={styles.menu}>
                     {/* บัญชี */}
                     <Link href="/profile" onClick={onClose}>
-                        <div className="flex items-center justify-between py-3 px-5 cursor-pointer hover:bg-gray-50">
-                            <span className="text-black text-[15px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                        <div className={styles.menuItem}>
+                            <span className={styles.menuText}>
                                 บัญชี
                             </span>
                             <img 
                                 src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
                                 alt="" 
-                                className="w-[15px] h-[15px] transform -rotate-90"
+                                className={styles.arrow}
                             />
                         </div>
                     </Link>
 
                     {/* การสั่งซื้อล่าสุด */}
                     <Link href="/profile-orders" onClick={onClose}>
-                        <div className="flex items-center justify-between py-3 px-5 cursor-pointer hover:bg-gray-50">
-                            <span className="text-black text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                        <div className={styles.menuItem}>
+                            <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
                                 การสั่งซื้อล่าสุด
                             </span>
                             <img 
                                 src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
                                 alt="" 
-                                className="w-[15px] h-[15px] transform -rotate-90"
+                                className={styles.arrow}
                             />
                         </div>
                     </Link>
 
                     {/* ที่อยู่ที่บันทึกไว้ */}
                     <Link href="/profile-address" onClick={onClose}>
-                        <div className="flex items-center justify-between py-3 px-5 cursor-pointer hover:bg-gray-50">
-                            <span className="text-black text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                        <div className={styles.menuItem}>
+                            <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
                                 ที่อยู่ที่บันทึกไว้
                             </span>
                             <img 
                                 src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
                                 alt="" 
-                                className="w-[15px] h-[15px] transform -rotate-90"
+                                className={styles.arrow}
                             />
                         </div>
                     </Link>
 
                     {/* บัตรเครดิต / บัตรเดบิต */}
-                    <div className="flex items-center justify-between py-3 px-5 cursor-pointer hover:bg-gray-50">
-                        <span className="text-black text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                    <div className={styles.menuItem}>
+                        <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
                             บัตรเครดิต / บัตรเดบิต
                         </span>
                         <img 
                             src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
                             alt="" 
-                            className="w-[15px] h-[15px] transform -rotate-90"
+                            className={styles.arrow}
                         />
                     </div>
 
                     {/* Language Toggle */}
-                    <div className="flex items-center justify-between py-3 px-5">
-                        <span className="text-black text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                    <div className={styles.menuItem}>
+                        <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
                             เปลี่ยนภาษา / Languages
                         </span>
                         <button 
                             onClick={() => setLanguage(language === 'TH' ? 'EN' : 'TH')}
-                            className="relative w-[75px] h-[22px] rounded-[36px] shadow-[0_2px_4px_0_rgba(0,0,0,0.25)_inset,-2px_-2px_4px_0_rgba(0,0,0,0.10)_inset] overflow-hidden"
+                            className={styles.languageToggle}
                         >
-                            <div 
-                                className={`absolute top-0 h-[22px] w-[41px] rounded-[36px] shadow-[0_-4px_10px_0_rgba(0,0,0,0.10)_inset] bg-[#FF4D00] transition-all duration-300 ${
-                                    language === 'TH' ? 'left-0' : 'left-[34px]'
-                                }`}
-                            ></div>
-                            <span className={`absolute left-3 top-0.5 text-[13px] font-['Mitr'] leading-[18px] transition-colors ${
-                                language === 'TH' ? 'text-white' : 'text-[#FD560B]'
-                            }`}>
+                            <div className={`${styles.languageSlider} ${language === 'TH' ? styles.th : styles.en}`}></div>
+                            <span className={`${styles.languageText} ${styles.left} ${language === 'TH' ? styles.active : styles.inactive}`}>
                                 TH
                             </span>
-                            <span className={`absolute right-3 top-0.5 text-[13px] font-['Mitr'] leading-[18px] transition-colors ${
-                                language === 'EN' ? 'text-white' : 'text-[#FD560B]'
-                            }`}>
+                            <span className={`${styles.languageText} ${styles.right} ${language === 'EN' ? styles.active : styles.inactive}`}>
                                 EN
                             </span>
                         </button>
                     </div>
 
                     {/* ออกจากระบบ */}
-                    <div className="py-3 px-5 cursor-pointer hover:bg-gray-50">
-                        <span className="text-[#FF4D00] text-[14px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                    <div className={styles.menuItem}>
+                        <span className={`${styles.menuText} ${styles.menuTextSmall} ${styles.menuTextLogout}`}>
                             ออกจากระบบ
                         </span>
                     </div>

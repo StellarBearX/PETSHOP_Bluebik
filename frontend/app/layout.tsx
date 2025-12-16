@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Navbar from "@/Components/Navbar";
 import Footer from"@/Components/Footer"
+import { AppProviders } from "./providers";
 import "./globals.css";
+
 
 export const metadata: Metadata = {
   title: "Pet Shop",
@@ -16,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-[#F5F5F5]">
-        <Navbar />
-        {children}
-        <Footer />
+        <AppProviders>
+          <Navbar />
+          {children}
+          <Footer />
+        </AppProviders>
       </body>
     </html>
   );

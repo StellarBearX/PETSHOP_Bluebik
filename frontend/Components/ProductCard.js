@@ -1,30 +1,60 @@
 "use client"
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import styles from './ProductCard.module.css'
 
-export default function ProductCard({ product, showBadge = true }) {
+export default function ProductCard({ product, showBadge = true, onOpen }) {
     const [isFavorite, setIsFavorite] = useState(false)
+    const router = useRouter()
+
+    const handleOpen = () => {
+        if (typeof onOpen === 'function') {
+            onOpen(product)
+            return
+        }
+        if (product?.id) {
+            router.push(`/product/${product.id}`)
+        }
+    }
 
     return (
-        <div className="relative w-[170px] rounded-sm shadow-md bg-white">
+        <div
+            role="button"
+            tabIndex={0}
+            onClick={handleOpen}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    handleOpen()
+                }
+            }}
+            className={styles.card}
+            aria-label={`Open ${product?.name ?? 'product'}`}
+        >
             {/* Product Image */}
-            <div className="relative">
+            <div className={styles.imageContainer}>
                 <img 
-                    src={product.image || "https://api.builder.io/api/v1/image/assets/TEMP/9f6f4a7ff45e59449140587baff701db77d4c33d"}
+                    src={product.image || product.images?.[0] || "https://api.builder.io/api/v1/image/assets/TEMP/9f6f4a7ff45e59449140587baff701db77d4c33d"}
                     alt={product.name}
-                    className="w-full h-[183px] object-cover rounded-t-sm"
+                    className="product-image"
                 />
                 
                 {/* Badge */}
                 {showBadge && (
-                    <div className="absolute top-0 left-0 bg-[#FF4D00] px-4 py-0.5">
-                        <span className="text-white text-[8px] font-bold">สินค้าขายดี</span>
+                    <div className="product-badge">
+                        <span className="product-badge-text">สินค้าขายดี</span>
                     </div>
                 )}
 
                 {/* Favorite Heart */}
                 <button 
-                    onClick={() => setIsFavorite(!isFavorite)}
-                    className="absolute top-2 right-2"
+                    type="button"
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        setIsFavorite(!isFavorite)
+                    }}
+                    className={styles.favoriteButton}
+                    aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                 >
                     <img 
                         src={isFavorite 
@@ -32,25 +62,25 @@ export default function ProductCard({ product, showBadge = true }) {
                             : "https://api.builder.io/api/v1/image/assets/TEMP/b5b05d0b81645500870018f47552cccbfd5fcbe1"
                         }
                         alt="Favorite"
-                        className="w-3 h-3"
+                        className={styles.favoriteIcon}
                     />
                 </button>
             </div>
 
             {/* Product Info */}
-            <div className="p-2">
-                <p className="text-black text-[8px] line-clamp-2 mb-2 min-h-[27px]">
+            <div className={styles.info}>
+                <p className={styles.name}>
                     {product.name || "PURINA ONE เพียวริน่าวัน อาหารแมว"}
                 </p>
                 
-                <div className="flex items-center justify-between">
-                    <span className="text-[#FF4D00] text-[8px] font-bold">
+                <div className={styles.footer}>
+                    <span className="product-price">
                         ฿{product.price || "400"}
                     </span>
                     <img 
                         src="https://api.builder.io/api/v1/image/assets/TEMP/46d04e9038d25e8fdc4ca4283a89c8d955dccb3d"
                         alt="Rating"
-                        className="w-7 h-7"
+                        className={styles.ratingImage}
                     />
                 </div>
             </div>

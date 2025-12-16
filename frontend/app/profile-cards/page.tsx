@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react'
-import Link from 'next/link'
+import ProfileSidebar from '@/Components/ProfileSidebar'
 
 export default function ProfileCardsPage() {
   const [showAddModal, setShowAddModal] = useState(false)
@@ -12,87 +12,18 @@ export default function ProfileCardsPage() {
   })
 
   return (
-    <main className="min-h-screen bg-[#F5F5F5] py-8">
-      <div className="max-w-[1253px] mx-auto px-4">
+    <main className="min-h-screen bg-[#F5F5F5] py-4 md:py-8 overflow-auto">
+      <div className="container-responsive max-w-[1253px]">
         {/* Header */}
-        <div className="bg-white h-[45px] flex items-center px-3 mb-6">
-          <h1 className="text-black text-center text-[20px] font-bold font-['Inter'] -tracking-[0.333px]">
+        <div className="bg-white h-[45px] flex items-center px-3 mb-4 md:mb-6">
+          <h1 className="text-black text-center text-base md:text-[20px] font-bold font-['Inter'] -tracking-[0.333px] overflow-wrap-break">
             My Profile
           </h1>
         </div>
 
-        <div className="flex gap-6">
-          {/* Left Sidebar */}
-          <div className="w-[203px] flex-shrink-0 bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] rounded-lg p-4">
-            {/* Profile Summary */}
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b">
-              <img 
-                src="https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd"
-                alt="Profile"
-                className="w-[50px] h-[50px] rounded-full"
-              />
-              <div>
-                <p className="text-[15px] font-['Inter'] -tracking-[0.333px]">Meow Meow</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <p className="text-[10px] text-[#656565] font-['Inter'] -tracking-[0.333px]">
-                    แก้ไขข้อมูลส่วนตัว
-                  </p>
-                  <img 
-                    src="https://api.builder.io/api/v1/image/assets/TEMP/ae5a90e8d55e5378329581ced7d9028a3bf964df"
-                    alt=""
-                    className="w-[14px] h-[14px]"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Menu */}
-            <nav className="space-y-3">
-              <Link href="/profile" className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
-                <span className="text-[15px] font-['Inter'] -tracking-[0.333px]">บัญชี</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-[15px] h-[7px] transform -rotate-90"
-                />
-              </Link>
-              <Link href="/profile-orders" className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
-                <span className="text-[14px] font-['Inter'] -tracking-[0.333px]">การสั่งซื้อล่าสุด</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-[15px] h-[7px] transform -rotate-90"
-                />
-              </Link>
-              <Link href="/profile-address" className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
-                <span className="text-[14px] font-['Inter'] -tracking-[0.333px]">ที่อยู่ที่บันทึกไว้</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-[15px] h-[7px] transform -rotate-90"
-                />
-              </Link>
-              <div className="flex items-center justify-between p-2 rounded text-[#FF4D00] bg-gray-50">
-                <span className="text-[14px] font-['Inter'] -tracking-[0.333px]">บัตรเครดิต / บัตรเดบิต</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-[15px] h-[7px] transform -rotate-90"
-                />
-              </div>
-              <Link href="/coupons" className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
-                <span className="text-[14px] font-['Inter'] -tracking-[0.333px]">โค้ดส่วนลดของฉัน</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-[15px] h-[7px] transform -rotate-90"
-                />
-              </Link>
-              <button className="w-full text-left p-2 rounded hover:bg-gray-50">
-                <span className="text-[14px] font-['Inter'] -tracking-[0.333px]">ออกจากระบบ</span>
-              </button>
-            </nav>
-          </div>
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+          {/* Sidebar */}
+          <ProfileSidebar />
 
           {/* Main Content */}
           <div className="flex-1 bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] rounded-lg p-8">
@@ -145,11 +76,11 @@ export default function ProfileCardsPage() {
         <div className="fixed inset-0 bg-black/25 flex items-center justify-center z-50" onClick={() => setShowAddModal(false)}>
           <div className="bg-white w-[603px] rounded-[20px] shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] relative" onClick={(e) => e.stopPropagation()}>
             <div className="bg-gray-200 w-full h-full shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] rounded-[20px] p-8">
-              <button 
+              <button
                 onClick={() => setShowAddModal(false)}
                 className="absolute top-4 right-4"
               >
-                <img 
+                <img
                   src="https://api.builder.io/api/v1/image/assets/TEMP/f628a52ade3ea5a382954063075f79b0164ddd9c"
                   alt="Close"
                   className="w-[41px] h-[41px]"
@@ -157,7 +88,7 @@ export default function ProfileCardsPage() {
               </button>
 
               <div className="flex items-center gap-2 mb-8">
-                <img 
+                <img
                   src="https://api.builder.io/api/v1/image/assets/TEMP/45f2260ea667bf4e0f39c8e4969ecc384b910e31"
                   alt="Card"
                   className="w-[29px] h-[29px]"
@@ -167,24 +98,23 @@ export default function ProfileCardsPage() {
                 </h2>
               </div>
 
-              {/* Payment Type Icons */}
               <div className="flex justify-end gap-2 mb-6">
-                <img 
+                <img
                   src="https://api.builder.io/api/v1/image/assets/TEMP/d32d6972ead0919d933be1bb396a8b4cf8fa49f4"
                   alt="Mastercard"
                   className="w-[42px] h-[42px]"
                 />
-                <img 
+                <img
                   src="https://api.builder.io/api/v1/image/assets/TEMP/2c8e8ed1a87be23179d489a05d810279d00399d7"
                   alt="JCB"
                   className="w-[34px] h-[34px] mt-1"
                 />
-                <img 
+                <img
                   src="https://api.builder.io/api/v1/image/assets/TEMP/15af96c3363b6443f5991cacd07535827f16f3c8"
                   alt="Visa"
                   className="w-[49px] h-[49px]"
                 />
-                <img 
+                <img
                   src="https://api.builder.io/api/v1/image/assets/TEMP/25c4dd6c2c65fbf58a458ec192aeb30986f74667"
                   alt="UnionPay"
                   className="w-[41px] h-[41px]"
@@ -192,7 +122,6 @@ export default function ProfileCardsPage() {
               </div>
 
               <form className="space-y-6">
-                {/* Card Number */}
                 <div>
                   <label className="text-[15px] font-['Inter'] -tracking-[0.333px] block mb-2">
                     <span className="text-red-500">* </span>หมายเลขบัตร
@@ -206,7 +135,6 @@ export default function ProfileCardsPage() {
                   />
                 </div>
 
-                {/* Cardholder Name */}
                 <div>
                   <label className="text-[15px] font-['Inter'] -tracking-[0.333px] block mb-2">
                     <span className="text-red-500">* </span>ชื่อบนบัตร
@@ -220,7 +148,6 @@ export default function ProfileCardsPage() {
                   />
                 </div>
 
-                {/* Expiry and CVV */}
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <label className="text-[15px] font-['Inter'] -tracking-[0.333px] block mb-2">
@@ -248,7 +175,6 @@ export default function ProfileCardsPage() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex gap-3 justify-end pt-6">
                   <button
                     type="button"

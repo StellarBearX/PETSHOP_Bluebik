@@ -1,5 +1,5 @@
 "use client"
-import Link from 'next/link'
+import ProfileSidebar from '@/Components/ProfileSidebar'
 
 export default function OrdersPage() {
   const orders = [
@@ -33,74 +33,16 @@ export default function OrdersPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-[#F5F5F5] py-8">
-      <div className="max-w-[1253px] mx-auto px-4">
+    <main className="min-h-screen bg-[#F5F5F5] py-4 md:py-8 overflow-auto">
+      <div className="container-responsive max-w-[1253px]">
         {/* Header */}
-        <div className="bg-white h-[45px] flex items-center px-4 rounded-lg mb-6">
-          <h1 className="text-black text-[20px] font-bold font-['Inter']">My Profile</h1>
+        <div className="bg-white h-[45px] flex items-center px-4 rounded-lg mb-4 md:mb-6">
+          <h1 className="text-black text-base md:text-[20px] font-bold font-['Inter'] overflow-wrap-break">My Profile</h1>
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
           {/* Sidebar */}
-          <div className="w-[203px] bg-white rounded-lg shadow p-4">
-            <div className="flex items-center gap-3 pb-4 border-b mb-4">
-              <img 
-                src="https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd"
-                alt="Profile"
-                className="w-12 h-12 rounded-full"
-              />
-              <div>
-                <p className="text-[15px] font-['Inter']">Meow Meow</p>
-                <p className="text-[10px] text-[#656565] font-['Inter']">แก้ไขข้อมูลส่วนตัว</p>
-              </div>
-            </div>
-
-            <nav className="space-y-3">
-              <Link href="/profile" className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                <span className="text-[15px] font-['Inter']">บัญชี</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-4 h-2 transform -rotate-90"
-                />
-              </Link>
-              <Link href="/profile-orders" className="flex items-center justify-between p-2 text-[#FF4D00] bg-gray-50 rounded">
-                <span className="text-sm font-['Inter']">การสั่งซื้อล่าสุด</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-4 h-2 transform -rotate-90"
-                />
-              </Link>
-              <Link href="/profile-address" className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                <span className="text-sm font-['Inter']">ที่อยู่ที่บันทึกไว้</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-4 h-2 transform -rotate-90"
-                />
-              </Link>
-              <Link href="/profile-cards" className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                <span className="text-sm font-['Inter']">บัตรเครดิต / บัตรเดบิต</span>
-                <img
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-4 h-2 transform -rotate-90"
-                />
-              </Link>
-              <Link href="/coupons" className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                <span className="text-sm font-['Inter']">โค้ดส่วนลดของฉัน</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/7edaf58636be0f810a89af2b6376c5458e66d49b"
-                  alt=""
-                  className="w-4 h-2 transform -rotate-90"
-                />
-              </Link>
-              <button className="w-full text-left p-2 hover:bg-gray-50 rounded">
-                <span className="text-sm font-['Inter']">ออกจากระบบ</span>
-              </button>
-            </nav>
-          </div>
+          <ProfileSidebar />
 
           {/* Main Content */}
           <div className="flex-1">

@@ -5,8 +5,8 @@ export default function SuccessModal({ isOpen, onClose, title = "ทำราย
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={onClose}>
-            <div className="bg-white rounded-xl p-12 w-[697px] h-[733px] flex flex-col items-center justify-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content rounded-xl p-12 w-[697px] h-[733px] flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
                 {/* Success Icon */}
                 <div className="mb-16">
                     <img 
@@ -17,23 +17,21 @@ export default function SuccessModal({ isOpen, onClose, title = "ทำราย
                 </div>
 
                 {/* Success Message */}
-                <h2 className="text-black text-[48px] font-normal font-['Inter'] text-center mb-12">
+                <h2 className="text-black text-5xl font-normal text-center mb-12">
                     {title}
                 </h2>
 
                 {/* Close Button */}
                 {redirectUrl ? (
                     <Link href={redirectUrl}>
-                        <button 
-                            className="w-[198px] h-[38px] rounded-full border-2 border-[#F7921E] text-[#FF4D00] text-[16px] font-normal font-['Mitr'] hover:bg-[#F7921E] hover:text-white transition-all"
-                        >
+                        <button className="w-[198px] h-[38px] btn-outline-primary text-base font-['Mitr']">
                             ปิด
                         </button>
                     </Link>
                 ) : (
                     <button 
                         onClick={onClose}
-                        className="w-[198px] h-[38px] rounded-full border-2 border-[#F7921E] text-[#FF4D00] text-[16px] font-normal font-['Mitr'] hover:bg-[#F7921E] hover:text-white transition-all"
+                        className="w-[198px] h-[38px] btn-outline-primary text-base font-['Mitr']"
                     >
                         ปิด
                     </button>

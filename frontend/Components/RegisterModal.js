@@ -14,8 +14,8 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
     }
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
-            <div className="bg-white rounded-xl p-8 w-[550px] relative" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content rounded-xl p-8 w-[550px] relative" onClick={(e) => e.stopPropagation()}>
                 {/* Logo */}
                 <div className="flex justify-center mb-12">
                     <img 
@@ -28,7 +28,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Email Input */}
                     <div className="relative">
-                        <div className="flex items-center gap-3 pb-2 border-b border-[#BDBDBD]">
+                        <div className="input-with-icon">
                             <img 
                                 src="https://api.builder.io/api/v1/image/assets/TEMP/bb1527979d860473a483ea26a23ad970aabda3aa" 
                                 alt="" 
@@ -39,14 +39,14 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="อีเมลล์"
-                                className="flex-1 outline-none text-[16px] placeholder-[#BDBDBD]"
+                                className="input-field"
                             />
                         </div>
                     </div>
 
                     {/* Password Input */}
                     <div className="relative">
-                        <div className="flex items-center gap-3 pb-2 border-b border-[#BDBDBD]">
+                        <div className="input-with-icon">
                             <img 
                                 src="https://api.builder.io/api/v1/image/assets/TEMP/9f0a45bb2b764c9eccaa361dc89c8ddf0644c367" 
                                 alt="" 
@@ -57,7 +57,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="รหัสผ่าน"
-                                className="flex-1 outline-none text-[16px] placeholder-[#BDBDBD]"
+                                className="input-field"
                             />
                         </div>
                     </div>
@@ -65,7 +65,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                     {/* Register Button */}
                     <button 
                         type="submit"
-                        className="w-full h-[50px] rounded-full bg-gradient-to-r from-[#FF4D00] to-[#FF7A00] text-white text-[20px] font-normal hover:opacity-90 transition-opacity mt-8"
+                        className="w-full h-[50px] btn-primary text-xl font-normal mt-8"
                     >
                         ลงทะเบียน
                     </button>

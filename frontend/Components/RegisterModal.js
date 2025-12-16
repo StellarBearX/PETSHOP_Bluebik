@@ -1,4 +1,6 @@
 "use client";
+const GMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
 import { useState } from "react";
 
 const USERS_KEY = "petshop_users";
@@ -14,10 +16,16 @@ export default function RegisterModal({ isOpen, onSuccess }) {
     e.preventDefault();
     setError("");
 
-    if (!email.trim() || !password.trim()) {
-      setError("กรุณากรอกอีเมลและรหัสผ่าน");
-      return;
-    }
+if (!email.trim() || !password.trim()) {
+  setError("กรุณากรอกอีเมลและรหัสผ่าน");
+  return;
+}
+
+if (!GMAIL_REGEX.test(email.trim())) {
+  setError("กรุณาใช้อีเมล @gmail.com เท่านั้น");
+  return;
+}
+
 
     const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
 
@@ -38,7 +46,7 @@ export default function RegisterModal({ isOpen, onSuccess }) {
       className="
         bg-white
         w-[550px] h-[700px]
-        rounded-xl
+        rounded-none
         px-[123px] pt-[34px]
         shadow-[0_18px_45px_rgba(0,0,0,0.18)]
         flex flex-col

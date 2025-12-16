@@ -9,7 +9,7 @@ export default function SuccessModal({ isOpen, onClose, message }) {
         className="
           bg-white
           w-[400px] h-[400px]
-          rounded-xl
+          rounded-none
           flex flex-col items-center
           shadow-[0_18px_45px_rgba(0,0,0,0.18)]
         "

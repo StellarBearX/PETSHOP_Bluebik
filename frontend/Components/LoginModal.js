@@ -41,7 +41,7 @@ export default function LoginModal({ isOpen, onRegister }) {
       className="
         bg-white
         w-[550px] h-[700px]
-        rounded-xl
+        rounded-none
         px-[123px] pt-[34px]
         shadow-[0_18px_45px_rgba(0,0,0,0.18)]
         flex flex-col

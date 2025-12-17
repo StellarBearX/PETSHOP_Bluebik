@@ -3,10 +3,17 @@ import { useState } from 'react'
 import Link from 'next/link'
 import styles from './ProfileDropdown.module.css'
 
-export default function ProfileDropdown({ isOpen, onClose }) {
+export default function ProfileDropdown({ isOpen, onClose, onLogout }) {
     const [language, setLanguage] = useState('TH')
 
     if (!isOpen) return null
+
+    const handleLogout = () => {
+        onClose()
+        if (onLogout) {
+            onLogout()
+        }
+    }
 
     return (
         <>
@@ -69,16 +76,18 @@ export default function ProfileDropdown({ isOpen, onClose }) {
                     </Link>
 
                     {/* บัตรเครดิต / บัตรเดบิต */}
-                    <div className={styles.menuItem}>
-                        <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
-                            บัตรเครดิต / บัตรเดบิต
-                        </span>
-                        <img 
-                            src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
-                            alt="" 
-                            className={styles.arrow}
-                        />
-                    </div>
+                    <Link href="/profile-cards" onClick={onClose}>
+                        <div className={styles.menuItem}>
+                            <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
+                                บัตรเครดิต / บัตรเดบิต
+                            </span>
+                            <img 
+                                src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
+                                alt="" 
+                                className={styles.arrow}
+                            />
+                        </div>
+                    </Link>
 
                     {/* Language Toggle */}
                     <div className={styles.menuItem}>
@@ -100,11 +109,11 @@ export default function ProfileDropdown({ isOpen, onClose }) {
                     </div>
 
                     {/* ออกจากระบบ */}
-                    <div className={styles.menuItem}>
+                    <button onClick={handleLogout} className={styles.menuItem} style={{ width: '100%', textAlign: 'left' }}>
                         <span className={`${styles.menuText} ${styles.menuTextSmall} ${styles.menuTextLogout}`}>
                             ออกจากระบบ
                         </span>
-                    </div>
+                    </button>
                 </div>
             </div>
         </>

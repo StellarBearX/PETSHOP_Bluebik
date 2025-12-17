@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ProductVariantSelector from "@/Components/ProductVariantSelector";
-import { useCatalog, useCart } from "@/app/providers";
+import { HeartIcon } from "@/Components/Icons";
+import { useCatalog, useCart, useFavorites } from "@/app/providers";
 import type { ProductVariantSelection } from "@/lib/catalog";
 import { findSku, getProductPriceRange, isSelectionComplete } from "@/lib/catalog";
 import { formatPriceRangeTHB, formatPriceTHB, formatSelection } from "@/lib/format";
@@ -14,6 +15,7 @@ export default function ProductDetailPage() {
 
   const { getProductById, loading } = useCatalog();
   const { addToCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const productId = params?.id;
   const product = productId ? getProductById(productId) : undefined;
@@ -78,7 +80,17 @@ export default function ProductDetailPage() {
               >
                 ย้อนกลับ
               </button>
-              <div className="text-xs text-gray-500 overflow-wrap-break">ID: {product.id}</div>
+              <button
+                type="button"
+                onClick={() => toggleFavorite(product.id)}
+                className="w-10 h-10 flex items-center justify-center hover:opacity-80 transition-opacity"
+                aria-label={isFavorite(product.id) ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <HeartIcon 
+                  filled={isFavorite(product.id)}
+                  className={`w-7 h-7 ${isFavorite(product.id) ? 'text-red-500' : 'text-gray-400'}`}
+                />
+              </button>
             </div>
 
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">

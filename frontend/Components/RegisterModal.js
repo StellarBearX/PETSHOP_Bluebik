@@ -1,15 +1,18 @@
 "use client"
 import { useState } from 'react'
+import { useAuth } from '@/app/providers'
 
 export default function RegisterModal({ isOpen, onClose, onSuccess }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const { handleLogin } = useAuth()
 
     if (!isOpen) return null
 
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log('Register:', { email, password })
+        handleLogin()
         onSuccess()
     }
 

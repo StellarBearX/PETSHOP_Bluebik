@@ -1,4 +1,6 @@
 "use client"
+import Link from 'next/link'
+import { HeartIcon, StarRatingIcon } from '@/Components/Icons'
 
 export default function ShopeeMallPage() {
   const products = Array(6).fill({
@@ -17,7 +19,7 @@ export default function ShopeeMallPage() {
         <div className="max-w-[1440px] mx-auto">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 px-[217px] py-6 text-[20px] font-['Inter']">
-            <a href="/" className="text-black hover:text-[#FF4D00]">Home</a>
+            <Link href="/" className="text-black hover:text-[#FF4D00]">Home</Link>
             <img 
               src="https://api.builder.io/api/v1/image/assets/TEMP/81cffa23d611a9098ff51247ea7a45e25a320e0c"
               alt=""
@@ -43,7 +45,6 @@ export default function ShopeeMallPage() {
           <div className="mx-[217px]">
             <div className="bg-white h-[45px] flex items-center justify-between px-4 rounded-t mb-0 shadow-[0_1px_4px_0_rgba(0,0,0,0.25)]">
               <h2 className="text-[#FF4D00] text-[20px] font-bold font-['Inter'] leading-normal -tracking-[0.333px]">Shopee Mall</h2>
-              <span className="text-black text-[10px] font-['Inter'] leading-normal -tracking-[0.333px]">Total number of products : 6 items</span>
             </div>
 
             {/* Products Grid */}
@@ -67,10 +68,9 @@ export default function ShopeeMallPage() {
                     <div className="flex-1 flex flex-col justify-between relative">
                       {/* Heart Icon */}
                       <button className="absolute top-0 right-0">
-                        <img 
-                          src="https://api.builder.io/api/v1/image/assets/TEMP/09a4f899918b90df2d20af4bd178f25e9857b5fa"
-                          alt="Add to favorites"
-                          className="w-[12px] h-[10px]"
+                        <HeartIcon 
+                          filled={false}
+                          className="w-[12px] h-[10px] text-gray-400"
                         />
                       </button>
 
@@ -108,11 +108,7 @@ export default function ShopeeMallPage() {
                         </div>
                         
                         {/* Rating */}
-                        <img 
-                          src="https://api.builder.io/api/v1/image/assets/TEMP/3762c7f0b8d9e8de20737776043e333bdbdafeeb"
-                          alt="Rating"
-                          className="w-[42px] h-[42px]"
-                        />
+                        <StarRatingIcon className="w-[42px] h-[42px]" />
                       </div>
                     </div>
                   </div>

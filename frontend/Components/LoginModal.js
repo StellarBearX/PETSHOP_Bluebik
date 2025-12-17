@@ -1,15 +1,19 @@
 "use client"
 import { useState } from 'react'
+import { useAuth } from '@/app/providers'
 
 export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const { handleLogin } = useAuth()
 
     if (!isOpen) return null
 
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log('Login:', { email, password })
+        handleLogin()
+        onClose()
     }
 
     const handleForgotPassword = () => {

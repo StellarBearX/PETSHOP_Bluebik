@@ -1,5 +1,6 @@
 "use client"
 import { useState } from 'react'
+import styles from './page.module.css'
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState('promotion')
@@ -16,27 +17,23 @@ export default function NotificationsPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-[#F5F5F5] overflow-auto">
+    <main className={styles.main}>
       <div className="container-responsive">
-        <div className="max-w-[1000px] mx-auto py-4 md:py-8">
+        <div className={styles.container}>
           {/* Header Tabs */}
-          <div className="flex mb-0">
+          <div className={styles.tabs}>
             <button
               onClick={() => setActiveTab('promotion')}
-              className={`flex-1 md:w-[498px] h-[40px] md:h-[45px] flex items-center justify-center text-base md:text-[20px] font-bold font-['Inter'] leading-normal -tracking-[0.333px] transition-colors rounded-tl shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] overflow-wrap-break ${
-                activeTab === 'promotion' 
-                  ? 'text-white bg-gradient-to-r from-[#FF4D00] to-[#F99D20]' 
-                  : 'text-[#A19D9D] bg-gray-100'
+              className={`${styles.tab} ${styles.tabLeft} ${
+                activeTab === 'promotion' ? styles.tabActive : styles.tabInactive
               }`}
             >
               Promotion
             </button>
             <button
               onClick={() => setActiveTab('news')}
-              className={`flex-1 md:w-[500px] h-[40px] md:h-[45px] flex items-center justify-center text-base md:text-[20px] font-bold font-['Inter'] leading-normal -tracking-[0.333px] transition-colors rounded-tr overflow-wrap-break ${
-                activeTab === 'news' 
-                  ? 'text-white bg-gradient-to-r from-[#FF4D00] to-[#F99D20]' 
-                  : 'text-[#A19D9D] bg-white'
+              className={`${styles.tab} ${styles.tabRight} ${
+                activeTab === 'news' ? styles.tabActive : styles.tabInactiveRight
               }`}
             >
               News
@@ -44,32 +41,28 @@ export default function NotificationsPage() {
           </div>
 
           {/* Content */}
-          <div className="bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] rounded-b">
+          <div className={styles.content}>
             {activeTab === 'promotion' && (
-              <div className="p-4 md:p-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                  {promotions.map((promo, index) => (
-                    <div 
-                      key={index}
-                      className="rounded-xl overflow-hidden shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] hover:shadow-lg transition-shadow cursor-pointer"
-                    >
-                      <img 
-                        src={promo}
-                        alt={`Promotion ${index + 1}`}
-                        className="w-full h-[150px] sm:h-[180px] md:h-[200px] object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
+              <div className={styles.promotionGrid}>
+                {promotions.map((promo, index) => (
+                  <div 
+                    key={index}
+                    className={styles.promotionCard}
+                  >
+                    <img 
+                      src={promo}
+                      alt={`Promotion ${index + 1}`}
+                      className={styles.promotionImage}
+                    />
+                  </div>
+                ))}
               </div>
             )}
 
             {activeTab === 'news' && (
-              <div className="p-8 md:p-12">
-                <p className="text-center text-gray-500 text-base md:text-[18px] font-['Inter'] overflow-wrap-break">
-                  ไม่มีข่าวสารในขณะนี้
-                </p>
-              </div>
+              <p className={styles.emptyState}>
+                ไม่มีข่าวสารในขณะนี้
+              </p>
             )}
           </div>
         </div>

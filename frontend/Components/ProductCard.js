@@ -1,11 +1,13 @@
 "use client"
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useFavorites } from '@/app/providers'
+import { HeartIcon, StarRatingIcon } from './Icons'
 import styles from './ProductCard.module.css'
 
 export default function ProductCard({ product, showBadge = true, onOpen }) {
-    const [isFavorite, setIsFavorite] = useState(false)
+    const { isFavorite, toggleFavorite } = useFavorites()
     const router = useRouter()
+    const currentFavoriteStatus = isFavorite(product.id)
 
     const handleOpen = () => {
         if (typeof onOpen === 'function') {
@@ -51,18 +53,14 @@ export default function ProductCard({ product, showBadge = true, onOpen }) {
                     type="button"
                     onClick={(e) => {
                         e.stopPropagation()
-                        setIsFavorite(!isFavorite)
+                        toggleFavorite(product.id)
                     }}
                     className={styles.favoriteButton}
-                    aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                    aria-label={currentFavoriteStatus ? 'Remove from favorites' : 'Add to favorites'}
                 >
-                    <img 
-                        src={isFavorite 
-                            ? "https://api.builder.io/api/v1/image/assets/TEMP/8b9fb69db0ce7252d1bfdfc1c81f6180647a5a2d"
-                            : "https://api.builder.io/api/v1/image/assets/TEMP/b5b05d0b81645500870018f47552cccbfd5fcbe1"
-                        }
-                        alt="Favorite"
-                        className={styles.favoriteIcon}
+                    <HeartIcon 
+                        filled={currentFavoriteStatus}
+                        className={`${styles.favoriteIcon} ${currentFavoriteStatus ? 'text-red-500' : 'text-gray-400'}`}
                     />
                 </button>
             </div>
@@ -77,11 +75,7 @@ export default function ProductCard({ product, showBadge = true, onOpen }) {
                     <span className="product-price">
                         ฿{product.price || "400"}
                     </span>
-                    <img 
-                        src="https://api.builder.io/api/v1/image/assets/TEMP/46d04e9038d25e8fdc4ca4283a89c8d955dccb3d"
-                        alt="Rating"
-                        className={styles.ratingImage}
-                    />
+                    <StarRatingIcon className={styles.ratingImage} />
                 </div>
             </div>
         </div>

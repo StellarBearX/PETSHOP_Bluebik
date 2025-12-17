@@ -17,6 +17,22 @@ export function useSearch() {
   return ctx;
 }
 
+type AuthContextValue = {
+  isLoggedIn: boolean;
+  showLogin: boolean;
+  setShowLogin: (value: boolean) => void;
+  handleLogin: () => void;
+  handleLogout: () => void;
+};
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
+}
+
 type CatalogContextValue = {
   products: Product[];
   loading: boolean;
@@ -97,6 +113,21 @@ export function useCart() {
   return ctx;
 }
 
+type FavoritesContextValue = {
+  favoriteIds: Set<string>;
+  toggleFavorite: (productId: string) => void;
+  isFavorite: (productId: string) => boolean;
+  getFavorites: () => Product[];
+};
+
+const FavoritesContext = createContext<FavoritesContextValue | null>(null);
+
+export function useFavorites() {
+  const ctx = useContext(FavoritesContext);
+  if (!ctx) throw new Error("useFavorites must be used within FavoritesProvider");
+  return ctx;
+}
+
 function loadCartFromStorage(): CartState {
   if (typeof window === "undefined") return { lines: [] };
   try {
@@ -114,8 +145,32 @@ function loadCartFromStorage(): CartState {
   }
 }
 
+function loadFavoritesFromStorage(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = window.localStorage.getItem("petshop_favorites_v1");
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw) as string[];
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function loadAuthFromStorage(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const raw = window.localStorage.getItem("petshop_auth_v1");
+    return raw === "true";
+  } catch {
+    return false;
+  }
+}
+
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [query, setQuery] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => loadAuthFromStorage());
+  const [showLogin, setShowLogin] = useState(false);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -133,10 +188,17 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   const [cartState, dispatch] = useReducer(cartReducer, undefined, loadCartFromStorage);
 
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => loadFavoritesFromStorage());
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.localStorage.setItem("petshop_cart_v1", JSON.stringify(cartState));
   }, [cartState]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("petshop_favorites_v1", JSON.stringify(Array.from(favoriteIds)));
+  }, [favoriteIds]);
 
   const subtotal = useMemo(
     () => cartState.lines.reduce((sum, l) => sum + l.price * l.quantity, 0),
@@ -156,7 +218,27 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     return { ok: true };
   };
 
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    setShowLogin(false);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("petshop_auth_v1", "true");
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("petshop_auth_v1");
+    }
+  };
+
   const searchValue = useMemo<SearchContextValue>(() => ({ query, setQuery }), [query]);
+
+  const authValue = useMemo<AuthContextValue>(
+    () => ({ isLoggedIn, showLogin, setShowLogin, handleLogin, handleLogout }),
+    [isLoggedIn, showLogin]
+  );
 
   const catalogValue = useMemo<CatalogContextValue>(
     () => ({ products, loading, getProductById }),
@@ -176,11 +258,41 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     [cartState, subtotal, totalItems]
   );
 
+  const toggleFavorite = (productId: string) => {
+    setFavoriteIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(productId)) {
+        next.delete(productId);
+      } else {
+        next.add(productId);
+      }
+      return next;
+    });
+  };
+
+  const isFavorite = (productId: string) => favoriteIds.has(productId);
+
+  const getFavorites = () => products.filter((p) => favoriteIds.has(p.id));
+
+  const favoritesValue = useMemo<FavoritesContextValue>(
+    () => ({
+      favoriteIds,
+      toggleFavorite,
+      isFavorite,
+      getFavorites,
+    }),
+    [favoriteIds, products]
+  );
+
   return (
-    <SearchContext.Provider value={searchValue}>
-      <CatalogContext.Provider value={catalogValue}>
-        <CartContext.Provider value={cartValue}>{children}</CartContext.Provider>
-      </CatalogContext.Provider>
-    </SearchContext.Provider>
+    <AuthContext.Provider value={authValue}>
+      <SearchContext.Provider value={searchValue}>
+        <CatalogContext.Provider value={catalogValue}>
+          <CartContext.Provider value={cartValue}>
+            <FavoritesContext.Provider value={favoritesValue}>{children}</FavoritesContext.Provider>
+          </CartContext.Provider>
+        </CatalogContext.Provider>
+      </SearchContext.Provider>
+    </AuthContext.Provider>
   );
 }

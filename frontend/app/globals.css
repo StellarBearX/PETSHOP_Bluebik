@@ -76,11 +76,11 @@ img {
   }
   
   .card-header {
-    @apply bg-white h-[45px] flex items-center px-4 rounded-t-lg overflow-hidden;
+    @apply bg-[#FF4D00] h-[45px] flex items-center justify-between px-4 md:px-8 rounded-t-lg overflow-hidden;
   }
   
   .card-title {
-    @apply text-black text-xl font-bold overflow-wrap-break;
+    @apply text-white text-base md:text-xl font-bold overflow-wrap-break;
   }
 
   /* Input Styles */
@@ -107,15 +107,15 @@ img {
 
   /* Navigation Styles */
   .nav-link {
-    @apply flex flex-col items-center gap-1 hover:opacity-80 transition-opacity;
+    @apply flex flex-col items-center gap-0.5 md:gap-1 hover:opacity-80 transition-opacity;
   }
   
   .nav-icon {
-    @apply w-6 h-6 md:w-8 md:h-8;
+    @apply w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8;
   }
   
   .nav-text {
-    @apply text-white text-xs md:text-[15px] font-bold;
+    @apply text-white text-[10px] md:text-xs lg:text-sm xl:text-[15px] font-bold whitespace-nowrap;
   }
 
   /* Product Card Styles */
@@ -137,7 +137,7 @@ img {
 
   /* Section Styles */
   .section-container {
-    @apply max-w-[1000px] mx-auto px-4 mb-12 overflow-hidden;
+    @apply max-w-[1000px] mx-auto px-4 mb-8 md:mb-12 overflow-visible;
   }
 
   /* Category Card */
@@ -224,7 +224,7 @@ img {
   }
   
   .gradient-navbar {
-    @apply bg-gradient-to-r from-[#E8954F] to-[#F7A961];
+    @apply bg-gradient-to-r from-[#FF4D00] to-[#FF7A00];
   }
   
   .gradient-primary {

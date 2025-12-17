@@ -3,7 +3,7 @@ import Navbar from "@/Components/Navbar";
 import Footer from"@/Components/Footer"
 import { AppProviders } from "./providers";
 import "./globals.css";
-
+import styles from "./layout.module.css";
 
 export const metadata: Metadata = {
   title: "Pet Shop",
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-[#F5F5F5]">
+      <body className={styles.body}>
         <AppProviders>
           <Navbar />
           {children}

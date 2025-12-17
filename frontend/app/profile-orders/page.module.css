@@ -1,0 +1,138 @@
+/* Profile Orders page uses global classes */
+
+.mainContent {
+  flex: 1;
+}
+
+/* Section titles use global classes: profile-section-title, profile-section-description */
+.infoCard {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.orderCard {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.orderHeader {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shopInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shopIcon {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+.shopName {
+  font-size: 10px;
+  font-family: 'Mitr';
+}
+
+.orderStatus {
+  font-size: 8px;
+  font-family: 'Mitr';
+  color: #656565;
+}
+
+.orderBody {
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.productImage {
+  width: 102px;
+  height: 102px;
+  border: 1px solid #979797;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.productImageImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.productDetails {
+  flex: 1;
+}
+
+.productName {
+  font-size: 0.875rem;
+  font-family: 'Mitr';
+  color: #333;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.variantBadge {
+  background: #F4F4F4;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.variantText {
+  font-size: 10px;
+  font-family: 'Mitr';
+}
+
+.variantIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.productPrice {
+  font-size: 0.875rem;
+  font-family: 'Mitr';
+}
+
+.orderSummary {
+  text-align: right;
+}
+
+.orderTotal {
+  font-size: 10px;
+  font-family: 'Mitr';
+  margin-bottom: 0.25rem;
+}
+
+.historySection {
+  margin-top: 2rem;
+}
+
+.historyTitle {
+  font-size: 15px;
+  font-family: 'Inter';
+  margin-bottom: 1rem;
+}
+

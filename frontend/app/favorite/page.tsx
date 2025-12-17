@@ -2,29 +2,45 @@
 
 import { useMemo, useState } from "react"
 import ProductQuickViewModal from "@/Components/ProductQuickViewModal"
-import { useCatalog, useSearch } from "../providers"
+import { HeartIcon, StarRatingIcon } from "@/Components/Icons"
+import { useFavorites, useSearch } from "../providers"
 import { getProductPriceRange, type Product } from "@/lib/catalog"
 import { formatPriceRangeTHB } from "@/lib/format"
 
 export default function FavoritePage() {
-  const { products } = useCatalog()
+  const { getFavorites, toggleFavorite } = useFavorites()
   const { query } = useSearch()
 
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
 
   const favoriteProducts = useMemo(() => {
+    const favorites = getFavorites()
     const q = query.trim().toLowerCase()
-    if (!q) return products
-    return products.filter((p) => p.name.toLowerCase().includes(q) || p.shopName.toLowerCase().includes(q))
-  }, [products, query])
+    if (!q) return favorites
+    return favorites.filter((p) => p.name.toLowerCase().includes(q) || p.shopName.toLowerCase().includes(q))
+  }, [getFavorites, query])
 
   return (
     <main className="min-h-screen bg-[#F5F5F5] overflow-auto">
       <div className="container-responsive max-w-[1440px] py-4 md:py-8">
+        <div className="bg-gradient-to-r from-[#FF4D00] to-[#F99D20] rounded-lg p-4 mb-6 md:mb-8 flex items-center gap-4">
+          <img
+            src="https://api.builder.io/api/v1/image/assets/TEMP/b80de9f65b94d83c27755ef14a0def9a5307a069"
+            alt="Favorite"
+            className="w-10 h-10 md:w-[50px] md:h-[50px]"
+          />
+          <h1 className="text-white text-2xl md:text-[32px] font-bold font-['Inter'] overflow-wrap-break">รายการโปรด</h1>
+        </div>
         <div className="max-w-[1000px] mx-auto">
           <div className="bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] rounded">
-            <div className="space-y-4 md:space-y-6 p-4 md:p-8">
-              {favoriteProducts.map((product) => {
+            {favoriteProducts.length === 0 ? (
+              <div className="text-center py-12 px-4">
+                <p className="text-gray-500 text-lg">ยังไม่มีสินค้าในรายการโปรด</p>
+                <p className="text-gray-400 text-sm mt-2">กดปุ่มหัวใจที่สินค้าที่คุณชอบเพื่อเพิ่มในรายการโปรด</p>
+              </div>
+            ) : (
+              <div className="space-y-4 md:space-y-6 p-4 md:p-8">
+                {favoriteProducts.map((product) => {
                 const range = getProductPriceRange(product)
 
                 return (
@@ -57,11 +73,7 @@ export default function FavoritePage() {
                               </span>
                             </div>
                           ))}
-                          <img
-                            src="https://api.builder.io/api/v1/image/assets/TEMP/3762c7f0b8d9e8de20737776043e333bdbdafeeb"
-                            alt="Rating"
-                            className="w-[42px] h-[42px]"
-                          />
+                          <StarRatingIcon className="w-[42px] h-[42px]" />
                         </div>
 
                         <div className="flex items-center gap-2 mt-2">
@@ -85,12 +97,12 @@ export default function FavoritePage() {
                           aria-label="Remove from favorites"
                           onClick={(e) => {
                             e.stopPropagation()
+                            toggleFavorite(product.id)
                           }}
                         >
-                          <img
-                            src="https://api.builder.io/api/v1/image/assets/TEMP/27d947f56fdf03696a238d9b61ee3c9122edb00c"
-                            alt="Remove from favorites"
-                            className="w-[24px] h-[22px]"
+                          <HeartIcon 
+                            filled={true}
+                            className="w-[24px] h-[22px] text-red-500"
                           />
                         </button>
                       </div>
@@ -98,7 +110,8 @@ export default function FavoritePage() {
                   </button>
                 )
               })}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

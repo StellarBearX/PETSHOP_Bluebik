@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import type { Product, ProductVariantSelection } from "@/lib/catalog";
 import { findSku, getProductPriceRange, isSelectionComplete } from "@/lib/catalog";
 import { formatPriceRangeTHB, formatPriceTHB, formatSelection } from "@/lib/format";
-import { useCart } from "@/app/providers";
+import { useCart, useFavorites } from "@/app/providers";
 import ProductVariantSelector from "./ProductVariantSelector";
+import { HeartIcon } from "./Icons";
 
 type Props = {
   isOpen: boolean;
@@ -17,15 +18,18 @@ type Props = {
 export default function ProductQuickViewModal({ isOpen, product, onClose }: Props) {
   const router = useRouter();
   const { addToCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const [selection, setSelection] = useState<ProductVariantSelection>({});
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     setSelection({});
     setQuantity(1);
     setError(null);
+    setSelectedImageIndex(0);
   }, [product?.id]);
 
   const sku = useMemo(() => (product ? findSku(product, selection) : null), [product, selection]);
@@ -44,6 +48,8 @@ export default function ProductQuickViewModal({ isOpen, product, onClose }: Prop
 
   if (!isOpen || !product) return null;
 
+  const currentFavoriteStatus = isFavorite(product.id);
+
   return (
     <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Product quick view">
       <div
@@ -51,11 +57,27 @@ export default function ProductQuickViewModal({ isOpen, product, onClose }: Prop
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4">
-          <div className="text-lg md:text-2xl font-bold overflow-wrap-break">{product.name}</div>
+          <div className="flex items-start gap-3 flex-1">
+            <div className="text-lg md:text-2xl font-bold overflow-wrap-break flex-1">{product.name}</div>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFavorite(product.id);
+              }}
+              className="w-8 h-8 flex items-center justify-center hover:opacity-80 transition-opacity flex-shrink-0"
+              aria-label={currentFavoriteStatus ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <HeartIcon 
+                filled={currentFavoriteStatus}
+                className={`w-6 h-6 ${currentFavoriteStatus ? 'text-red-500' : 'text-gray-400'}`}
+              />
+            </button>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="w-10 h-10 rounded-full border border-gray-300 hover:bg-gray-50"
+            className="w-10 h-10 rounded-full border border-gray-300 hover:bg-gray-50 flex-shrink-0"
             aria-label="Close"
           >
             ✕
@@ -64,21 +86,31 @@ export default function ProductQuickViewModal({ isOpen, product, onClose }: Prop
 
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <div className="rounded-xl overflow-hidden bg-gray-100">
+            <div className="rounded-xl overflow-hidden bg-gray-100 cursor-pointer">
               <img
-                src={product.images[0]}
+                src={product.images[selectedImageIndex] || product.images[0]}
                 alt={product.name}
                 className="w-full h-[280px] md:h-[360px] object-cover"
               />
             </div>
             <div className="mt-3 flex gap-2 overflow-auto">
-              {product.images.map((img) => (
-                <img
+              {product.images.map((img, index) => (
+                <button
                   key={img}
-                  src={img}
-                  alt=""
-                  className="w-16 h-16 rounded-md object-cover flex-shrink-0"
-                />
+                  type="button"
+                  onClick={() => setSelectedImageIndex(index)}
+                  className={`w-16 h-16 rounded-md overflow-hidden flex-shrink-0 border-2 transition-all ${
+                    selectedImageIndex === index
+                      ? 'border-orange-500 opacity-100'
+                      : 'border-transparent opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                </button>
               ))}
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react"
-import { useSearch } from "@/app/providers"
+import { useSearch, useAuth } from "@/app/providers"
 import ProfileDropdown from "./ProfileDropdown"
 import styles from "./Navbar.module.css"
 
@@ -10,6 +10,7 @@ export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   const { query, setQuery } = useSearch()
+  const { handleLogout } = useAuth()
 
   const closeMobileMenu = () => setShowMobileMenu(false)
 
@@ -107,6 +108,7 @@ export default function Navbar() {
             <ProfileDropdown
               isOpen={showProfileDropdown}
               onClose={() => setShowProfileDropdown(false)}
+              onLogout={handleLogout}
             />
           </div>
 

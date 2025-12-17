@@ -73,7 +73,7 @@
 .arrow {
   width: 15px;
   height: 15px;
-  transform: rotate(-90deg);
+  color: #666;
 }
 
 .languageToggle {

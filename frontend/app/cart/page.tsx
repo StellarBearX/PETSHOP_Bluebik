@@ -32,7 +32,7 @@ export default function CartPage() {
   const discount = 0;
 
   return (
-    <main className="min-h-screen bg-[#F5F5F5] overflow-auto">
+    <main className="min-h-screen bg-[#F7F7F7] overflow-auto">
       <div className="container-responsive max-w-[1340px] py-4 md:py-8">
         <div className="bg-gradient-to-r from-[#FF4D00] to-[#F99D20] rounded-lg p-4 mb-6 md:mb-8 flex items-center gap-4">
           <img

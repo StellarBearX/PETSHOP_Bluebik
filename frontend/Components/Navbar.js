@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react"
+import { usePathname } from "next/navigation"
 import { useSearch, useAuth } from "@/app/providers"
 import ProfileDropdown from "./ProfileDropdown"
 import styles from "./Navbar.module.css"
@@ -8,11 +9,14 @@ import styles from "./Navbar.module.css"
 export default function Navbar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const pathname = usePathname()
 
   const { query, setQuery } = useSearch()
   const { handleLogout } = useAuth()
 
   const closeMobileMenu = () => setShowMobileMenu(false)
+
+  const isActive = (href) => pathname === href
 
   return (
     <nav className={`gradient-navbar ${styles.navbar}`}>
@@ -28,7 +32,7 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className={`${styles.navLinks} ${styles.desktopOnly}`}>
-          <Link href="/" className="nav-link">
+          <Link href="/" className={`nav-link ${isActive('/') ? styles.navLinkActive : ''}`}>
             <img
               src="https://api.builder.io/api/v1/image/assets/TEMP/a4d5c457cadca55671963e132cba2bdd395881a9"
               alt=""
@@ -37,7 +41,7 @@ export default function Navbar() {
             <span className="nav-text">Home</span>
           </Link>
 
-          <Link href="/notifications" className="nav-link">
+          <Link href="/notifications" className={`nav-link ${isActive('/notifications') ? styles.navLinkActive : ''}`}>
             <img
               src="https://api.builder.io/api/v1/image/assets/TEMP/f34acdfaa4d915c3708eed128c269e53490186e0"
               alt=""
@@ -46,7 +50,7 @@ export default function Navbar() {
             <span className="nav-text">Notification</span>
           </Link>
 
-          <Link href="/coupons" className="nav-link">
+          <Link href="/coupons" className={`nav-link ${isActive('/coupons') ? styles.navLinkActive : ''}`}>
             <img
               src="https://api.builder.io/api/v1/image/assets/TEMP/5bd10c6b52e96ab682118e91c3fa2c5c3f9b7574"
               alt=""
@@ -55,7 +59,7 @@ export default function Navbar() {
             <span className="nav-text">Coupon</span>
           </Link>
 
-          <Link href="/cart" className="nav-link">
+          <Link href="/cart" className={`nav-link ${isActive('/cart') ? styles.navLinkActive : ''}`}>
             <img
               src="https://api.builder.io/api/v1/image/assets/TEMP/2901bf89fcba411386dac60c3d561a559f5223b6"
               alt=""
@@ -64,7 +68,7 @@ export default function Navbar() {
             <span className="nav-text">Cart</span>
           </Link>
 
-          <Link href="/favorite" className="nav-link">
+          <Link href="/favorite" className={`nav-link ${isActive('/favorite') ? styles.navLinkActive : ''}`}>
             <img
               src="https://api.builder.io/api/v1/image/assets/TEMP/b80de9f65b94d83c27755ef14a0def9a5307a069"
               alt=""

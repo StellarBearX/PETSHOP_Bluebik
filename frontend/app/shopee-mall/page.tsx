@@ -1,30 +1,26 @@
 "use client"
+import { useState } from 'react'
 import Link from 'next/link'
-import { HeartIcon, StarRatingIcon } from '@/Components/Icons'
+import ProductCard from '@/Components/ProductCard'
+import ProductQuickViewModal from '@/Components/ProductQuickViewModal'
+import { ChevronRightIcon } from '@/Components/Icons'
+import { useCatalog } from '@/app/providers'
+import { getProductPriceRange, type Product } from '@/lib/catalog'
 
 export default function ShopeeMallPage() {
-  const products = Array(6).fill({
-    name: "Kaniva คานิว่า อาหารแมว กระสอบ 8kg",
-    price: "815 - ฿899",
-    originalPrice: "฿999",
-    sales: "ยอดขาย 7 ชิ้น",
-    location: "กรุงเทพมหานคร",
-    rating: 5,
-    badge: "สินค้าขายดี",
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/a0e97df153de0241b08a7dd44d7e1f5d659a532f"
-  })
+  const { products } = useCatalog()
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
+  
+  // Show first 6 products
+  const displayProducts = products.slice(0, 6)
 
   return (
-    <main className="min-h-screen bg-[#F5F5F5]">
+    <main className="min-h-screen bg-[#F7F7F7]">
         <div className="max-w-[1440px] mx-auto">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 px-[217px] py-6 text-[20px] font-['Inter']">
             <Link href="/" className="text-black hover:text-[#FF4D00]">Home</Link>
-            <img 
-              src="https://api.builder.io/api/v1/image/assets/TEMP/81cffa23d611a9098ff51247ea7a45e25a320e0c"
-              alt=""
-              className="w-[22px] h-[22px] transform -rotate-90"
-            />
+            <ChevronRightIcon className="w-[22px] h-[22px] text-gray-500" />
             <span className="text-[#FF4D00]">Shopee Mall</span>
           </div>
 
@@ -48,75 +44,27 @@ export default function ShopeeMallPage() {
             </div>
 
             {/* Products Grid */}
-            <div className="bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] p-6 grid grid-cols-2 gap-6">
-              {products.map((product, index) => (
-                <div 
-                  key={index}
-                  className="bg-white border border-gray-200 rounded-lg shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] hover:shadow-lg transition-shadow cursor-pointer"
-                >
-                  <div className="flex gap-4 p-3">
-                    {/* Product Image */}
-                    <div className="w-[90px] h-[90px] flex-shrink-0 rounded overflow-hidden">
-                      <img 
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    {/* Product Info */}
-                    <div className="flex-1 flex flex-col justify-between relative">
-                      {/* Heart Icon */}
-                      <button className="absolute top-0 right-0">
-                        <HeartIcon 
-                          filled={false}
-                          className="w-[12px] h-[10px] text-gray-400"
-                        />
-                      </button>
-
-                      {/* Product Name */}
-                      <h3 className="text-[12px] font-['Inter'] text-black leading-normal -tracking-[0.333px] pr-4 mt-1">
-                        {product.name}
-                      </h3>
-
-                      {/* Badge */}
-                      <div className="bg-[#FF4D00] rounded w-fit px-2 py-0.5 mt-1">
-                        <span className="text-white text-[8px] font-['Inter'] leading-normal -tracking-[0.333px]">
-                          {product.badge}
-                        </span>
-                      </div>
-
-                      {/* Price */}
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-[#979797] text-[6px] font-bold font-['Inter'] line-through leading-normal -tracking-[0.333px]">
-                          {product.originalPrice}
-                        </span>
-                        <span className="text-[#FA7D27] text-[12px] font-bold font-['Inter'] leading-normal -tracking-[0.333px]">
-                          ฿{product.price}
-                        </span>
-                      </div>
-
-                      {/* Bottom Section */}
-                      <div className="flex items-end justify-between mt-2">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-black text-[8px] font-['Inter'] leading-normal -tracking-[0.333px]">
-                            {product.sales}
-                          </span>
-                          <span className="text-black text-[10px] font-['Inter'] leading-normal -tracking-[0.333px]">
-                            {product.location}
-                          </span>
-                        </div>
-                        
-                        {/* Rating */}
-                        <StarRatingIcon className="w-[42px] h-[42px]" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayProducts.map((product) => {
+                const range = getProductPriceRange(product)
+                return (
+                  <ProductCard
+                    key={product.id}
+                    product={{ ...product, image: product.images[0], price: String(range.min) }}
+                    onOpen={(p: Product) => setQuickViewProduct(p)}
+                  />
+                )
+              })}
             </div>
           </div>
         </div>
+
+        {/* Product Quick View Modal */}
+        <ProductQuickViewModal
+          isOpen={Boolean(quickViewProduct)}
+          product={quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+        />
       </main>
   )
 }

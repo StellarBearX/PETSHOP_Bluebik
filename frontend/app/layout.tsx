@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/Components/Navbar";
-import Footer from"@/Components/Footer"
+import Footer from "@/Components/Footer";
+import AuthModals from "@/Components/AuthModals";
 import { AppProviders } from "./providers";
 import "./globals.css";
 import styles from "./layout.module.css";
@@ -22,6 +23,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          <AuthModals />
         </AppProviders>
       </body>
     </html>

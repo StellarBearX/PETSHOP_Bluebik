@@ -1,0 +1,56 @@
+/* Product Variant Selector Styles */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dimensionGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.dimensionLabel {
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  overflow-wrap: break-word;
+  color: #000000;
+}
+
+.optionsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.optionButton {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  overflow-wrap: break-word;
+  background-color: white;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+.optionButton:hover:not(:disabled) {
+  background-color: #f9fafb;
+}
+
+.optionButtonActive {
+  border-color: #FF4D00;
+  background-color: #FFEEE0;
+  color: #FF4D00;
+}
+
+.optionButtonDisabled {
+  border-color: #e5e7eb;
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}

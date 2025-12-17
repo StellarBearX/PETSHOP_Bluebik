@@ -6,6 +6,7 @@ import { HeartIcon, StarRatingIcon } from "@/Components/Icons"
 import { useFavorites, useSearch } from "../providers"
 import { getProductPriceRange, type Product } from "@/lib/catalog"
 import { formatPriceRangeTHB } from "@/lib/format"
+import styles from "./page.module.css"
 
 export default function FavoritePage() {
   const { getFavorites, toggleFavorite } = useFavorites()
@@ -21,7 +22,7 @@ export default function FavoritePage() {
   }, [getFavorites, query])
 
   return (
-    <main className="min-h-screen bg-[#F5F5F5] overflow-auto">
+    <main className="min-h-screen bg-[#F7F7F7] overflow-auto">
       <div className="container-responsive max-w-[1440px] py-4 md:py-8">
         <div className="bg-gradient-to-r from-[#FF4D00] to-[#F99D20] rounded-lg p-4 mb-6 md:mb-8 flex items-center gap-4">
           <img
@@ -48,52 +49,49 @@ export default function FavoritePage() {
                     key={product.id}
                     type="button"
                     onClick={() => setQuickViewProduct(product)}
-                    className="w-full text-left bg-white border-[2px] border-gray-200 rounded-[2px] shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] hover:shadow-lg transition-shadow"
+                    className={styles.productItem}
                     aria-label={`Open ${product.name}`}
                   >
-                    <div className="flex gap-4 p-3">
-                      <div className="w-[90px] h-[90px] flex-shrink-0 rounded overflow-hidden">
+                    <div className={styles.productContent}>
+                      <div className={styles.productImage}>
                         <img
                           src={product.images[0]}
                           alt={product.name}
-                          className="w-full h-full object-cover"
                         />
                       </div>
 
-                      <div className="flex-1 flex flex-col justify-between relative">
-                        <h3 className="text-[12px] font-['Inter'] text-black leading-normal -tracking-[0.333px] pr-8 mt-1 overflow-wrap-break">
+                      <div className={styles.productInfo}>
+                        <h3 className={styles.productName}>
                           {product.name}
                         </h3>
 
-                        <div className="flex items-center gap-2 mt-1">
+                        <div className={styles.productBadges}>
                           {(product.badges ?? []).slice(0, 1).map((badge) => (
-                            <div key={badge} className="bg-[#FF4D00] rounded w-fit px-2 py-0.5">
-                              <span className="text-white text-[8px] font-['Inter'] leading-normal -tracking-[0.333px]">
-                                {badge}
-                              </span>
+                            <div key={badge} className="product-badge">
+                              <span>{badge}</span>
                             </div>
                           ))}
                           <StarRatingIcon className="w-[42px] h-[42px]" />
                         </div>
 
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className="text-[#FA7D27] text-[12px] font-bold font-['Inter'] leading-normal -tracking-[0.333px]">
+                        <div className={styles.productPrice}>
+                          <span className={styles.priceText}>
                             {formatPriceRangeTHB(range.min, range.max)}
                           </span>
                         </div>
 
-                        <div className="flex flex-col gap-1 mt-2">
-                          <span className="text-black text-[8px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                        <div className={styles.productMeta}>
+                          <span className={styles.metaSales}>
                             ยอดขาย {(product.sold ?? 0).toLocaleString("th-TH")} ชิ้น
                           </span>
-                          <span className="text-black text-[10px] font-['Inter'] leading-normal -tracking-[0.333px]">
+                          <span className={styles.metaLocation}>
                             {product.location ?? ""}
                           </span>
                         </div>
 
                         <button
                           type="button"
-                          className="absolute top-0 right-0"
+                          className={styles.favoriteButton}
                           aria-label="Remove from favorites"
                           onClick={(e) => {
                             e.stopPropagation()

@@ -3,6 +3,7 @@
 import React, { useMemo } from "react";
 import type { Product, ProductVariantSelection } from "@/lib/catalog";
 import { getAvailableOptions } from "@/lib/catalog";
+import styles from "./ProductVariantSelector.module.css";
 
 type Props = {
   product: Product;
@@ -20,15 +21,15 @@ export default function ProductVariantSelector({ product, selection, onChange }:
   }, [product, selection]);
 
   return (
-    <div className="space-y-4">
+    <div className={styles.container}>
       {product.dimensions.map((dim) => {
         const active = selection[dim.key] ?? "";
         const available = availableByDim[dim.key] ?? new Set<string>();
 
         return (
-          <div key={dim.key}>
-            <div className="text-sm font-['Inter'] font-bold mb-2 overflow-wrap-break">{dim.label}</div>
-            <div className="flex flex-wrap gap-2">
+          <div key={dim.key} className={styles.dimensionGroup}>
+            <div className={styles.dimensionLabel}>{dim.label}</div>
+            <div className={styles.optionsContainer}>
               {dim.options.map((opt) => {
                 const isAvailable = available.has(opt.id);
                 const isActive = active === opt.id;
@@ -42,12 +43,12 @@ export default function ProductVariantSelector({ product, selection, onChange }:
                       const next: ProductVariantSelection = { ...selection, [dim.key]: opt.id };
                       onChange(next);
                     }}
-                    className={`px-3 py-2 rounded border text-sm transition-colors overflow-wrap-break ${
+                    className={`${styles.optionButton} ${
                       isActive
-                        ? "border-[#FF4D00] bg-[#FFEEE0] text-[#FF4D00]"
-                        : isAvailable
-                          ? "border-gray-300 bg-white text-gray-800 hover:bg-gray-50"
-                          : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                        ? styles.optionButtonActive
+                        : !isAvailable
+                          ? styles.optionButtonDisabled
+                          : ''
                     }`}
                     aria-pressed={isActive}
                   >

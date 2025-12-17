@@ -13,7 +13,9 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
         e.preventDefault()
         console.log('Register:', { email, password })
         handleLogin()
-        onSuccess()
+        setTimeout(() => {
+            onSuccess()
+        }, 0)
     }
 
     return (
@@ -28,7 +30,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                     />
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                     {/* Email Input */}
                     <div className="relative">
                         <div className="input-with-icon">
@@ -38,7 +40,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                                 className="w-5 h-5"
                             />
                             <input 
-                                type="email"
+                                type="text"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="อีเมลล์"
@@ -56,7 +58,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                                 className="w-5 h-5"
                             />
                             <input 
-                                type="password"
+                                type="text"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="รหัสผ่าน"

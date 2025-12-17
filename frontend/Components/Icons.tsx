@@ -30,18 +30,56 @@ export function StarIcon({ filled = false, className = "w-5 h-5" }: { filled?: b
   );
 }
 
-export function StarRatingIcon({ className = "w-7 h-7" }: { className?: string }) {
+export function StarRatingIcon({ 
+  rating = 5, 
+  maxRating = 5,
+  showScore = true,
+  className = "" 
+}: { 
+  rating?: number
+  maxRating?: number
+  showScore?: boolean
+  className?: string 
+}) {
+  // Clamp rating between 0 and 5
+  const clampedRating = Math.min(Math.max(rating, 0), 5)
+  const percentage = (clampedRating / maxRating) * 100
+  
   return (
-    <svg className={className} viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g>
-        {/* 5 stars in a row */}
-        <path d="M8.5 14.5l1.5 3 3.5 0.5-2.5 2.5 0.5 3.5-3-1.5-3 1.5 0.5-3.5-2.5-2.5 3.5-0.5z" fill="#FFD700" />
-        <path d="M17.5 14.5l1.5 3 3.5 0.5-2.5 2.5 0.5 3.5-3-1.5-3 1.5 0.5-3.5-2.5-2.5 3.5-0.5z" fill="#FFD700" />
-        <path d="M26.5 14.5l1.5 3 3.5 0.5-2.5 2.5 0.5 3.5-3-1.5-3 1.5 0.5-3.5-2.5-2.5 3.5-0.5z" fill="#FFD700" />
-        <path d="M35.5 14.5l1.5 3 3.5 0.5-2.5 2.5 0.5 3.5-3-1.5-3 1.5 0.5-3.5-2.5-2.5 3.5-0.5z" fill="#FFD700" />
-        <path d="M44.5 14.5l1.5 3 3.5 0.5-2.5 2.5 0.5 3.5-3-1.5-3 1.5 0.5-3.5-2.5-2.5 3.5-0.5z" fill="#FFD700" />
-      </g>
-      <text x="21" y="35" textAnchor="middle" fontSize="8" fill="#666" fontFamily="Arial">5.0</text>
+    <div className={className} style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+      <div style={{ position: 'relative', display: 'inline-block', lineHeight: 1 }}>
+        {/* Empty stars (background) */}
+        <span style={{ color: '#ddd', letterSpacing: '2px' }}>★★★★★</span>
+        {/* Filled stars (overlay) */}
+        <span 
+          style={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            overflow: 'hidden', 
+            color: '#FFD700',
+            width: `${percentage}%`,
+            letterSpacing: '2px',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          ★★★★★
+        </span>
+      </div>
+      {/* Score display */}
+      {showScore && (
+        <span style={{ fontSize: '0.7em', color: '#666', fontWeight: 500 }}>
+          {clampedRating.toFixed(1)}
+        </span>
+      )}
+    </div>
+  )
+}
+
+export function ChevronRightIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
   );
 }

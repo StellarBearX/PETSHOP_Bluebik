@@ -1,9 +1,17 @@
 "use client"
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useAuth } from '@/app/providers'
 
 export default function ProfileSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const { handleLogout } = useAuth()
+
+  const onLogout = () => {
+    handleLogout()
+    router.push('/')
+  }
 
   const menuItems = [
     { href: '/profile', label: 'บัญชี', fontSize: 'text-[15px]' },
@@ -56,8 +64,11 @@ export default function ProfileSidebar() {
         ))}
         
         {/* Logout Button */}
-        <button className="w-full text-left p-2 rounded hover:bg-gray-50">
-          <span className="text-sm font-['Inter'] -tracking-[0.333px]">
+        <button 
+          onClick={onLogout}
+          className="w-full text-left p-2 rounded hover:bg-gray-50"
+        >
+          <span className="text-sm font-['Inter'] -tracking-[0.333px] text-red-500">
             ออกจากระบบ
           </span>
         </button>

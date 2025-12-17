@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './BannerCarousel.module.css'
 
 interface BannerCarouselProps {
@@ -7,19 +7,47 @@ interface BannerCarouselProps {
   autoPlayInterval?: number
 }
 
-export default function BannerCarousel({ images, autoPlayInterval }: BannerCarouselProps) {
+export default function BannerCarousel({ images, autoPlayInterval = 5000 }: BannerCarouselProps) {
   const [centerIndex, setCenterIndex] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  // Auto-play every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCenterIndex((prev) => (prev + 1) % images.length)
+        setIsTransitioning(false)
+      }, 500) // fade duration
+    }, autoPlayInterval)
+
+    return () => clearInterval(interval)
+  }, [images.length, autoPlayInterval])
 
   const nextSlide = () => {
-    setCenterIndex((prev) => (prev + 1) % images.length)
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCenterIndex((prev) => (prev + 1) % images.length)
+      setIsTransitioning(false)
+    }, 300)
   }
 
   const prevSlide = () => {
-    setCenterIndex((prev) => (prev - 1 + images.length) % images.length)
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCenterIndex((prev) => (prev - 1 + images.length) % images.length)
+      setIsTransitioning(false)
+    }, 300)
   }
 
   const goToSlide = (index: number) => {
-    setCenterIndex(index)
+    if (index !== centerIndex) {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCenterIndex(index)
+        setIsTransitioning(false)
+      }, 300)
+    }
   }
 
   // Get circular indices for displaying prev, current, next
@@ -31,7 +59,7 @@ export default function BannerCarousel({ images, autoPlayInterval }: BannerCarou
     <section className={styles.bannerSection}>
       <div className={styles.bannerContainer}>
         {/* Carousel Track */}
-        <div className={styles.carouselTrack}>
+        <div className={`${styles.carouselTrack} ${isTransitioning ? styles.transitioning : ''}`}>
           {/* Previous Image */}
           <div 
             className={`${styles.carouselItem} ${styles.sideImage}`}

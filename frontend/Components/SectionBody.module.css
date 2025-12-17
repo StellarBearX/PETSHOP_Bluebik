@@ -8,32 +8,32 @@
 
 /* Padding Variants */
 .paddingSmall {
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
 }
 
 @media (min-width: 768px) {
   .paddingSmall {
-    padding: 1rem;
+    padding: 1rem 1rem;
   }
 }
 
 .paddingMedium {
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
 }
 
 @media (min-width: 768px) {
   .paddingMedium {
-    padding: 1rem;
+    padding: 1rem 1rem;
   }
 }
 
 .paddingLarge {
-  padding: 1rem;
+  padding: 1rem 1rem;
 }
 
 @media (min-width: 768px) {
   .paddingLarge {
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
   }
 }
 

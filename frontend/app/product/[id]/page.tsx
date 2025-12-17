@@ -8,6 +8,7 @@ import { useCatalog, useCart, useFavorites } from "@/app/providers";
 import type { ProductVariantSelection } from "@/lib/catalog";
 import { findSku, getProductPriceRange, isSelectionComplete } from "@/lib/catalog";
 import { formatPriceRangeTHB, formatPriceTHB, formatSelection } from "@/lib/format";
+import styles from "../page.module.css";
 
 export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
@@ -40,9 +41,9 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#F5F5F5] overflow-auto">
+      <main className={styles.main}>
         <div className="container-responsive py-8">
-          <div className="bg-white rounded-lg shadow p-6">Loading...</div>
+          <div className={styles.loadingCard}>Loading...</div>
         </div>
       </main>
     );
@@ -50,13 +51,13 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <main className="min-h-screen bg-[#F5F5F5] overflow-auto">
+      <main className={styles.main}>
         <div className="container-responsive py-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-lg font-bold">ไม่พบสินค้า</div>
+          <div className={styles.notFoundCard}>
+            <div className={styles.notFoundTitle}>ไม่พบสินค้า</div>
             <button
               type="button"
-              className="mt-4 px-4 py-2 rounded border border-gray-300 hover:bg-gray-50"
+              className={styles.notFoundButton}
               onClick={() => router.push("/")}
             >
               กลับหน้าหลัก
@@ -68,14 +69,14 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F5F5F5] overflow-auto">
+    <main className={styles.main}>
       <div className="container-responsive py-4 md:py-8">
-        <div className="max-w-[1100px] mx-auto">
-          <div className="bg-white rounded-lg shadow p-4 md:p-6 overflow-auto">
-            <div className="flex items-center justify-between gap-4">
+        <div className={styles.container}>
+          <div className={styles.card}>
+            <div className={styles.header}>
               <button
                 type="button"
-                className="text-sm text-[#0038FF] underline"
+                className={styles.backButton}
                 onClick={() => router.back()}
               >
                 ย้อนกลับ
@@ -83,7 +84,7 @@ export default function ProductDetailPage() {
               <button
                 type="button"
                 onClick={() => toggleFavorite(product.id)}
-                className="w-10 h-10 flex items-center justify-center hover:opacity-80 transition-opacity"
+                className={styles.favoriteButton}
                 aria-label={isFavorite(product.id) ? 'Remove from favorites' : 'Add to favorites'}
               >
                 <HeartIcon 
@@ -93,37 +94,36 @@ export default function ProductDetailPage() {
               </button>
             </div>
 
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <div className="rounded-xl overflow-hidden bg-gray-100">
+            <div className={styles.productLayout}>
+              <div className={styles.imageSection}>
+                <div className={styles.mainImage}>
                   <img
                     src={product.images[0]}
                     alt={product.name}
-                    className="w-full h-[300px] md:h-[420px] object-cover"
                   />
                 </div>
-                <div className="mt-3 flex gap-2 overflow-auto">
+                <div className={styles.thumbnails}>
                   {product.images.map((img) => (
-                    <img
-                      key={img}
-                      src={img}
-                      alt=""
-                      className="w-16 h-16 rounded-md object-cover flex-shrink-0"
-                    />
+                    <div key={img} className={styles.thumbnail}>
+                      <img
+                        src={img}
+                        alt=""
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <h1 className="text-xl md:text-2xl font-bold overflow-wrap-break">{product.name}</h1>
-                <div className="text-sm text-gray-600 overflow-wrap-break">ร้าน: {product.shopName}</div>
+              <div className={styles.infoSection}>
+                <h1 className={styles.productTitle}>{product.name}</h1>
+                <div className={styles.shopName}>ร้าน: {product.shopName}</div>
 
-                <div className="text-[#FF4D00] text-2xl font-bold">{priceText}</div>
+                <div className={styles.price}>{priceText}</div>
 
                 {selectionText ? (
-                  <div className="text-xs text-gray-600 overflow-wrap-break">{selectionText}</div>
+                  <div className={styles.selectionText}>{selectionText}</div>
                 ) : (
-                  <div className="text-xs text-gray-600 overflow-wrap-break">เลือกตัวเลือกสินค้าเพื่อดูราคา</div>
+                  <div className={styles.selectionText}>เลือกตัวเลือกสินค้าเพื่อดูราคา</div>
                 )}
 
                 <ProductVariantSelector
@@ -135,39 +135,39 @@ export default function ProductDetailPage() {
                   }}
                 />
 
-                <div className="flex items-center gap-3">
-                  <div className="text-sm font-bold">จำนวน</div>
-                  <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                <div className={styles.quantitySection}>
+                  <div className={styles.quantityLabel}>จำนวน</div>
+                  <div className={styles.quantityControl}>
                     <button
                       type="button"
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="w-10 h-10 hover:bg-gray-50"
+                      className={styles.quantityButton}
                       aria-label="Decrease quantity"
                     >
                       −
                     </button>
-                    <div className="w-12 text-center">{quantity}</div>
+                    <div className={styles.quantityValue}>{quantity}</div>
                     <button
                       type="button"
                       onClick={() => setQuantity((q) => q + 1)}
-                      className="w-10 h-10 hover:bg-gray-50"
+                      className={styles.quantityButton}
                       aria-label="Increase quantity"
                     >
                       +
                     </button>
                   </div>
 
-                  <div className="text-xs text-gray-500 overflow-wrap-break">
+                  <div className={styles.stockText}>
                     {sku ? `คงเหลือ ${sku.stock} ชิ้น` : ""}
                   </div>
                 </div>
 
-                {error ? <div className="text-sm text-red-600 overflow-wrap-break">{error}</div> : null}
+                {error ? <div className={styles.error}>{error}</div> : null}
 
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <div className={styles.actions}>
                   <button
                     type="button"
-                    className="flex-1 h-[45px] btn-outline-primary text-base"
+                    className={`${styles.actionButton} btn-outline-primary`}
                     onClick={() => {
                       if (!isSelectionComplete(product, selection)) {
                         setError("กรุณาเลือกตัวเลือกสินค้าให้ครบ");
@@ -186,7 +186,7 @@ export default function ProductDetailPage() {
 
                   <button
                     type="button"
-                    className="flex-1 h-[45px] btn-primary text-base"
+                    className={`${styles.actionButton} btn-primary`}
                     onClick={() => {
                       if (!isSelectionComplete(product, selection)) {
                         setError("กรุณาเลือกตัวเลือกสินค้าให้ครบ");
@@ -206,9 +206,9 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <div className="mt-6 border-t pt-6">
-              <div className="text-lg font-bold mb-2">รายละเอียดสินค้า</div>
-              <div className="text-sm text-gray-700 overflow-wrap-break">{product.description}</div>
+            <div className={styles.description}>
+              <div className={styles.descriptionTitle}>รายละเอียดสินค้า</div>
+              <div className={styles.descriptionText}>{product.description}</div>
             </div>
           </div>
         </div>

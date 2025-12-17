@@ -1,0 +1,275 @@
+.main {
+  min-height: 100vh;
+  background-color: #F7F7F7;
+  overflow: auto;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  overflow: auto;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 1.5rem;
+  }
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.backButton {
+  font-size: 0.875rem;
+  color: #0038FF;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.favoriteButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.favoriteButton:hover {
+  opacity: 0.8;
+}
+
+/* Product Layout */
+.productLayout {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .productLayout {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Image Section */
+.imageSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mainImage {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: #F3F4F6;
+}
+
+.mainImage img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .mainImage img {
+    height: 420px;
+  }
+}
+
+.thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  overflow: auto;
+}
+
+.thumbnail {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info Section */
+.infoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.productTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .productTitle {
+    font-size: 1.5rem;
+  }
+}
+
+.shopName {
+  font-size: 0.875rem;
+  color: #4B5563;
+  overflow-wrap: break-word;
+}
+
+.price {
+  color: #FF4D00;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.selectionText {
+  font-size: 0.75rem;
+  color: #4B5563;
+  overflow-wrap: break-word;
+}
+
+/* Quantity Section */
+.quantitySection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.quantityLabel {
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.quantityButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.quantityButton:hover {
+  background-color: #F9FAFB;
+}
+
+.quantityValue {
+  width: 3rem;
+  text-align: center;
+}
+
+.stockText {
+  font-size: 0.75rem;
+  color: #6B7280;
+  overflow-wrap: break-word;
+}
+
+/* Error Message */
+.error {
+  font-size: 0.875rem;
+  color: #DC2626;
+  overflow-wrap: break-word;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .actions {
+    flex-direction: row;
+  }
+}
+
+.actionButton {
+  flex: 1;
+  height: 45px;
+  font-size: 1rem;
+}
+
+/* Description Section */
+.description {
+  margin-top: 1.5rem;
+  border-top: 1px solid #E5E7EB;
+  padding-top: 1.5rem;
+}
+
+.descriptionTitle {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.descriptionText {
+  font-size: 0.875rem;
+  color: #374151;
+  overflow-wrap: break-word;
+}
+
+/* Loading & Not Found */
+.loadingCard,
+.notFoundCard {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.notFoundTitle {
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.notFoundButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #D1D5DB;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.notFoundButton:hover {
+  background-color: #F9FAFB;
+}

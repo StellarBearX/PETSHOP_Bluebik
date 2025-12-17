@@ -1,6 +1,7 @@
 "use client"
 import { useState } from 'react'
 import Link from 'next/link'
+import { ChevronRightIcon } from './Icons'
 import styles from './ProfileDropdown.module.css'
 
 export default function ProfileDropdown({ isOpen, onClose, onLogout }) {
@@ -39,11 +40,7 @@ export default function ProfileDropdown({ isOpen, onClose, onLogout }) {
                             <span className={styles.menuText}>
                                 บัญชี
                             </span>
-                            <img 
-                                src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
-                                alt="" 
-                                className={styles.arrow}
-                            />
+                            <ChevronRightIcon className={styles.arrow} />
                         </div>
                     </Link>
 
@@ -53,11 +50,7 @@ export default function ProfileDropdown({ isOpen, onClose, onLogout }) {
                             <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
                                 การสั่งซื้อล่าสุด
                             </span>
-                            <img 
-                                src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
-                                alt="" 
-                                className={styles.arrow}
-                            />
+                            <ChevronRightIcon className={styles.arrow} />
                         </div>
                     </Link>
 
@@ -67,11 +60,7 @@ export default function ProfileDropdown({ isOpen, onClose, onLogout }) {
                             <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
                                 ที่อยู่ที่บันทึกไว้
                             </span>
-                            <img 
-                                src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
-                                alt="" 
-                                className={styles.arrow}
-                            />
+                            <ChevronRightIcon className={styles.arrow} />
                         </div>
                     </Link>
 
@@ -81,11 +70,7 @@ export default function ProfileDropdown({ isOpen, onClose, onLogout }) {
                             <span className={`${styles.menuText} ${styles.menuTextSmall}`}>
                                 บัตรเครดิต / บัตรเดบิต
                             </span>
-                            <img 
-                                src="https://api.builder.io/api/v1/image/assets/TEMP/71a8a8e8af26442e173f219fc941d79484c92c5e" 
-                                alt="" 
-                                className={styles.arrow}
-                            />
+                            <ChevronRightIcon className={styles.arrow} />
                         </div>
                     </Link>
 

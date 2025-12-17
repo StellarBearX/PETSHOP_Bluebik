@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useReducer, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useReducer, useState, useCallback } from "react";
 import { mockCatalog, type Product, type ProductSku, type ProductVariantSelection, findSku } from "@/lib/catalog";
 import type { CartLine, CartState } from "@/lib/cart";
 
@@ -20,6 +20,7 @@ export function useSearch() {
 type AuthContextValue = {
   isLoggedIn: boolean;
   showLogin: boolean;
+  authLoaded: boolean;
   setShowLogin: (value: boolean) => void;
   handleLogin: () => void;
   handleLogout: () => void;
@@ -169,11 +170,20 @@ function loadAuthFromStorage(): boolean {
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [query, setQuery] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => loadAuthFromStorage());
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [authLoaded, setAuthLoaded] = useState(false);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Load auth state from localStorage after mount (client-side only)
+  useEffect(() => {
+    const savedAuth = loadAuthFromStorage();
+    setIsLoggedIn(savedAuth);
+    setShowLogin(!savedAuth);
+    setAuthLoaded(true);
+  }, []);
 
   useEffect(() => {
     // In the future: fetch from Backend / Builder CMS when credentials exist.
@@ -218,26 +228,27 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     return { ok: true };
   };
 
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     setIsLoggedIn(true);
     setShowLogin(false);
     if (typeof window !== "undefined") {
       window.localStorage.setItem("petshop_auth_v1", "true");
     }
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setIsLoggedIn(false);
+    setShowLogin(true);
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("petshop_auth_v1");
     }
-  };
+  }, []);
 
   const searchValue = useMemo<SearchContextValue>(() => ({ query, setQuery }), [query]);
 
   const authValue = useMemo<AuthContextValue>(
-    () => ({ isLoggedIn, showLogin, setShowLogin, handleLogin, handleLogout }),
-    [isLoggedIn, showLogin]
+    () => ({ isLoggedIn, showLogin, authLoaded, setShowLogin, handleLogin, handleLogout }),
+    [isLoggedIn, showLogin, authLoaded, handleLogin, handleLogout]
   );
 
   const catalogValue = useMemo<CatalogContextValue>(

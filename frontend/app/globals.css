@@ -6,9 +6,9 @@
 
 /* ========== Design Tokens ========== */
 :root {
-  --background: #ffffff;
+  --background: #F7F7F7;
   --foreground: #171717;
-  --page-bg: #F5F5F5;
+  --page-bg: #F7F7F7;
   
   /* Brand Colors */
   --primary: #FF4D00;
@@ -31,7 +31,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #F7F7F7;
     --foreground: #ededed;
   }
 }
@@ -107,7 +107,7 @@ img {
 
   /* Navigation Styles */
   .nav-link {
-    @apply flex flex-col items-center gap-0.5 md:gap-1 hover:opacity-80 transition-opacity;
+    @apply flex flex-col items-center justify-center gap-0.5 md:gap-1 hover:opacity-80 transition-opacity h-full;
   }
   
   .nav-icon {
@@ -132,7 +132,13 @@ img {
   }
   
   .product-price {
-    @apply text-[#FF4D00] text-[8px] font-bold;
+    @apply text-[#FF4D00] text-[14px] font-bold;
+  }
+  
+  @media (min-width: 640px) {
+    .product-price {
+      @apply text-[16px];
+    }
   }
 
   /* Section Styles */
@@ -248,5 +254,29 @@ img {
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* ========== Shared Page Styles ========== */
+  
+  /* Page Header Banner (used in Cart, Favorite, etc.) */
+  .page-header-banner {
+    @apply bg-gradient-to-r from-[#FF4D00] to-[#F99D20] rounded-lg p-4 mb-6 md:mb-8 flex items-center gap-4;
+  }
+  
+  .page-header-banner img {
+    @apply w-10 h-10 md:w-[50px] md:h-[50px];
+  }
+  
+  .page-header-banner h1 {
+    @apply text-white text-2xl md:text-[32px] font-bold font-['Inter'];
+  }
+  
+  /* Product Badge */
+  .product-badge {
+    @apply bg-[#FF4D00] rounded w-fit px-2 py-0.5;
+  }
+  
+  .product-badge span {
+    @apply text-white text-[8px] font-['Inter'] leading-normal tracking-[-0.333px];
   }
 }

@@ -75,7 +75,7 @@ export default function ProductCard({ product, showBadge = true, onOpen }) {
                     <span className="product-price">
                         ฿{product.price || "400"}
                     </span>
-                    <StarRatingIcon className={styles.ratingImage} />
+                    <StarRatingIcon rating={product.rating || 4.5} className={styles.ratingImage} />
                 </div>
             </div>
         </div>

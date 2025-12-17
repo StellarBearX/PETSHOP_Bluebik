@@ -1,8 +1,5 @@
 "use client";
 import { useMemo, useState } from 'react'
-import LoginModal from '@/Components/LoginModal'
-import RegisterModal from '@/Components/RegisterModal'
-import SuccessModal from '@/Components/SuccessModal'
 import ProductCard from '@/Components/ProductCard'
 import ProductQuickViewModal from '@/Components/ProductQuickViewModal'
 import BannerCarousel from '@/Components/BannerCarousel'
@@ -10,30 +7,11 @@ import PageHeader from '@/Components/PageHeader'
 import ContentSection from '@/Components/ContentSection'
 import SectionHeader from '@/Components/SectionHeader'
 import SectionBody from '@/Components/SectionBody'
-import { useCatalog, useSearch, useAuth } from './providers'
+import { useCatalog, useSearch } from './providers'
 import { getProductPriceRange, type Product } from '@/lib/catalog'
 import styles from './page.module.css'
 
 export default function Home() {
-  const { isLoggedIn, showLogin, setShowLogin } = useAuth()
-  const [showRegister, setShowRegister] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
-
-  const handleSwitchToRegister = () => {
-    setShowLogin(false)
-    setShowRegister(true)
-  }
-
-  const handleRegisterSuccess = () => {
-    setShowRegister(false)
-    setShowSuccess(true)
-  }
-
-  const handleCloseSuccess = () => {
-    setShowSuccess(false)
-    // Optionally redirect or perform other actions
-  }
-
   const { products } = useCatalog()
   const { query } = useSearch()
 
@@ -159,22 +137,6 @@ export default function Home() {
         isOpen={Boolean(quickViewProduct)}
         product={quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
-      />
-
-      {/* Modals */}
-      <LoginModal 
-        isOpen={!isLoggedIn && showLogin} 
-        onClose={() => setShowLogin(false)}
-        onSwitchToRegister={handleSwitchToRegister}
-      />
-      <RegisterModal 
-        isOpen={!isLoggedIn && showRegister} 
-        onClose={() => setShowRegister(false)}
-        onSuccess={handleRegisterSuccess}
-      />
-      <SuccessModal 
-        isOpen={showSuccess} 
-        onClose={handleCloseSuccess}
       />
     </>
   )

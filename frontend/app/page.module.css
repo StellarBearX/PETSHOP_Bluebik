@@ -1,7 +1,7 @@
 /* Main Container */
 .main {
   min-height: 576px;
-  background-color: #F5F5F5;
+  background-color: #F7F7F7;
   overflow: auto;
 }
 
@@ -64,9 +64,9 @@
   }
 }
 
-/* Category Card */
+/* Category Card - Gradient เหมือน Navbar แสงมุมขวาบน */
 .categoryCard {
-  background-color: #FF4D00;
+  background: linear-gradient(135deg, #FF4D00 0%, #FF7A00 100%);
   border-radius: 10px;
   height: 120px;
   display: flex;
@@ -76,11 +76,13 @@
   cursor: pointer;
   padding: 0.5rem;
   overflow: hidden;
-  transition: opacity 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(255, 77, 0, 0.3);
 }
 
 .categoryCard:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 77, 0, 0.4);
 }
 
 @media (min-width: 768px) {

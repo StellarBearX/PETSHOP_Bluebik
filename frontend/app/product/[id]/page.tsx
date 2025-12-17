@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ProductVariantSelector from "@/Components/ProductVariantSelector";
+import ProductReviews from "@/Components/ProductReviews";
 import { HeartIcon } from "@/Components/Icons";
 import { useCatalog, useCart, useFavorites } from "@/app/providers";
 import type { ProductVariantSelection } from "@/lib/catalog";
@@ -347,6 +348,9 @@ export default function ProductDetailPage() {
                 ))}
               </div>
             </div>
+
+            {/* Product Reviews Section */}
+            <ProductReviews />
           </div>
         </div>
       </div>

@@ -1,0 +1,378 @@
+.navbar {
+  height: 105px;
+  padding: 0 10px;
+  position: relative;
+  z-index: 50;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: 70px;
+  }
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 0 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    gap: 0.75rem;
+    padding: 0 1rem;
+  }
+}
+
+.logo {
+  width: 80px;
+  height: 50px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .logo {
+    width: 100px;
+    height: 60px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo {
+    width: 120px;
+    height: 70px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .logo {
+    width: 138px;
+    height: 78px;
+  }
+}
+
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Desktop Only (must override other display rules) */
+.desktopOnly {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .desktopOnly {
+    display: flex !important;
+  }
+}
+
+/* Navigation Links */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 1 auto;
+  min-width: 0;
+  justify-content: center;
+  margin: 0 1rem;
+  height: 100%;
+  position: relative;
+  padding: 0 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .navLinks {
+    gap: 1rem;
+    margin: 0 1.5rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .navLinks {
+    gap: 1.5rem;
+    margin: 0 2rem;
+    padding: 0 1.5rem;
+  }
+}
+
+/* Active Nav Link Indicator - อยู่ที่ขอบล่างของ navLinks container */
+.navLinkActive {
+  position: relative;
+}
+
+.navLinkActive::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: white;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Right Actions */
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Desktop Search */
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 240px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 1px solid #F99D20;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 0 45px 0 18px;
+  outline: none;
+  font-size: 14px;
+  color: #000;
+}
+
+@media (min-width: 1280px) {
+  .searchInput {
+    width: 320px;
+    font-size: 16px;
+  }
+}
+
+.searchButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.searchButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.searchIcon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* Search Suggestions Dropdown */
+.suggestionsDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e5e5e5;
+}
+
+.suggestionItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestionItem:last-child {
+  border-bottom: none;
+}
+
+.suggestionItem:hover {
+  background-color: #FFF5F0;
+}
+
+.suggestionIcon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.suggestionText {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestionType {
+  font-size: 11px;
+  color: #999;
+  background: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* Profile Button */
+.profileButton {
+  width: 40px;
+  height: 40px;
+}
+
+@media (min-width: 768px) {
+  .profileButton {
+    width: 47px;
+    height: 47px;
+  }
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+}
+
+/* Burger Menu Button */
+.burgerButton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  z-index: 80;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .burgerButton {
+    display: none;
+  }
+}
+
+.burgerLine {
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  transition: all 0.25s ease;
+  border-radius: 2px;
+}
+
+.burgerLine.open:nth-child(1) {
+  transform: rotate(45deg) translateY(9px);
+}
+
+.burgerLine.open:nth-child(2) {
+  opacity: 0;
+}
+
+.burgerLine.open:nth-child(3) {
+  transform: rotate(-45deg) translateY(-9px);
+}
+
+/* Mobile Menu Overlay */
+.mobileMenu {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #E8954F, #F7A961);
+  z-index: 70;
+  padding-top: 70px;
+  overflow: auto;
+}
+
+@media (min-width: 768px) {
+  .mobileMenu {
+    display: none;
+  }
+}
+
+.mobileMenuContent {
+  min-height: 100%;
+  overflow-y: auto;
+  padding-bottom: 2rem;
+}
+
+/* Search inside burger */
+.mobileSearchContainer {
+  padding: 1rem 1.25rem 0.5rem;
+}
+
+.mobileSearchPill {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 9999px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.mobileSearchIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.mobileSearchInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 16px;
+  color: #000;
+}
+
+.mobileNavLinks {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 0;
+}
+
+.mobileNavLink {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: background-color 0.2s;
+}
+
+.mobileNavLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobileNavLink:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}

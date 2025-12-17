@@ -38,3 +38,7 @@ yarn-error.log*
 *.jar
 *.war
 *.ear
+
+# Package
+pacage-lock.json
+.config/

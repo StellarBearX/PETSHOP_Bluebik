@@ -1,0 +1,39 @@
+/* Section Body */
+.body {
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+/* Padding Variants */
+.paddingSmall {
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .paddingSmall {
+    padding: 1rem 1rem;
+  }
+}
+
+.paddingMedium {
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .paddingMedium {
+    padding: 1rem 1rem;
+  }
+}
+
+.paddingLarge {
+  padding: 1rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .paddingLarge {
+    padding: 1.5rem 1rem;
+  }
+}
+

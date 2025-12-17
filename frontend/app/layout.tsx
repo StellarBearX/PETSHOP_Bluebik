@@ -7,8 +7,14 @@ import "./globals.css";
 import styles from "./layout.module.css";
 
 export const metadata: Metadata = {
-  title: "Pet Shop",
+  title: "Meow Meow",
   description: "Pet Shop Application",
+  icons: {
+    icon: "https://api.builder.io/api/v1/image/assets/TEMP/920430fbdf8e30589d118b73fe63623ac597477e",
+    shortcut: "https://api.builder.io/api/v1/image/assets/TEMP/920430fbdf8e30589d118b73fe63623ac597477e",
+    apple: "https://api.builder.io/api/v1/image/assets/TEMP/920430fbdf8e30589d118b73fe63623ac597477e",
+    
+  },
 };
 
 export default function RootLayout({

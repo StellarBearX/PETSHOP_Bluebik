@@ -1,100 +1,262 @@
 "use client"
-import { useState } from 'react'
+import { useState, useMemo, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { useCatalog, useSearch, useFavorites } from '@/app/providers'
+import { getProductPriceRange, type Product, CATEGORIES, BRANDS, CAT_AGES, PROMOTIONS } from '@/lib/catalog'
+import { HeartIcon, StarRatingIcon, ChevronRightIcon } from '@/Components/Icons'
+import ProductQuickViewModal from '@/Components/ProductQuickViewModal'
+import SimpleBannerCarousel from '@/Components/SimpleBannerCarousel'
 import styles from './page.module.css'
 
-export default function CategoryDetailPage() {
+function CategoryPageContent() {
+  const searchParams = useSearchParams()
+  const searchQuery = searchParams.get('q') || ''
+  const categoryParam = searchParams.get('cat') || ''
+  
+  const { products } = useCatalog()
+  const { query } = useSearch()
+  const { isFavorite, toggleFavorite } = useFavorites()
+  
+  // Filter states
   const [currentPage, setCurrentPage] = useState(1)
-  const totalPages = 12
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam || 'all')
+  const [selectedBrand, setSelectedBrand] = useState<string>('')
+  const [selectedCatAge, setSelectedCatAge] = useState<string>('')
+  const [priceSort, setPriceSort] = useState('low-to-high')
+  const [minPrice, setMinPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(5000)
+  const [selectedLocation, setSelectedLocation] = useState('all')
+  const [minRating, setMinRating] = useState(0)
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
+  const [showMobileFilters, setShowMobileFilters] = useState(false)
+  
+  // Staged filters for right panel (only apply when user clicks "ตกลง")
+  const [stagedCategory, setStagedCategory] = useState(categoryParam || 'all')
+  const [stagedBrand, setStagedBrand] = useState<string>('')
+  const [stagedMinPrice, setStagedMinPrice] = useState(0)
+  const [stagedMaxPrice, setStagedMaxPrice] = useState(5000)
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([])
+  
+  const itemsPerPage = 15
+  
+  const bannerImages = [
+    "https://api.builder.io/api/v1/image/assets/TEMP/0bd2893a763071d0018d40ec3fd0ec2534c33120",
+    "https://api.builder.io/api/v1/image/assets/TEMP/1fd37dc0a9f7a659bc9914b9218685930cf9200f",
+    "https://api.builder.io/api/v1/image/assets/TEMP/abb7edfe50237f94aeaf1a789fa8f6fe60e61085",
+  ]
 
-  const products = Array(50).fill(null).map((_, i) => ({
-    id: i + 1,
-    name: i % 5 === 0 ? "Pet Paradise อาหารเปียก อาหารแมว กระสอบ 2kg" : 
-         i % 5 === 1 ? "Regalos รีกาลอส อาหารแมว กระสอบ 5kg" :
-         i % 5 === 2 ? "Kaniva คานิว่า อาหารแมว กระสอบ 8kg" :
-         i % 5 === 3 ? "FURLOVE คานิว่า เหมาะสำหรับแมวทุกวัย ถุงละ 1kg" :
-         "PURINA ONE เพียวริน่าวัน อาหารแมว",
-    price: 1400 + (i * 50),
-    image: i % 5 === 0 ? "https://api.builder.io/api/v1/image/assets/TEMP/7ffc7c948ff8e15233c19748f8bd3ef5ed63b14d" :
-           i % 5 === 1 ? "https://api.builder.io/api/v1/image/assets/TEMP/0deb6464ba5ea0356f7edd023e441c04da01c575" :
-           i % 5 === 2 ? "https://api.builder.io/api/v1/image/assets/TEMP/2c07e0be7e9f34de7d3a66ec6b07c399979a3f83" :
-           i % 5 === 3 ? "https://api.builder.io/api/v1/image/assets/TEMP/2f57526bb1463607ea5e05a2f0b2148164758157" :
-           "https://api.builder.io/api/v1/image/assets/TEMP/aae45ac0563278956fb9e425a0a469351743b70a",
-    sold: "7",
-    location: "กรุงเทพมหานคร",
-    isBestSeller: i % 3 === 0
-  }))
+  // Filter products based on all criteria
+  const filteredProducts = useMemo(() => {
+    let result = [...products]
+    
+    // Search filter
+    const searchTerm = searchQuery || query
+    if (searchTerm) {
+      result = result.filter(p => 
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+    
+    // Category filter
+    if (selectedCategory && selectedCategory !== 'all') {
+      result = result.filter(p => p.category === selectedCategory)
+    }
+    
+    // Brand filter
+    if (selectedBrand) {
+      result = result.filter(p => p.brand === selectedBrand)
+    }
+    
+    // Cat age filter
+    if (selectedCatAge) {
+      result = result.filter(p => p.catAge === selectedCatAge)
+    }
+    
+    // Location filter
+    if (selectedLocation !== 'all') {
+      result = result.filter(p => p.location === selectedLocation)
+    }
+    
+    // Rating filter
+    if (minRating > 0) {
+      result = result.filter(p => (p.rating || 0) >= minRating)
+    }
+    
+    // Price filter
+    result = result.filter(p => {
+      const range = getProductPriceRange(p)
+      return range.min >= minPrice && range.min <= maxPrice
+    })
+    
+    // Sort
+    if (priceSort === 'low-to-high') {
+      result.sort((a, b) => getProductPriceRange(a).min - getProductPriceRange(b).min)
+    } else {
+      result.sort((a, b) => getProductPriceRange(b).min - getProductPriceRange(a).min)
+    }
+    
+    return result
+  }, [products, searchQuery, query, selectedCategory, selectedBrand, selectedCatAge, selectedLocation, minRating, minPrice, maxPrice, priceSort])
+  
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
+  const currentProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+  
+  // Get display title
+  const getDisplayTitle = () => {
+    if (searchQuery || query) return searchQuery || query
+    const cat = CATEGORIES.find(c => c.id === selectedCategory)
+    return cat?.name || 'สินค้าทั้งหมด'
+  }
+
+  // Reset page when filters change
+  const handleCategoryChange = (catId: string) => {
+    setSelectedCategory(catId)
+    setCurrentPage(1)
+  }
+
+  const handleBrandChange = (brandId: string) => {
+    setSelectedBrand(brandId === selectedBrand ? '' : brandId)
+    setCurrentPage(1)
+  }
+
+  const handleCatAgeChange = (ageId: string) => {
+    setSelectedCatAge(ageId === selectedCatAge ? '' : ageId)
+    setCurrentPage(1)
+  }
+
+  const handleRatingChange = (rating: number) => {
+    setMinRating(rating === minRating ? 0 : rating)
+    setCurrentPage(1)
+  }
+
+  const clearAllFilters = () => {
+    setSelectedCategory('all')
+    setSelectedBrand('')
+    setSelectedCatAge('')
+    setSelectedLocation('all')
+    setMinRating(0)
+    setMinPrice(0)
+    setMaxPrice(5000)
+    setPriceSort('low-to-high')
+    setCurrentPage(1)
+  }
+
+  // Apply staged filters from right panel
+  const applyFilters = () => {
+    setSelectedCategory(stagedCategory)
+    setSelectedBrand(stagedBrand)
+    setMinPrice(stagedMinPrice)
+    setMaxPrice(stagedMaxPrice)
+    setCurrentPage(1)
+    // Don't scroll - keep user at current position
+  }
+
+  // Clear both staged and applied filters
+  const clearStagedFilters = () => {
+    // Clear staged values
+    setStagedCategory('all')
+    setStagedBrand('')
+    setStagedMinPrice(0)
+    setStagedMaxPrice(5000)
+    setSelectedSizes([])
+    
+    // Clear applied values
+    setSelectedCategory('all')
+    setSelectedBrand('')
+    setMinPrice(0)
+    setMaxPrice(5000)
+    setCurrentPage(1)
+  }
 
   return (
     <main className={styles.main}>
       {/* Breadcrumb */}
       <div className={styles.breadcrumb}>
         <div className={styles.breadcrumbText}>
-          Home &gt; อาหารสัตว์
+          <Link href="/">Home</Link>
+          <ChevronRightIcon className="inline-block w-4 h-4 mx-1 text-gray-400" />
+          <span>{getDisplayTitle()}</span>
         </div>
       </div>
 
-      {/* Banner */}
+      {/* Banner Carousel */}
       <div className={styles.bannerContainer}>
-        <div style={{ position: 'relative', width: '100%' }}>
-          <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/0bd2893a763071d0018d40ec3fd0ec2534c33120"
-            alt="Banner"
-            className={styles.bannerImage}
-          />
-          <div className={styles.bannerIndicators}>
-            <div className={styles.indicator}></div>
-            <div className={styles.indicatorActive}></div>
-            <div className={styles.indicator}></div>
-          </div>
+        <SimpleBannerCarousel images={bannerImages} />
+      </div>
+
+      {/* Recommended Section */}
+      <div className={styles.recommendedSection}>
+        <div className={styles.recommendedHeader}>
+          <h3 className={styles.recommendedTitle}>Recommended for you</h3>
+        </div>
+        <div className={styles.recommendedScroll}>
+          {products.slice(0, 12).map((product) => {
+            const range = getProductPriceRange(product)
+            return (
+              <div 
+                key={product.id} 
+                className={styles.recommendedCard}
+                onClick={() => setQuickViewProduct(product)}
+              >
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className={styles.recommendedCardImage}
+                />
+                <div className={styles.recommendedCardInfo}>
+                  <p className={styles.recommendedCardName}>{product.name}</p>
+                  <span className={styles.recommendedCardPrice}>฿{range.min}</span>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 
       <div className={styles.contentWrapper}>
         <div className={styles.flexContainer}>
+          {/* Mobile Overlay */}
+          {showMobileFilters && (
+            <div 
+              className={styles.mobileOverlay}
+              onClick={() => setShowMobileFilters(false)}
+            />
+          )}
+
           {/* Left Sidebar - Filters */}
-          <aside className={styles.sidebar}>
-            {/* Recommended for you */}
-            <div style={{ marginBottom: '1rem' }}>
-              <h3 className={styles.sidebarTitle}>
-                Recommended for you
-              </h3>
-            </div>
+          <aside className={`${styles.sidebar} ${showMobileFilters ? styles.sidebarMobileOpen : ''}`}>
+            {/* Close Button for Mobile */}
+            <button 
+              className={styles.mobileCloseBtn}
+              onClick={() => setShowMobileFilters(false)}
+            >
+              ✕
+            </button>
 
             {/* All Categories */}
-            <div className={styles.categoryBox}>
-              <div className={styles.categoryTitle}>
-                หมวดหมู่ทั้งหมด
-              </div>
+            <div 
+              className={`${styles.categoryBox} ${selectedCategory === 'all' ? styles.categoryBoxActive : ''}`}
+              onClick={() => handleCategoryChange('all')}
+            >
+              <div className={styles.categoryTitle}>หมวดหมู่ทั้งหมด</div>
             </div>
 
-            {/* Food Category */}
-            <div className={styles.categoryActive}>
-              <span className={styles.categoryActiveText}>
-                อาหารสัตว์
-              </span>
-              <img 
-                src="https://api.builder.io/api/v1/image/assets/TEMP/4e4fbbbebc67c8ff6c1da4e0abdfec44e01fd966"
-                alt=""
-                className="w-[11px] h-2"
-              />
-            </div>
-
-            <div className={styles.categoryList} style={{ marginBottom: '0.75rem' }}>
-              <div className={styles.categoryItem}>อาหารชนิดเนื้อสัตว์</div>
-              <div className={styles.categoryItem}>อาหารชนิดปลา</div>
-              <div className={styles.categoryItem}>อาหารชนิดผัก</div>
-              <div className={styles.categoryItem}>อาหารชนิดเม็ด</div>
-              <div className={styles.categoryItem}>เสื้อผ้าและอุปกรณ์แต่งตัว</div>
-              <div className={styles.categoryItem}>อุปกรณ์สำหรับสัตว์เลี้ยง</div>
-              <div className={styles.categoryItem}>อุปกรณ์ทำความสะอาดและการอาบน้ำ</div>
-              <div className={styles.viewMore}>
-                <span>ดูเพิ่มเติม</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/17ffef7275697e6b8cdcfe5ff2ef9c738fef43ad"
-                  alt=""
-                  className="w-2 h-2"
-                />
-              </div>
+            {/* Categories */}
+            <div className={styles.categoryList}>
+              {CATEGORIES.filter(c => c.id !== 'all').map((cat) => (
+                <div 
+                  key={cat.id}
+                  className={`${styles.categoryItem} ${selectedCategory === cat.id ? styles.categoryItemActive : ''}`}
+                  onClick={() => handleCategoryChange(cat.id)}
+                >
+                  {cat.name}
+                </div>
+              ))}
             </div>
 
             <div className={styles.divider}></div>
@@ -103,286 +265,447 @@ export default function CategoryDetailPage() {
             <div className={styles.brandHeader}>
               <span className={styles.brandHeaderText}>ยี่ห้อ</span>
             </div>
-
-            <div className={styles.categoryList} style={{ marginBottom: '0.75rem' }}>
-              <div>Regalos (รีกาลอส)</div>
-              <div>FURLOVE (คานิว่า)</div>
-              <div>Buzz Netura บัซซ์</div>
-              <div>Oliver (โอลิเวอร์)</div>
-              <div>Kin-D กินดี</div>
-              <div>All well (ออลเวลล์)</div>
-              <div>PURINA ONE (เพียวริน่า วัน)</div>
-              <div>Kaniva (คานิว่า)</div>
-              <div className={styles.viewMore}>
-                <span>ดูเพิ่มเติม</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/17ffef7275697e6b8cdcfe5ff2ef9c738fef43ad"
-                  alt=""
-                  className="w-2 h-2"
-                />
-              </div>
+            <div className={styles.categoryList}>
+              {BRANDS.map((brand) => (
+                <div 
+                  key={brand.id}
+                  className={`${styles.categoryItem} ${selectedBrand === brand.id ? styles.categoryItemActive : ''}`}
+                  onClick={() => handleBrandChange(brand.id)}
+                >
+                  {brand.name}
+                </div>
+              ))}
             </div>
 
             <div className={styles.divider}></div>
 
-            {/* Services & Promotions */}
+            {/* Promotions */}
             <div className={styles.serviceHeader}>
-              <span className={styles.serviceHeaderText}>
-                บริการสินค้าและโปรโมชั่น
-              </span>
+              <span className={styles.serviceHeaderText}>บริการสินค้าและโปรโมชั่น</span>
             </div>
-
-            <div className={styles.categoryList} style={{ marginBottom: '0.75rem' }}>
-              <div>ส่วนลด สมาชิกใหม่</div>
-              <div>ส่วนลด ส่งฟรี</div>
-              <div>ลดแรง ซื้อครั้งแรก</div>
-              <div>ราคาดีที่สุด</div>
-              <div>จ่ายผ่านบัตร สะสมแต้ม</div>
-              <div>ส่วนลด 10%/15%/20%</div>
-              <div>Flash Sale</div>
+            <div className={styles.categoryList}>
+              {PROMOTIONS.map((promo, i) => (
+                <div key={i} className={styles.categoryItem}>{promo}</div>
+              ))}
             </div>
 
             <div className={styles.divider}></div>
 
             {/* Cat Age */}
             <div className={styles.serviceHeader}>
-              <span style={{ fontSize: '12px', fontFamily: 'Inter', color: '#FFFCF9' }}>
-                วัยของแมว
-              </span>
+              <span className={styles.serviceHeaderText}>วัยของแมว</span>
             </div>
-
-            <div className={styles.categoryList} style={{ marginBottom: '0.75rem' }}>
-              <div>ลูกแมว (แรกเกิด - 1 ปี)</div>
-              <div>แมวผู้ใหญวัยรุ่น(1 ปี - 7 ปี)</div>
-              <div>แมวผู้ใหญวัยผู้ใหญ่ ( 7 ปีขึ้นไป)</div>
-              <div>แมวอาวุโส (11 ปีขึ้นไป)</div>
-            </div>
-
-            <div className={styles.divider}></div>
-
-            {/* Food Properties */}
-            <div className={styles.serviceHeader}>
-              <span style={{ fontSize: '12px', fontFamily: 'Inter', color: '#FFFCF9' }}>
-                คุณสมบัติอาหาร
-              </span>
-            </div>
-
-            <div className={styles.categoryList} style={{ marginBottom: '0.75rem' }}>
-              <div>ปราศจากธัญพืช</div>
-              <div>ธรรมชาติ-โปรตีน</div>
-              <div>แบบผสม</div>
-            </div>
-
-            <div className={styles.divider}></div>
-
-            {/* Search by Category */}
-            <div className={styles.serviceHeader}>
-              <span style={{ fontSize: '12px', fontFamily: 'Inter', color: '#FFFCF9' }}>
-                ค้นหาตามหมวดหมู่
-              </span>
-            </div>
-
-            <div className={styles.categoryList} style={{ marginBottom: '0.75rem' }}>
-              <div>อาหารสัตว์ ( 999 พัน+)</div>
-              <div>เสื้อผ้าและอุปกรณ์สำหรับสัตว์เลี้ยง (233 พัน+)</div>
-              <div>อุปกรณ์ทำความสะอาดและตกแต่งขน (190 พัน+)</div>
-              <div>ชามและเครื่องให้อาหาร (87 พัน+)</div>
-              <div>ของเล่น (ุ65 พัน+)</div>
-              <div>ปอกคอ สายจูง และสายรัด (ุ35 พัน+)</div>
-              <div className={styles.viewMore}>
-                <span>ดูเพิ่มเติม</span>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/17ffef7275697e6b8cdcfe5ff2ef9c738fef43ad"
-                  alt=""
-                  className="w-2 h-2"
-                />
-              </div>
+            <div className={styles.categoryList}>
+              {CAT_AGES.map((age) => (
+                <div 
+                  key={age.id}
+                  className={`${styles.categoryItem} ${selectedCatAge === age.id ? styles.categoryItemActive : ''}`}
+                  onClick={() => handleCatAgeChange(age.id)}
+                >
+                  {age.name}
+                </div>
+              ))}
             </div>
 
             <div className={styles.divider}></div>
 
             {/* Rating */}
-            <div style={{ marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '12px', fontFamily: 'Inter' }}>คะแนน</span>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '0.75rem' }}>
+            <div className={styles.sidebarTitle}>คะแนน</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {[
-                { stars: 5, label: 'ดีเยี่ยม', color: '#FF4D00' },
-                { stars: 4, label: 'ดี', color: '#FF4D00' },
-                { stars: 3, label: 'ปานกลาง', color: '#FF4D00' },
-                { stars: 2, label: 'พอใช้', color: '#FD560B' },
-                { stars: 1, label: 'ปรับปรุง', color: '#F35C05' }
-              ].map((rating, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <div className={styles.ratingStars}>
-                    {Array(rating.stars).fill(0).map((_, j) => (
-                      <svg key={j} className={styles.star} viewBox="0 0 16 13" fill={rating.color}>
-                        <path d="M7.6084 0L9.40451 4.83688H15.2169L10.5146 7.82624L12.3107 12.6631L7.6084 9.67376L2.90612 12.6631L4.70223 7.82624L-5.38826e-05 4.83688H5.81229L7.6084 0Z"/>
-                      </svg>
-                    ))}
-                    {Array(5 - rating.stars).fill(0).map((_, j) => (
-                      <svg key={j + rating.stars} className={styles.star} viewBox="0 0 16 13" fill={i === 3 ? "#C4C4C4" : "#D9D9D9"}>
-                        <path d="M7.6084 0L9.40451 4.83688H15.2169L10.5146 7.82624L12.3107 12.6631L7.6084 9.67376L2.90612 12.6631L4.70223 7.82624L-5.38826e-05 4.83688H5.81229L7.6084 0Z"/>
-                      </svg>
-                    ))}
-                  </div>
-                  <span style={{ fontSize: '12px', fontFamily: 'Inter' }}>{rating.label}</span>
+                { stars: 5, label: 'ดีเยี่ยม' },
+                { stars: 4, label: 'ดี' },
+                { stars: 3, label: 'ปานกลาง' },
+                { stars: 2, label: 'พอใช้' },
+                { stars: 1, label: 'ปรับปรุง' }
+              ].map((rating) => (
+                <div 
+                  key={rating.stars}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                  onClick={() => handleRatingChange(rating.stars)}
+                  className={minRating === rating.stars ? styles.categoryItemActive : ''}
+                >
+                  <StarRatingIcon rating={rating.stars} showScore={false} className="text-sm" />
+                  <span style={{ fontSize: '11px', color: minRating === rating.stars ? '#FF4D00' : '#666' }}>{rating.label}</span>
                 </div>
               ))}
             </div>
 
             <div className={styles.divider}></div>
+
+            {/* Clear Filters */}
+            <button 
+              className={styles.clearFiltersBtn}
+              onClick={clearAllFilters}
+            >
+              ล้างตัวกรองทั้งหมด
+            </button>
           </aside>
 
           {/* Main Content */}
           <div className={styles.mainContent}>
+            {/* Search Results Header */}
+            {(searchQuery || query) && (
+              <div className={styles.searchHeader}>
+                <h2 className={styles.searchTitle}>ผลการค้นหา: "{searchQuery || query}"</h2>
+                <p className={styles.searchCount}>พบ {filteredProducts.length} รายการ</p>
+              </div>
+            )}
+
             {/* Header */}
             <div className={styles.header}>
               <h2 className={styles.headerTitle}>สินค้า</h2>
               <div className={styles.headerInfo}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '10px', fontFamily: 'Inter', textAlign: 'center', letterSpacing: '-0.333px' }}>
-                  <span>จำนวนรายการสินค้าทั้งหมด</span>
-                  <span>15000</span>
-                  <span>รายการ</span>
-                </div>
-                <button style={{ fontSize: '10px', fontFamily: 'Inter', textAlign: 'center', letterSpacing: '-0.333px' }}>
-                  ดูทั้งหมด
-                </button>
+                <span>จำนวนรายการสินค้าทั้งหมด</span>
+                <span className="font-semibold text-[#FF4D00]">{filteredProducts.length}</span>
+                <span>รายการ</span>
               </div>
             </div>
 
-            {/* Filters Bar */}
+            {/* Mobile Filter Toggle */}
+            <button 
+              className={styles.mobileFilterToggle}
+              onClick={() => setShowMobileFilters(!showMobileFilters)}
+            >
+              🔍 ตัวกรองสินค้า
+            </button>
+
+            {/* Filter Bar - Synced with Sidebar */}
             <div className={styles.filterBar}>
               <div className={styles.filterGroup}>
-                <select className={styles.filterSelect}>
-                  <option>หมวดหมู่: แมวโต</option>
+                <select 
+                  className={styles.filterSelect}
+                  value={selectedCategory}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
+                >
+                  {CATEGORIES.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
                 </select>
-                <select className={styles.filterSelect}>
-                  <option>กรุงเทพมหานคร</option>
+                
+                <select 
+                  className={styles.filterSelect}
+                  value={selectedCatAge}
+                  onChange={(e) => setSelectedCatAge(e.target.value)}
+                >
+                  <option value="">วัยแมว: ทั้งหมด</option>
+                  {CAT_AGES.map(age => (
+                    <option key={age.id} value={age.id}>{age.name}</option>
+                  ))}
                 </select>
-                <select className={styles.filterSelect}>
-                  <option>ราคา : สูงไปต่ำ</option>
+                
+                <select 
+                  className={styles.filterSelect}
+                  value={selectedLocation}
+                  onChange={(e) => setSelectedLocation(e.target.value)}
+                >
+                  <option value="all">สถานที่: ทั้งหมด</option>
+                  <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
+                  <option value="เชียงใหม่">เชียงใหม่</option>
                 </select>
-                <select className={styles.filterSelect}>
-                  <option>100 - 2,000</option>
+                
+                <select 
+                  className={styles.filterSelect}
+                  value={priceSort}
+                  onChange={(e) => setPriceSort(e.target.value)}
+                >
+                  <option value="low-to-high">ราคา: ต่ำไปสูง</option>
+                  <option value="high-to-low">ราคา: สูงไปต่ำ</option>
                 </select>
-              </div>
-              <div className={styles.viewOptions}>
-                <div className={styles.viewBox}></div>
-                <div style={{ width: '23px', height: '19px', border: '1px solid rgba(217, 217, 217, 0.31)', boxShadow: '0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px 0 rgba(0,0,0,0.30)' }}></div>
-                <svg className="w-5 h-6 ml-2" viewBox="0 0 20 24" fill="#FA7D27">
-                  <path d="M6.86934 19.3635L8.83201 20.6666V12.0794C8.83092 11.7375 8.72871 11.4099 8.54742 11.1672L2.18837 2.60612H17.4579L11.1087 11.1672C10.9274 11.4099 10.8252 11.7375 10.8241 12.0794L10.7947 22.1521L12.7573 23.4551V12.6136L19.2145 3.90919C19.4728 3.56122 19.6204 3.09464 19.6267 2.60612V1.30306C19.6267 0.957468 19.5233 0.62603 19.3393 0.381658C19.1552 0.137287 18.9056 0 18.6453 0H0.981334C0.721068 0 0.471462 0.137287 0.287426 0.381658C0.10339 0.62603 0 0.957468 0 1.30306V2.60612C0.00627809 3.09464 0.153859 3.56122 0.41216 3.90919L6.86934 12.6136V19.3635Z"/>
-                </svg>
+                
+                <select 
+                  className={styles.filterSelect}
+                  value={`${minPrice}-${maxPrice}`}
+                  onChange={(e) => {
+                    const [min, max] = e.target.value.split('-').map(Number)
+                    setMinPrice(min)
+                    setMaxPrice(max)
+                  }}
+                >
+                  <option value="0-5000">ทุกช่วงราคา</option>
+                  <option value="0-500">0 - 500</option>
+                  <option value="500-1000">500 - 1,000</option>
+                  <option value="1000-2000">1,000 - 2,000</option>
+                  <option value="2000-5000">2,000+</option>
+                </select>
               </div>
             </div>
 
-            {/* Total Count */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '10px', fontFamily: 'Inter', textAlign: 'center', letterSpacing: '-0.333px' }}>จำนวนสินค้าทั้งหมด</span>
-              <span style={{ fontSize: '10px', fontFamily: 'Inter', textAlign: 'center', letterSpacing: '-0.333px' }}>1000</span>
-            </div>
+            {/* Active Filters */}
+            {(selectedBrand || selectedCatAge || minRating > 0) && (
+              <div className={styles.activeFilters}>
+                {selectedBrand && (
+                  <span className={styles.filterTag}>
+                    {BRANDS.find(b => b.id === selectedBrand)?.name}
+                    <button onClick={() => setSelectedBrand('')}>×</button>
+                  </span>
+                )}
+                {selectedCatAge && (
+                  <span className={styles.filterTag}>
+                    {CAT_AGES.find(a => a.id === selectedCatAge)?.name}
+                    <button onClick={() => setSelectedCatAge('')}>×</button>
+                  </span>
+                )}
+                {minRating > 0 && (
+                  <span className={styles.filterTag}>
+                    {minRating}+ ดาว
+                    <button onClick={() => setMinRating(0)}>×</button>
+                  </span>
+                )}
+              </div>
+            )}
 
             {/* Product Grid */}
             <div className={styles.productGrid}>
-              {products.slice((currentPage - 1) * 10, currentPage * 10).map((product) => (
-                <div key={product.id} className={styles.productCard}>
-                  <div style={{ position: 'relative' }}>
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className={styles.productImage}
-                    />
-                    {product.isBestSeller && (
-                      <div className={styles.bestSellerBadge}>
-                        สินค้าขายดี
+              {currentProducts.map((product) => {
+                const range = getProductPriceRange(product)
+                const favorited = isFavorite(product.id)
+                
+                return (
+                  <div 
+                    key={product.id} 
+                    className={styles.productCard}
+                    onClick={() => setQuickViewProduct(product)}
+                  >
+                    <div style={{ position: 'relative' }}>
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className={styles.productImage}
+                      />
+                      {product.badges?.[0] && (
+                        <div className={styles.bestSellerBadge}>{product.badges[0]}</div>
+                      )}
+                      <button 
+                        className={styles.favoriteBtn}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleFavorite(product.id)
+                        }}
+                      >
+                        <HeartIcon 
+                          filled={favorited}
+                          className={`w-3 h-3 ${favorited ? 'text-red-500' : 'text-gray-400'}`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className={styles.productInfo}>
+                      <p className={styles.productName}>{product.name}</p>
+                      
+                      <div className={styles.couponBadge}>
+                        <span className={styles.couponText}>โค้ดส่วนลด</span>
                       </div>
-                    )}
-                    <button className={styles.favoriteBtn}>
-                      <img
-                        src="https://api.builder.io/api/v1/image/assets/TEMP/b5b05d0b81645500870018f47552cccbfd5fcbe1"
-                        alt="Favorite"
-                        className="w-3 h-3"
-                      />
-                    </button>
-                  </div>
 
-                  <div className={styles.productInfo}>
-                    <p className={styles.productName}>
-                      {product.name}
-                    </p>
-                    
-                    <div className={styles.couponBadge}>
-                      <span className={styles.couponText}>
-                        โค้ดส่วนลด
-                      </span>
-                    </div>
+                      <div className={styles.priceRow}>
+                        <span className={styles.price}>฿{range.min}</span>
+                        <StarRatingIcon rating={product.rating || 4.5} className="text-xs" />
+                      </div>
 
-                    <div className={styles.priceRow}>
-                      <span className={styles.price}>
-                        ฿{product.price}
-                      </span>
-                      <img
-                        src="https://api.builder.io/api/v1/image/assets/TEMP/412b6c1c5473e480deaa8942dbfbbb11f4ebdfee"
-                        alt="Rating"
-                        className="w-5 h-5"
-                      />
-                    </div>
-
-                    <div className={styles.productDetails}>
-                      <div>ยอดขาย {product.sold} ชิ้น</div>
-                      <div>{product.location}</div>
+                      <div className={styles.productDetails}>
+                        <div>ยอดขาย {product.sold || 0} ชิ้น</div>
+                        <div>{product.location}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
+
+            {/* Empty State */}
+            {currentProducts.length === 0 && (
+              <div className={styles.emptyState}>
+                <p className={styles.emptyTitle}>ไม่พบสินค้าที่ค้นหา</p>
+                <p className={styles.emptySubtitle}>ลองค้นหาด้วยคำอื่น หรือเปลี่ยนตัวกรอง</p>
+                <button 
+                  className={styles.clearFiltersBtn}
+                  onClick={clearAllFilters}
+                >
+                  ล้างตัวกรองทั้งหมด
+                </button>
+              </div>
+            )}
 
             {/* Pagination */}
-            <div className={styles.pagination}>
-              <button className={styles.pageBtn}>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/afaa7d3fcc3e8a3cda6e577d5f1ca50ebe9277f8"
-                  alt=""
-                  className="w-3 h-2"
+            {totalPages > 1 && (
+              <>
+                <div className={styles.pagination}>
+                  <button 
+                    className={styles.pageBtn}
+                    onClick={() => {
+                      setCurrentPage(Math.max(1, currentPage - 1))
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronRightIcon className="w-3 h-3 rotate-180" />
+                  </button>
+                  
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    // Show pages around current page
+                    let pageNum
+                    if (totalPages <= 5) {
+                      pageNum = i + 1
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i
+                    } else {
+                      pageNum = currentPage - 2 + i
+                    }
+                    return pageNum
+                  }).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => {
+                        setCurrentPage(page)
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }}
+                      className={`${styles.pageBtn} ${currentPage === page ? styles.pageBtnActive : ''}`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  {totalPages > 5 && currentPage < totalPages - 2 && (
+                    <>
+                      <span className={styles.pageDots}>...</span>
+                      <button
+                        onClick={() => {
+                          setCurrentPage(totalPages)
+                          window.scrollTo({ top: 0, behavior: 'smooth' })
+                        }}
+                        className={`${styles.pageBtn} ${currentPage === totalPages ? styles.pageBtnActive : ''}`}
+                      >
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+
+                  <button 
+                    className={styles.pageBtn}
+                    onClick={() => {
+                      setCurrentPage(Math.min(totalPages, currentPage + 1))
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }}
+                    disabled={currentPage === totalPages}
+                  >
+                    <ChevronRightIcon className="w-3 h-3" />
+                  </button>
+                </div>
+
+                <div className={styles.pageInfo}>
+                  <span className={styles.pageInfoCurrent}>{currentPage}</span>
+                  <span>/{totalPages}</span>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Right Panel - Filter Panel */}
+          <div className={styles.rightPanel}>
+            <div className={styles.rightPanelBox}>
+              {/* Category Dropdown */}
+              <h4 className={styles.rightPanelTitle}>หมวดหมู่</h4>
+              <select 
+                className={styles.rightPanelSelect}
+                value={stagedCategory}
+                onChange={(e) => setStagedCategory(e.target.value)}
+              >
+                {CATEGORIES.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              
+              {/* Brand Dropdown */}
+              <h4 className={styles.rightPanelTitle}>ยี่ห้อ</h4>
+              <select 
+                className={styles.rightPanelSelect}
+                value={stagedBrand}
+                onChange={(e) => setStagedBrand(e.target.value)}
+              >
+                <option value="">ทั้งหมด</option>
+                {BRANDS.map(brand => (
+                  <option key={brand.id} value={brand.id}>{brand.name}</option>
+                ))}
+              </select>
+              
+              {/* Price Range */}
+              <h4 className={styles.rightPanelTitle}>ช่วงราคา</h4>
+              <div className={styles.priceRange}>
+                <input 
+                  type="number" 
+                  className={styles.priceInput}
+                  placeholder="ต่ำสุด"
+                  value={stagedMinPrice || ''}
+                  onChange={(e) => setStagedMinPrice(Number(e.target.value) || 0)}
                 />
+                <span className={styles.priceSeparator}>-</span>
+                <input 
+                  type="number" 
+                  className={styles.priceInput}
+                  placeholder="สูงสุด"
+                  value={stagedMaxPrice || ''}
+                  onChange={(e) => setStagedMaxPrice(Number(e.target.value) || 5000)}
+                />
+              </div>
+
+              {/* Size/Weight Options */}
+              <h4 className={styles.rightPanelTitle}>ขนาด/น้ำหนัก</h4>
+              <div className={styles.sizeOptions}>
+                {['1 กก.', '2 กก.', '3 กก.', '5 กก.', '7 กก.', '10 กก.'].map((size) => (
+                  <label key={size} className={styles.checkboxLabel}>
+                    <input 
+                      type="checkbox" 
+                      className={styles.checkbox}
+                      checked={selectedSizes.includes(size)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedSizes([...selectedSizes, size])
+                        } else {
+                          setSelectedSizes(selectedSizes.filter(s => s !== size))
+                        }
+                      }}
+                    />
+                    <span>{size}</span>
+                  </label>
+                ))}
+              </div>
+              
+              {/* Apply Button */}
+              <button 
+                className={styles.applyButton}
+                onClick={applyFilters}
+              >
+                ตกลง
               </button>
               
-              {[1, 2, 3, 4].map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={styles.pageBtn}
-                >
-                  {page}
-                </button>
-              ))}
-
-              <span className={styles.pageDots}>...</span>
-
-              <button
-                onClick={() => setCurrentPage(12)}
-                className={styles.pageBtn}
+              {/* Clear Button */}
+              <button 
+                className={styles.clearButton}
+                onClick={clearStagedFilters}
               >
-                12
+                ล้างตัวกรอง
               </button>
-
-              <button className={styles.pageBtn}>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/abaad69eaf40adfe8ecd1ce45ecbefd5ef39ea3c"
-                  alt=""
-                  className="w-3 h-2"
-                />
-              </button>
-            </div>
-
-            <div className={styles.pageInfo}>
-              <span className={styles.pageInfoCurrent}>{currentPage}</span>
-              <span>/12</span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      <ProductQuickViewModal
+        isOpen={Boolean(quickViewProduct)}
+        product={quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+      />
     </main>
+  )
+}
+
+export default function CategoryPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F7F7F7] flex items-center justify-center">Loading...</div>}>
+      <CategoryPageContent />
+    </Suspense>
   )
 }

@@ -1,22 +1,69 @@
 "use client"
 import Link from "next/link"
-import { useState } from "react"
-import { usePathname } from "next/navigation"
-import { useSearch, useAuth } from "@/app/providers"
+import { useState, useMemo } from "react"
+import { usePathname, useRouter } from "next/navigation"
+import { useSearch, useAuth, useCatalog } from "@/app/providers"
+import { CATEGORIES, BRANDS } from "@/lib/catalog"
 import ProfileDropdown from "./ProfileDropdown"
 import styles from "./Navbar.module.css"
 
 export default function Navbar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
 
   const { query, setQuery } = useSearch()
   const { handleLogout } = useAuth()
+  const { products } = useCatalog()
 
   const closeMobileMenu = () => setShowMobileMenu(false)
 
   const isActive = (href) => pathname === href
+
+  // Generate suggestions based on query
+  const suggestions = useMemo(() => {
+    if (!query.trim() || query.length < 2) return []
+    
+    const q = query.toLowerCase()
+    const results = []
+    
+    // Search in products
+    const matchingProducts = products
+      .filter(p => p.name.toLowerCase().includes(q))
+      .slice(0, 5)
+      .map(p => ({ type: 'product', id: p.id, name: p.name, url: `/category?q=${encodeURIComponent(p.name)}` }))
+    
+    // Search in categories
+    const matchingCategories = CATEGORIES
+      .filter(c => c.name.toLowerCase().includes(q) && c.id !== 'all')
+      .slice(0, 3)
+      .map(c => ({ type: 'category', id: c.id, name: c.name, url: `/category?cat=${c.id}` }))
+    
+    // Search in brands
+    const matchingBrands = BRANDS
+      .filter(b => b.name.toLowerCase().includes(q))
+      .slice(0, 3)
+      .map(b => ({ type: 'brand', id: b.id, name: b.name, url: `/category?q=${encodeURIComponent(b.name)}` }))
+    
+    return [...matchingProducts, ...matchingCategories, ...matchingBrands].slice(0, 8)
+  }, [query, products])
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && query.trim()) {
+      const searchTerm = query.trim()
+      setShowSuggestions(false)
+      setQuery('') // Clear search input
+      router.push(`/category?q=${encodeURIComponent(searchTerm)}`)
+    }
+  }
+
+  const handleSuggestionClick = (suggestion) => {
+    setShowSuggestions(false)
+    setQuery('') // Clear search input
+    router.push(suggestion.url)
+  }
 
   return (
     <nav className={`gradient-navbar ${styles.navbar}`}>
@@ -86,15 +133,59 @@ export default function Navbar() {
               type="text"
               placeholder="ค้นหา..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value)
+                setShowSuggestions(true)
+              }}
+              onKeyDown={handleSearch}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               className={styles.searchInput}
               aria-label="Search"
             />
-            <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/b153ae714e010a92b4a556df09e4b7be58cdd427"
-              alt="Search"
-              className={styles.searchIcon}
-            />
+            <button
+              type="button"
+              onClick={() => {
+                if (query.trim()) {
+                  const searchTerm = query.trim()
+                  setShowSuggestions(false)
+                  setQuery('') // Clear search input
+                  router.push(`/category?q=${encodeURIComponent(searchTerm)}`)
+                }
+              }}
+              className={styles.searchButton}
+            >
+              <img
+                src="https://api.builder.io/api/v1/image/assets/TEMP/b153ae714e010a92b4a556df09e4b7be58cdd427"
+                alt="Search"
+                className={styles.searchIcon}
+              />
+            </button>
+            
+            {/* Search Suggestions Dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className={styles.suggestionsDropdown}>
+                {suggestions.map((suggestion, index) => (
+                  <div
+                    key={`${suggestion.type}-${suggestion.id}-${index}`}
+                    className={styles.suggestionItem}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                  >
+                    <span className={styles.suggestionIcon}>
+                      {suggestion.type === 'product' && '🔍'}
+                      {suggestion.type === 'category' && '📁'}
+                      {suggestion.type === 'brand' && '🏷️'}
+                    </span>
+                    <span className={styles.suggestionText}>{suggestion.name}</span>
+                    <span className={styles.suggestionType}>
+                      {suggestion.type === 'product' && 'สินค้า'}
+                      {suggestion.type === 'category' && 'หมวดหมู่'}
+                      {suggestion.type === 'brand' && 'ยี่ห้อ'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Profile Icon - Desktop */}
@@ -146,6 +237,14 @@ export default function Navbar() {
                   placeholder="ค้นหา..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && query.trim()) {
+                      const searchTerm = query.trim()
+                      closeMobileMenu()
+                      setQuery('') // Clear search input
+                      router.push(`/category?q=${encodeURIComponent(searchTerm)}`)
+                    }
+                  }}
                   className={styles.mobileSearchInput}
                   aria-label="Search"
                 />

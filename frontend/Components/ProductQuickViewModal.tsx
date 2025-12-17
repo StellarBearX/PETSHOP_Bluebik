@@ -105,10 +105,10 @@ export default function ProductQuickViewModal({ isOpen, product, onClose }: Prop
                   }`}
                 >
                   <img
-                    src={img}
-                    alt=""
+                  src={img}
+                  alt=""
                     className={styles.thumbnailImage}
-                  />
+                />
                 </button>
               ))}
             </div>

@@ -62,10 +62,11 @@
 .promotionGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
+    gap: 1.5rem;
 }
 
 .promotionCard {
+  position: relative;
   background: white;
   border-radius: 12px;
   overflow: hidden;
@@ -86,6 +87,31 @@
   display: block;
 }
 
+.newBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
 /* Empty State */
 .emptyState {
   text-align: center;
@@ -93,13 +119,13 @@
   font-size: 1.125rem;
   font-family: 'Inter', sans-serif;
   padding: 4rem 0;
-}
+  }
 
 /* Responsive */
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
-  }
+}
 
   .tab {
     font-size: 1rem;

@@ -27,7 +27,7 @@ export default function BannerCarousel({ images, autoPlayInterval = 5000 }: Bann
   const nextSlide = () => {
     setIsTransitioning(true)
     setTimeout(() => {
-      setCenterIndex((prev) => (prev + 1) % images.length)
+    setCenterIndex((prev) => (prev + 1) % images.length)
       setIsTransitioning(false)
     }, 300)
   }
@@ -35,7 +35,7 @@ export default function BannerCarousel({ images, autoPlayInterval = 5000 }: Bann
   const prevSlide = () => {
     setIsTransitioning(true)
     setTimeout(() => {
-      setCenterIndex((prev) => (prev - 1 + images.length) % images.length)
+    setCenterIndex((prev) => (prev - 1 + images.length) % images.length)
       setIsTransitioning(false)
     }, 300)
   }
@@ -44,7 +44,7 @@ export default function BannerCarousel({ images, autoPlayInterval = 5000 }: Bann
     if (index !== centerIndex) {
       setIsTransitioning(true)
       setTimeout(() => {
-        setCenterIndex(index)
+    setCenterIndex(index)
         setIsTransitioning(false)
       }, 300)
     }
@@ -57,6 +57,18 @@ export default function BannerCarousel({ images, autoPlayInterval = 5000 }: Bann
 
   return (
     <section className={styles.bannerSection}>
+      {/* Carousel Dots - ย้ายมาอยู่ใน bannerSection เพื่อให้ position absolute ทำงานถูกต้อง */}
+      <div className={styles.dotsContainer}>
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={index === centerIndex ? styles.dotActive : styles.dot}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+      
       <div className={styles.bannerContainer}>
         {/* Carousel Track */}
         <div className={`${styles.carouselTrack} ${isTransitioning ? styles.transitioning : ''}`}>
@@ -92,18 +104,6 @@ export default function BannerCarousel({ images, autoPlayInterval = 5000 }: Bann
               className={styles.image}
             />
           </div>
-        </div>
-
-        {/* Carousel Dots */}
-        <div className={styles.dotsContainer}>
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={index === centerIndex ? styles.dotActive : styles.dot}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
         </div>
       </div>
     </section>

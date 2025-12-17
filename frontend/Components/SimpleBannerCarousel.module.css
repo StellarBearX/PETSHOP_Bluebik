@@ -1,21 +1,21 @@
-/* Banner Section */
+/* Banner Section - เหมือน BannerCarousel */
 .bannerSection {
   position: relative;
   width: 100%;
   height: 380px;
   background-color: #F7F7F7;
-  padding: 0;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  padding: 0 0 1.5rem 0;
+  margin-top: 0;
+  margin-bottom: 0;
   overflow: hidden;
 }
 
 @media (min-width: 768px) {
   .bannerSection {
     height: 520px;
-    padding: 0;
-    margin-top: 3rem;
-    margin-bottom: 3rem;
+    padding: 0 0 2rem 0;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 
@@ -31,92 +31,42 @@
   justify-content: center;
 }
 
-/* Carousel Track */
-.carouselTrack {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Image Container */
+.container {
   position: relative;
-  flex: 1;
-  height: 100%;
-  overflow: visible;
-  width: 100%;
-  transition: opacity 0.5s ease;
-}
-
-.transitioning {
-  opacity: 0.5;
-}
-
-/* Carousel Items */
-.carouselItem {
-  flex-shrink: 0;
-  transition: all 0.4s ease;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  position: relative;
-}
-
-/* Side Images - ชิดมุมโชว์ครึ่งเดียว ไม่มีหมอก */
-.sideImage {
-  width: 150px;
-  height: 200px;
-  opacity: 1;
-  cursor: pointer;
-  position: absolute;
-}
-
-.sideImage:first-child {
-  left: -75px;
-}
-
-.sideImage:last-child {
-  right: -75px;
-}
-
-.sideImage:hover {
-  opacity: 0.9;
-}
-
-@media (min-width: 768px) {
-  .sideImage {
-    width: 250px;
-    height: 350px;
-  }
-  
-  .sideImage:first-child {
-    left: -125px;
-  }
-  
-  .sideImage:last-child {
-    right: -125px;
-  }
-}
-
-/* Center Image - ขยายเต็มพื้นที่ */
-.centerImage {
   width: 100%;
   max-width: 600px;
   height: 280px;
+  border-radius: 0.75rem;
+  overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   z-index: 5;
 }
 
 @media (min-width: 768px) {
-  .centerImage {
+  .container {
     max-width: 800px;
     height: 400px;
   }
 }
 
 @media (min-width: 1024px) {
-  .centerImage {
+  .container {
     max-width: 900px;
     height: 450px;
   }
 }
 
-/* Image */
+.imageWrapper {
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+.transitioning {
+  opacity: 0.5;
+}
+
 .image {
   width: 100%;
   height: 100%;
@@ -138,9 +88,6 @@
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  text-align: center;
-  vertical-align: bottom;
-  margin-top: 10px;
 }
 
 @media (min-width: 768px) {

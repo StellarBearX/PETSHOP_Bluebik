@@ -40,8 +40,8 @@ export default function FavoritePage() {
                 <p className="text-gray-400 text-sm mt-2">กดปุ่มหัวใจที่สินค้าที่คุณชอบเพื่อเพิ่มในรายการโปรด</p>
               </div>
             ) : (
-              <div className="space-y-4 md:space-y-6 p-4 md:p-8">
-                {favoriteProducts.map((product) => {
+            <div className="space-y-4 md:space-y-6 p-4 md:p-8">
+              {favoriteProducts.map((product) => {
                 const range = getProductPriceRange(product)
 
                 return (
@@ -108,7 +108,7 @@ export default function FavoritePage() {
                   </button>
                 )
               })}
-              </div>
+            </div>
             )}
           </div>
         </div>

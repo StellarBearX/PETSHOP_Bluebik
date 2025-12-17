@@ -14,7 +14,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
         console.log('Register:', { email, password })
         handleLogin()
         setTimeout(() => {
-            onSuccess()
+        onSuccess()
         }, 0)
     }
 

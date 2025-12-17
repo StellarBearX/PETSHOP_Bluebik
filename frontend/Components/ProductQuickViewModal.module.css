@@ -2,7 +2,7 @@
 
 .modalContent {
   width: 100%;
-  max-width: 960px;
+  max-width: 1200px;
   max-height: 90vh;
   overflow: auto;
   padding: 1rem;
@@ -10,7 +10,8 @@
 
 @media (min-width: 768px) {
   .modalContent {
-    padding: 1.5rem;
+    padding: 2rem;
+    max-width: 1400px;
   }
 }
 
@@ -101,13 +102,19 @@
 
 .mainImage {
   width: 100%;
-  height: 280px;
+  height: 400px;
   object-fit: cover;
 }
 
 @media (min-width: 768px) {
   .mainImage {
-    height: 360px;
+    height: 550px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mainImage {
+    height: 650px;
   }
 }
 
@@ -185,9 +192,17 @@
 .quantityControl {
   display: flex;
   align-items: center;
-  border: 1px solid #d1d5db;
+  border: 2px solid;
+  border-color: rgba(255, 122, 0, 1);
   border-radius: 0.5rem;
   overflow: hidden;
+  background-image: radial-gradient(ellipse at 50% 50%, rgba(247, 146, 30, 1) 0%, rgba(255, 77, 0, 1) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-color: rgba(255, 122, 0, 1);
+  padding: 0;
+  border-image: none;
 }
 
 .quantityButton {
@@ -197,18 +212,24 @@
   border: none;
   cursor: pointer;
   font-size: 1.25rem;
-  color: #000000;
-  transition: background-color 0.2s;
+  color: #F7921E;
+  transition: opacity 0.2s;
 }
 
 .quantityButton:hover {
-  background-color: #f9fafb;
+  opacity: 0.8;
 }
 
 .quantityValue {
   width: 3rem;
   text-align: center;
-  color: #000000;
+  color: #FCFCFC;
+  background-color: rgba(255, 122, 0, 1);
+  border: 2px solid rgba(255, 122, 0, 1);
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .stockText {
@@ -241,6 +262,8 @@
 .actionButton {
   flex: 1;
   height: 45px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .detailButton {

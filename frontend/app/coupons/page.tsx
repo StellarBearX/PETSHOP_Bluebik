@@ -2,8 +2,67 @@
 import { useState } from 'react'
 import styles from './page.module.css'
 
+type CouponConditions = {
+  id: number
+  title: string
+  conditions: string[]
+}
+
+const couponConditionsData: CouponConditions[] = [
+  {
+    id: 1,
+    title: "เงื่อนไขส่วนลด ฿100",
+    conditions: [
+      "ใช้ได้สำหรับสมาชิกทุกท่าน",
+      "สั่งซื้อขั้นต่ำ ฿200",
+      "ใช้ได้ถึง 20 ธันวาคม 2025",
+      "ใช้ได้ครั้งเดียวต่อ 1 บัญชี",
+      "ไม่สามารถใช้ร่วมกับส่วนลดอื่นได้",
+      "สงวนสิทธิ์ในการยกเลิกโค้ดโดยไม่ต้องแจ้งให้ทราบล่วงหน้า"
+    ]
+  },
+  {
+    id: 2,
+    title: "เงื่อนไขส่งฟรี (ใช้คู่กับร้านโค้ดคุ้ม)",
+    conditions: [
+      "ใช้ได้เฉพาะสินค้าในร้านโค้ดคุ้ม",
+      "สั่งซื้อขั้นต่ำ ฿100",
+      "ใช้ได้ถึง 20 ธันวาคม 2025",
+      "ต้องใช้ร่วมกับโค้ดส่วนลดของร้าน",
+      "ใช้ได้ครั้งเดียวต่อ 1 คำสั่งซื้อ",
+      "จัดส่งในพื้นที่กรุงเทพและปริมณฑลเท่านั้น"
+    ]
+  },
+  {
+    id: 3,
+    title: "เงื่อนไขส่งฟรี (วันเดียวเท่านั้น)",
+    conditions: [
+      "ใช้ได้เฉพาะวันที่ 1 ธันวาคม 2025",
+      "ไม่มีขั้นต่ำ",
+      "ใช้ได้กับสินค้าทุกชิ้นในร้าน",
+      "ใช้ได้ครั้งเดียวต่อ 1 บัญชี",
+      "จัดส่งภายใน 3-5 วันทำการ",
+      "**โค้ดนี้หมดอายุแล้ว**"
+    ]
+  },
+  {
+    id: 4,
+    title: "เงื่อนไขส่วนลด ฿500",
+    conditions: [
+      "ใช้ได้สำหรับสมาชิกทุกท่าน",
+      "ไม่มีขั้นต่ำ",
+      "ใช้ได้ถึง 30 ธันวาคม 2025",
+      "ใช้ได้ครั้งเดียวต่อ 1 บัญชี",
+      "สามารถใช้ร่วมกับโค้ดส่งฟรีได้",
+      "สงวนสิทธิ์ในการยกเลิกโค้ดโดยไม่ต้องแจ้งให้ทราบล่วงหน้า"
+    ]
+  }
+]
+
 export default function CouponsPage() {
   const [savedCoupons, setSavedCoupons] = useState<number[]>([])
+  const [showModal, setShowModal] = useState(false)
+  const [selectedCoupon, setSelectedCoupon] = useState<CouponConditions | null>(null)
 
   const toggleSave = (id: number) => {
     if (savedCoupons.includes(id)) {
@@ -11,6 +70,19 @@ export default function CouponsPage() {
     } else {
       setSavedCoupons([...savedCoupons, id])
     }
+  }
+
+  const showConditions = (id: number) => {
+    const coupon = couponConditionsData.find(c => c.id === id)
+    if (coupon) {
+      setSelectedCoupon(coupon)
+      setShowModal(true)
+    }
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
+    setSelectedCoupon(null)
   }
 
   return (
@@ -64,9 +136,15 @@ export default function CouponsPage() {
                     <span className={styles.couponDetailsExpiry}>
                       ใช้ได้ถึง 20 ธันวาคม
                     </span>
-                    <a href="#" className={styles.couponDetailsLink}>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        showConditions(1)
+                      }}
+                      className={styles.couponDetailsLink}
+                    >
                       เงื่อนไข
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -111,26 +189,32 @@ export default function CouponsPage() {
                     <p className={styles.couponDetailsMinimum}>
                       สั่งซื้อขั้นต่ำ ฿100
                     </p>
-                    <div className={styles.couponDetailsInfo}>
-                      <span className={styles.couponDetailsExpiry}>
-                        ใช้ได้ถึง 20 ธันวาคม
-                      </span>
-                      <a href="#" className={styles.couponDetailsLink}>
-                        เงื่อนไข
-                      </a>
-                    </div>
+                  <div className={styles.couponDetailsInfo}>
+                    <span className={styles.couponDetailsExpiry}>
+                      ใช้ได้ถึง 20 ธันวาคม
+                    </span>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        showConditions(2)
+                      }}
+                      className={styles.couponDetailsLink}
+                    >
+                      เงื่อนไข
+                    </button>
                   </div>
                 </div>
-
-                <button 
-                  onClick={() => toggleSave(2)}
-                  className={`${styles.saveBtn} ${styles.saveBtnGreen} ${
-                    savedCoupons.includes(2) ? styles.saveBtnSaved : ''
-                  }`}
-                >
-                  {savedCoupons.includes(2) ? 'บันทึกแล้ว' : 'เก็บ'}
-                </button>
               </div>
+
+              <button 
+                onClick={() => toggleSave(2)}
+                className={`${styles.saveBtn} ${styles.saveBtnGreen} ${
+                  savedCoupons.includes(2) ? styles.saveBtnSaved : ''
+                }`}
+              >
+                {savedCoupons.includes(2) ? 'บันทึกแล้ว' : 'เก็บ'}
+              </button>
+            </div>
 
               {/* Expired Shipping Coupon */}
               <div className={`${styles.couponCard} ${styles.expiredCard}`}>
@@ -155,9 +239,15 @@ export default function CouponsPage() {
                       <span className={styles.couponDetailsExpiry}>
                         ใช้ได้ถึง 1 ธันวาคม
                       </span>
-                      <a href="#" className={styles.couponDetailsLink}>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          showConditions(3)
+                        }}
+                        className={styles.couponDetailsLink}
+                      >
                         เงื่อนไข
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -198,9 +288,15 @@ export default function CouponsPage() {
                     <span className={styles.couponDetailsExpiry}>
                       ใช้ได้ถึง 30 ธันวาคม
                     </span>
-                    <a href="#" className={styles.couponDetailsLink}>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        showConditions(4)
+                      }}
+                      className={styles.couponDetailsLink}
+                    >
                       เงื่อนไข
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -217,6 +313,34 @@ export default function CouponsPage() {
           </div>
         </div>
       </div>
+
+      {/* Conditions Modal */}
+      {showModal && selectedCoupon && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>{selectedCoupon.title}</h2>
+              <button className={styles.modalClose} onClick={closeModal}>
+                ✕
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <ul className={styles.conditionsList}>
+                {selectedCoupon.conditions.map((condition, index) => (
+                  <li key={index} className={styles.conditionItem}>
+                    {condition}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={styles.modalFooter}>
+              <button className={styles.modalButton} onClick={closeModal}>
+                ปิด
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

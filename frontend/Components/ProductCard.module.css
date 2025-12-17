@@ -21,18 +21,27 @@
   position: absolute;
   top: 8px;
   right: 8px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  border: 1px solid #E5E5E5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.favoriteButton:hover {
+  border-color: #FF4D00;
+  box-shadow: 0 2px 8px rgba(255, 77, 0, 0.2);
 }
 
 .favoriteIcon {
-  width: 10px;
-  height: 10px;
-}
-
-@media (min-width: 640px) {
-  .favoriteIcon {
-    width: 12px;
-    height: 12px;
-  }
+  width: 14px;
+  height: 14px;
 }
 
 .info {

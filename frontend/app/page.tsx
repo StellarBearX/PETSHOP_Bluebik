@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import ProductCard from '@/Components/ProductCard'
 import ProductQuickViewModal from '@/Components/ProductQuickViewModal'
 import BannerCarousel from '@/Components/BannerCarousel'
@@ -32,14 +33,14 @@ export default function Home() {
   const recommendedProducts = useMemo(() => filteredProducts.slice(0, 10), [filteredProducts])
 
   const categories = [
-    { name: "Animal\nfood", icon: "https://api.builder.io/api/v1/image/assets/TEMP/6d1edec1969de036e58d4ce6f5779ebb80350538" },
-    { name: "pet\nsupplies", icon: "https://api.builder.io/api/v1/image/assets/TEMP/7271d343953f252b7a42d884cae36bb9d5469f47" },
-    { name: "Clothes and\naccessories", icon: "https://api.builder.io/api/v1/image/assets/TEMP/a34d75e49f456032094a4b5ff46e0609ed5463ac" },
-    { name: "Cleaning\nequipment", icon: "https://api.builder.io/api/v1/image/assets/TEMP/929fe5c8f3f0dc09a3ad8ec925bcebaaf8fb5227" },
-    { name: "sand and\nbathroom", icon: "https://api.builder.io/api/v1/image/assets/TEMP/79f556957c403ba99f5d15360f964cdfa9950b4c" },
-    { name: "Hygiene\ncare", icon: "https://api.builder.io/api/v1/image/assets/TEMP/004d3d0b2ac2c5d00c635a02511f937edc4882bf" },
-    { name: "Cat\nsnacks", icon: "https://api.builder.io/api/v1/image/assets/TEMP/b8a79e732389849e0a47627c6632dd6c41546d62" },
-    { name: "Cat\nexercise", icon: "https://api.builder.io/api/v1/image/assets/TEMP/d78aa07115d10be4a643985db44560ecfbf7cb06" },
+    { id: "food", name: "อาหาร\nสัตว์", icon: "https://api.builder.io/api/v1/image/assets/TEMP/6d1edec1969de036e58d4ce6f5779ebb80350538" },
+    { id: "meat-food", name: "อาหารชนิด\nเนื้อสัตว์", icon: "https://api.builder.io/api/v1/image/assets/TEMP/7271d343953f252b7a42d884cae36bb9d5469f47" },
+    { id: "fish-food", name: "อาหาร\nชนิดปลา", icon: "https://api.builder.io/api/v1/image/assets/TEMP/a34d75e49f456032094a4b5ff46e0609ed5463ac" },
+    { id: "vegetable-food", name: "อาหาร\nชนิดผัก", icon: "https://api.builder.io/api/v1/image/assets/TEMP/929fe5c8f3f0dc09a3ad8ec925bcebaaf8fb5227" },
+    { id: "pellet-food", name: "อาหาร\nชนิดเม็ด", icon: "https://api.builder.io/api/v1/image/assets/TEMP/79f556957c403ba99f5d15360f964cdfa9950b4c" },
+    { id: "clothing", name: "เสื้อผ้าและ\nอุปกรณ์", icon: "https://api.builder.io/api/v1/image/assets/TEMP/004d3d0b2ac2c5d00c635a02511f937edc4882bf" },
+    { id: "equipment", name: "อุปกรณ์\nสัตว์เลี้ยง", icon: "https://api.builder.io/api/v1/image/assets/TEMP/b8a79e732389849e0a47627c6632dd6c41546d62" },
+    { id: "cleaning", name: "ทำความสะอาด\nและอาบน้ำ", icon: "https://api.builder.io/api/v1/image/assets/TEMP/d78aa07115d10be4a643985db44560ecfbf7cb06" },
   ]
 
 
@@ -48,33 +49,41 @@ export default function Home() {
       <BannerCarousel images={bannerImages} />
 
       <main className={styles.main}>
-        <div className="container-responsive max-w-[1440px] py-4 md:py-8">
+        <div className="container-responsive max-w-[1440px]">
           {/* Shopping Mall Section */}
           <div className={styles.sectionWrapper}>
           <PageHeader title="Shopping Mall" seeMoreLink="/shopee-mall" />
           <ContentSection>
             <SectionBody padding="medium">
             <div className={styles.mallGrid}>
+              <Link href="/category?cat=pellet-food" className={styles.mallImageLink}>
               <img 
                 src="https://api.builder.io/api/v1/image/assets/TEMP/abb7edfe50237f94aeaf1a789fa8f6fe60e61085" 
-                alt="Product 1" 
+                  alt="อาหารชนิดเม็ด" 
                 className={styles.mallImage}
               />
+              </Link>
+              <Link href="/category?cat=clothing" className={styles.mallImageLink}>
               <img 
                 src="https://api.builder.io/api/v1/image/assets/TEMP/fd8662dce488a82f6ce120d647d6110ea222dc0b" 
-                alt="Product 2" 
+                  alt="เสื้อผ้าและอุปกรณ์" 
                 className={styles.mallImage}
               />
+              </Link>
+              <Link href="/category?cat=equipment" className={styles.mallImageLink}>
               <img 
                 src="https://api.builder.io/api/v1/image/assets/TEMP/50109194e77f1ca8695d89b25c2f6e64fb211b23" 
-                alt="Product 3" 
+                  alt="อุปกรณ์สัตว์เลี้ยง" 
                 className={styles.mallImage}
               />
+              </Link>
+              <Link href="/category?cat=cleaning" className={styles.mallImageLink}>
               <img 
                 src="https://api.builder.io/api/v1/image/assets/TEMP/ae71c0de8f2b0bbb13cec9d98c66ae3627f6ae17" 
-                alt="Product 4" 
+                  alt="อุปกรณ์ทำความสะอาด" 
                 className={styles.mallImage}
               />
+              </Link>
             </div>
             </SectionBody>
           </ContentSection>
@@ -87,7 +96,11 @@ export default function Home() {
             <SectionBody padding="medium">
             <div className={styles.categoryGrid}>
               {categories.map((category, index) => (
-                <div key={index} className={styles.categoryCard}>
+                <Link
+                  key={index}
+                  href={`/category?cat=${category.id}`}
+                  className={styles.categoryCard}
+                >
                   <img 
                     src={category.icon} 
                     alt={category.name}
@@ -96,7 +109,7 @@ export default function Home() {
                   <span className={styles.categoryText}>
                     {category.name}
                   </span>
-                </div>
+                </Link>
               ))}
             </div>
             </SectionBody>
@@ -123,9 +136,9 @@ export default function Home() {
             
             {/* See More Button */}
             <div className={styles.seeMoreButtonWrapper}>
-              <button className={styles.seeMoreButton}>
+              <Link href="/category" className={styles.seeMoreButton}>
                 See more
-              </button>
+              </Link>
             </div>
             </SectionBody>
           </ContentSection>

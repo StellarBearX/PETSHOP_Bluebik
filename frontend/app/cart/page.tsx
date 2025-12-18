@@ -59,23 +59,22 @@ export default function CartPage() {
           <>
             <div className="bg-white rounded-lg shadow overflow-auto">
               <div className="min-w-[900px]">
-                <div className="flex items-center gap-4 px-4 py-3 border-b">
-                  <div className="flex items-center gap-3 w-[140px]">
-                    <input
-                      type="checkbox"
-                      checked={selectAll}
-                      onChange={toggleSelectAll}
-                      className="w-[22px] h-[22px] cursor-pointer accent-[#FF4D00]"
-                      aria-label="Select all"
-                    />
-                    <span className="text-black text-base font-semibold font-sans">ทั้งหมด</span>
-                  </div>
-                  <div className="flex-1 grid grid-cols-12 gap-4 text-sm font-sans">
-                    <div className="col-span-4"></div>
-                    <div className="col-span-2 font-semibold text-[#6B7280] text-center">ราคาต่อชิ้น</div>
-                    <div className="col-span-2 font-semibold text-[#6B7280] text-center">จำนวน</div>
-                    <div className="col-span-2 font-semibold text-[#6B7280] text-center">ราคารวม</div>
-                    <div className="col-span-2 font-semibold text-[#6B7280] text-center">Action</div>
+                <div className="px-4 py-3 border-b">
+                  <div className="grid grid-cols-12 gap-4 items-center">
+                    <div className="col-span-4 flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={toggleSelectAll}
+                        className="w-[22px] h-[22px] cursor-pointer accent-[#FF4D00] flex-shrink-0"
+                        aria-label="Select all"
+                      />
+                      <span className="text-black text-base font-semibold font-sans">ทั้งหมด</span>
+                    </div>
+                    <div className="col-span-2 text-sm font-semibold text-[#6B7280] text-center font-sans">ราคาต่อชิ้น</div>
+                    <div className="col-span-2 text-sm font-semibold text-[#6B7280] text-center font-sans">จำนวน</div>
+                    <div className="col-span-2 text-sm font-semibold text-[#6B7280] text-center font-sans">ราคารวม</div>
+                    <div className="col-span-2 text-sm font-semibold text-[#6B7280] text-center font-sans">Action</div>
                   </div>
                 </div>
 
@@ -85,68 +84,65 @@ export default function CartPage() {
                     const variantText = product ? formatSelection(product, line.selection) : "";
 
                     return (
-                      <div key={line.id} className="flex items-start gap-4 px-4 py-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedIds.includes(line.id)}
-                          onChange={() => toggleItem(line.id)}
-                          className="w-[22px] h-[22px] mt-8 cursor-pointer accent-[#FF4D00]"
-                          aria-label={`Select ${line.name}`}
-                        />
-
-                        <div className="flex-1">
-                          <div className="grid grid-cols-12 gap-4 items-center">
-                            <div className="col-span-4 flex gap-4">
-                              <div className="w-[110px] h-[110px] border border-[#D9D9D9] rounded-xl overflow-hidden flex-shrink-0">
-                                <img src={line.image} alt={line.name} className="w-full h-full object-cover" />
-                              </div>
-                              <div className="flex flex-col gap-2 min-w-0">
-                                <h3 className="text-[14px] font-sans text-[#333] line-clamp-2 leading-5 overflow-wrap-break font-normal">
-                                  {line.name}
-                                </h3>
-                                {variantText ? (
-                                  <div className="text-xs text-[#656565] overflow-wrap-break font-sans">{variantText}</div>
-                                ) : null}
-                              </div>
+                      <div key={line.id} className="px-4 py-4">
+                        <div className="grid grid-cols-12 gap-4 items-center">
+                          <div className="col-span-4 flex items-center gap-4">
+                            <input
+                              type="checkbox"
+                              checked={selectedIds.includes(line.id)}
+                              onChange={() => toggleItem(line.id)}
+                              className="w-[22px] h-[22px] cursor-pointer accent-[#FF4D00] flex-shrink-0"
+                              aria-label={`Select ${line.name}`}
+                            />
+                            <div className="w-[110px] h-[110px] border border-[#D9D9D9] rounded-xl overflow-hidden flex-shrink-0">
+                              <img src={line.image} alt={line.name} className="w-full h-full object-cover" />
                             </div>
-
-                            <div className="col-span-2 text-[15px] font-sans font-medium text-[#1F2937] text-center">{formatPriceTHB(line.price)}</div>
-
-                            <div className="col-span-2">
-                              <div className="flex items-center border border-[#D9D9D9] rounded-lg w-[96px] h-[32px] overflow-hidden">
-                                <button
-                                  type="button"
-                                  onClick={() => setQty(line.id, line.quantity - 1)}
-                                  className="flex items-center justify-center w-[32px] h-full hover:bg-gray-100"
-                                  aria-label="Decrease"
-                                >
-                                  −
-                                </button>
-                                <span className="flex-1 text-center text-[15px] font-sans font-medium text-[#1F2937]">{line.quantity}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => setQty(line.id, line.quantity + 1)}
-                                  className="flex items-center justify-center w-[32px] h-full hover:bg-gray-100"
-                                  aria-label="Increase"
-                                >
-                                  +
-                                </button>
-                              </div>
+                            <div className="flex flex-col gap-2 min-w-0">
+                              <h3 className="text-[14px] font-sans text-[#333] line-clamp-2 leading-5 overflow-wrap-break font-normal">
+                                {line.name}
+                              </h3>
+                              {variantText ? (
+                                <div className="text-xs text-[#656565] overflow-wrap-break font-sans">{variantText}</div>
+                              ) : null}
                             </div>
+                          </div>
 
-                            <div className="col-span-2 text-[15px] font-sans font-semibold text-[#FF4D00] text-center">
-                              {formatPriceTHB(line.price * line.quantity)}
-                            </div>
+                          <div className="col-span-2 text-[15px] font-sans font-medium text-[#1F2937] text-center">{formatPriceTHB(line.price)}</div>
 
-                            <div className="col-span-2">
+                          <div className="col-span-2 flex justify-center">
+                            <div className="flex items-center border border-[#D9D9D9] rounded-lg w-[96px] h-[32px] overflow-hidden">
                               <button
                                 type="button"
-                                onClick={() => removeFromCart(line.id)}
-                                className="text-red-500 hover:opacity-80"
+                                onClick={() => setQty(line.id, line.quantity - 1)}
+                                className="flex items-center justify-center w-[32px] h-full hover:bg-gray-100"
+                                aria-label="Decrease"
                               >
-                                ลบ
+                                −
+                              </button>
+                              <span className="flex-1 text-center text-[15px] font-sans font-medium text-[#1F2937]">{line.quantity}</span>
+                              <button
+                                type="button"
+                                onClick={() => setQty(line.id, line.quantity + 1)}
+                                className="flex items-center justify-center w-[32px] h-full hover:bg-gray-100"
+                                aria-label="Increase"
+                              >
+                                +
                               </button>
                             </div>
+                          </div>
+
+                          <div className="col-span-2 text-[15px] font-sans font-semibold text-[#FF4D00] text-center">
+                            {formatPriceTHB(line.price * line.quantity)}
+                          </div>
+
+                          <div className="col-span-2 text-center">
+                            <button
+                              type="button"
+                              onClick={() => removeFromCart(line.id)}
+                              className="text-red-500 hover:opacity-80 font-sans"
+                            >
+                              ลบ
+                            </button>
                           </div>
                         </div>
                       </div>

@@ -59,7 +59,7 @@ export default function CartPage() {
           <>
             <div className="bg-white rounded-lg shadow overflow-auto">
               <div className="min-w-[900px]">
-                <div className="flex items-center gap-4 px-4 py-3 border-b">
+                <div className="flex items-center gap-4 px-6 py-4 border-b border-[#E5E7EB] bg-[#F9FAFB]">
                   <div className="flex items-center gap-3 w-[140px]">
                     <input
                       type="checkbox"
@@ -68,65 +68,65 @@ export default function CartPage() {
                       className="w-[22px] h-[22px] cursor-pointer accent-[#FF4D00]"
                       aria-label="Select all"
                     />
-                    <span className="text-black text-base font-semibold font-sans">ทั้งหมด</span>
+                    <span className="text-[#1F2937] text-base font-semibold font-sans">ทั้งหมด</span>
                   </div>
                   <div className="flex-1 grid grid-cols-12 gap-4 text-sm font-sans">
                     <div className="col-span-4"></div>
-                    <div className="col-span-2 font-semibold text-[#6B7280] text-center">ราคาต่อชิ้น</div>
-                    <div className="col-span-2 font-semibold text-[#6B7280] text-center">จำนวน</div>
-                    <div className="col-span-2 font-semibold text-[#6B7280] text-center">ราคารวม</div>
-                    <div className="col-span-2 font-semibold text-[#6B7280] text-center">Action</div>
+                    <div className="col-span-2 font-semibold text-[#6B7280] text-center text-[14px]">ราคาต่อชิ้น</div>
+                    <div className="col-span-2 font-semibold text-[#6B7280] text-center text-[14px]">จำนวน</div>
+                    <div className="col-span-2 font-semibold text-[#6B7280] text-center text-[14px]">ราคารวม</div>
+                    <div className="col-span-2 font-semibold text-[#6B7280] text-center text-[14px]">Action</div>
                   </div>
                 </div>
 
-                <div className="divide-y">
+                <div className="divide-y divide-[#E5E7EB]">
                   {state.lines.map((line) => {
                     const product = getProductById(line.productId);
                     const variantText = product ? formatSelection(product, line.selection) : "";
 
                     return (
-                      <div key={line.id} className="flex items-start gap-4 px-4 py-4">
+                      <div key={line.id} className="flex items-start gap-4 px-6 py-5 hover:bg-[#F9FAFB] transition-colors">
                         <input
                           type="checkbox"
                           checked={selectedIds.includes(line.id)}
                           onChange={() => toggleItem(line.id)}
-                          className="w-[22px] h-[22px] mt-8 cursor-pointer accent-[#FF4D00]"
+                          className="w-[22px] h-[22px] mt-8 cursor-pointer accent-[#FF4D00] flex-shrink-0"
                           aria-label={`Select ${line.name}`}
                         />
 
                         <div className="flex-1">
                           <div className="grid grid-cols-12 gap-4 items-center">
                             <div className="col-span-4 flex gap-4">
-                              <div className="w-[110px] h-[110px] border border-[#D9D9D9] rounded-xl overflow-hidden flex-shrink-0">
+                              <div className="w-[120px] h-[120px] border border-[#E5E7EB] rounded-lg overflow-hidden flex-shrink-0 bg-[#F9FAFB]">
                                 <img src={line.image} alt={line.name} className="w-full h-full object-cover" />
                               </div>
-                              <div className="flex flex-col gap-2 min-w-0">
-                                <h3 className="text-[14px] font-sans text-[#333] line-clamp-2 leading-5 overflow-wrap-break font-normal">
+                              <div className="flex flex-col gap-2 min-w-0 flex-1">
+                                <h3 className="text-[15px] font-sans text-[#1F2937] line-clamp-2 leading-5 overflow-wrap-break font-medium">
                                   {line.name}
                                 </h3>
                                 {variantText ? (
-                                  <div className="text-xs text-[#656565] overflow-wrap-break font-sans">{variantText}</div>
+                                  <div className="text-xs text-[#6B7280] overflow-wrap-break font-sans">{variantText}</div>
                                 ) : null}
                               </div>
                             </div>
 
                             <div className="col-span-2 text-[15px] font-sans font-medium text-[#1F2937] text-center">{formatPriceTHB(line.price)}</div>
 
-                            <div className="col-span-2">
-                              <div className="flex items-center border border-[#D9D9D9] rounded-lg w-[96px] h-[32px] overflow-hidden">
+                            <div className="col-span-2 flex justify-center">
+                              <div className="flex items-center border border-[#D1D5DB] rounded-lg w-[100px] h-[36px] overflow-hidden bg-white">
                                 <button
                                   type="button"
                                   onClick={() => setQty(line.id, line.quantity - 1)}
-                                  className="flex items-center justify-center w-[32px] h-full hover:bg-gray-100"
+                                  className="flex items-center justify-center w-[36px] h-full hover:bg-[#F3F4F6] active:bg-[#E5E7EB] transition-colors text-[#374151] font-semibold"
                                   aria-label="Decrease"
                                 >
                                   −
                                 </button>
-                                <span className="flex-1 text-center text-[15px] font-sans font-medium text-[#1F2937]">{line.quantity}</span>
+                                <span className="flex-1 text-center text-[15px] font-sans font-medium text-[#1F2937] bg-white">{line.quantity}</span>
                                 <button
                                   type="button"
                                   onClick={() => setQty(line.id, line.quantity + 1)}
-                                  className="flex items-center justify-center w-[32px] h-full hover:bg-gray-100"
+                                  className="flex items-center justify-center w-[36px] h-full hover:bg-[#F3F4F6] active:bg-[#E5E7EB] transition-colors text-[#374151] font-semibold"
                                   aria-label="Increase"
                                 >
                                   +
@@ -138,11 +138,11 @@ export default function CartPage() {
                               {formatPriceTHB(line.price * line.quantity)}
                             </div>
 
-                            <div className="col-span-2">
+                            <div className="col-span-2 flex justify-center">
                               <button
                                 type="button"
                                 onClick={() => removeFromCart(line.id)}
-                                className="text-red-500 hover:opacity-80"
+                                className="text-[#EF4444] hover:text-[#DC2626] hover:bg-red-50 px-3 py-1.5 rounded-md transition-colors font-medium text-[14px]"
                               >
                                 ลบ
                               </button>

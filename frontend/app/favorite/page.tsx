@@ -67,11 +67,14 @@ export default function FavoritePage() {
 
                         <div className={styles.productBadges}>
                           {(product.badges ?? []).slice(0, 1).map((badge) => (
-                            <div key={badge} className="product-badge">
-                              <span>{badge}</span>
+                            <div key={badge} className={styles.badge}>
+                              <span className={styles.badgeText}>{badge}</span>
                             </div>
                           ))}
-                          <StarRatingIcon className="w-[42px] h-[42px]" />
+                          <StarRatingIcon 
+                            rating={product.rating || 5} 
+                            className={styles.ratingIcon}
+                          />
                         </div>
 
                         <div className={styles.productPrice}>

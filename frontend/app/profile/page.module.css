@@ -28,7 +28,7 @@
   font-size: 24px;
   font-weight: 700;
   color: #171717;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -70,7 +70,7 @@
   font-weight: 700;
   color: #171717;
   margin-bottom: 0.5rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -83,7 +83,7 @@
   font-size: 14px;
   color: #666666;
   margin-bottom: 2rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -118,7 +118,7 @@
 .formGroupTitle {
   font-size: 16px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   color: #171717;
   margin-bottom: 1.25rem;
 }
@@ -130,7 +130,7 @@
 .label {
   font-size: 14px;
   font-weight: 500;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   color: #333333;
   display: block;
   margin-bottom: 0.5rem;
@@ -145,7 +145,7 @@
   padding: 0 1rem;
   font-size: 15px;
   color: #171717;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   transition: all 0.2s;
   background: white;
 }
@@ -222,7 +222,7 @@
 
 .radioText {
   font-size: 15px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   color: #333333;
   user-select: none;
 }
@@ -246,7 +246,7 @@
   border-radius: 8px;
   padding: 0 2.5rem 0 1rem;
   font-size: 15px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   color: #171717;
   appearance: none;
   background: white;
@@ -288,7 +288,7 @@
   color: white;
   font-size: 15px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 2px 8px rgba(255, 77, 0, 0.2);
@@ -346,7 +346,7 @@
   color: #F99D20;
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   background: white;
   cursor: pointer;
   transition: all 0.2s;
@@ -365,7 +365,7 @@
 .uploadNote {
   font-size: 11px;
   color: #666666;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   margin-top: 1rem;
   text-align: center;
   max-width: 200px;
@@ -434,7 +434,7 @@
   color: #FF4D00;
   font-size: 18px;
   font-weight: 700;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -448,7 +448,7 @@
   font-weight: 500;
   color: #171717;
   margin-bottom: 0.5rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -472,7 +472,7 @@
   color: #FF4D00;
   font-size: 15px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -494,7 +494,7 @@
   color: white;
   font-size: 15px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 2px 8px rgba(255, 77, 0, 0.2);
@@ -552,7 +552,7 @@
   color: #171717;
   margin-bottom: 2rem;
   text-align: center;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -570,7 +570,7 @@
   color: #F7921E;
   font-size: 16px;
   font-weight: 500;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
 }

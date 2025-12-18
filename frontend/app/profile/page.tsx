@@ -1,0 +1,230 @@
+"use client"
+import { useState } from 'react'
+import ProfileSidebar from '@/Components/ProfileSidebar'
+import styles from './page.module.css'
+
+export default function ProfilePage() {
+  const [formData, setFormData] = useState({
+    firstName: 'Meow',
+    lastName: 'Meow',
+    email: 'meow.me@gmail.com',
+    phone: '090-000-0000',
+    gender: 'female',
+    day: '9',
+    month: 'สิงหาคม',
+    year: '2567'
+  })
+
+  return (
+    <main className={styles.main}>
+      <div className="container-responsive">
+        <div className={styles.container}>
+          {/* Header */}
+          <div className={styles.header}>
+            <h1 className={styles.headerTitle}>
+              My Profile
+            </h1>
+          </div>
+
+          <div className={styles.flexContainer}>
+            {/* Sidebar */}
+            <ProfileSidebar />
+
+            {/* Main Content */}
+            <div className={styles.mainContent}>
+              <div>
+                <h2 className={styles.sectionTitle}>ข้อมูลของฉัน</h2>
+                <p className={styles.sectionDescription}>
+                  จัดการข้อมูลส่วนตัวคุณเพื่อความปลอดภัยของบัญชีผู้ใช้นี้
+                </p>
+              </div>
+
+              <div className={styles.formContainer}>
+                <div className={styles.formSection}>
+                  {/* Username Section */}
+                  <div className={styles.formGroup}>
+                    <h3 className={styles.formGroupTitle}>ชื่อผู้ใช้</h3>
+                    
+                    {/* First Name */}
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>ชื่อ</label>
+                      <input
+                        type="text"
+                        value={formData.firstName}
+                        onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                        className={styles.input}
+                      />
+                    </div>
+
+                    {/* Last Name */}
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>นามสกุล</label>
+                      <input
+                        type="text"
+                        value={formData.lastName}
+                        onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                        className={styles.input}
+                      />
+                    </div>
+
+                    {/* Email */}
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>อีเมล</label>
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        className={`${styles.input} ${styles.inputEmail}`}
+                      />
+                    </div>
+
+                    {/* Phone */}
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>หมายเลขโทรศัพท์</label>
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        className={`${styles.input} ${styles.inputEmail}`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Gender */}
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>เพศ</label>
+                    <div className={styles.genderOptions}>
+                      <label className={styles.radioLabel}>
+                        <div className={styles.radioOuter}>
+                          <div className={`${styles.radioCircle} ${formData.gender === 'female' ? styles.radioCircleActive : ''}`}></div>
+                          {formData.gender === 'female' && (
+                            <div className={styles.radioInner}></div>
+                          )}
+                        </div>
+                        <span className={styles.radioText}>หญิง</span>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="female"
+                          checked={formData.gender === 'female'}
+                          onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                          className="sr-only"
+                        />
+                      </label>
+                      <label className={styles.radioLabel}>
+                        <div className={styles.radioOuter}>
+                          <div className={styles.radioCircle}></div>
+                          {formData.gender === 'male' && (
+                            <div className={styles.radioInner}></div>
+                          )}
+                        </div>
+                        <span className={styles.radioText}>ชาย</span>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="male"
+                          checked={formData.gender === 'male'}
+                          onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                          className="sr-only"
+                        />
+                      </label>
+                      <label className={styles.radioLabel}>
+                        <div className={styles.radioOuter}>
+                          <div className={styles.radioCircle}></div>
+                          {formData.gender === 'other' && (
+                            <div className={styles.radioInner}></div>
+                          )}
+                        </div>
+                        <span className={styles.radioText}>อื่นๆ</span>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="other"
+                          checked={formData.gender === 'other'}
+                          onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                          className="sr-only"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Birth Date */}
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>วัน/เดือน/ปี เกิด</label>
+                    <div className={styles.dateInputs}>
+                      <div className={styles.selectWrapper}>
+                        <select
+                          value={formData.day}
+                          onChange={(e) => setFormData({...formData, day: e.target.value})}
+                          className={styles.select}
+                        >
+                          <option value="9">9</option>
+                        </select>
+                        <img 
+                          src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
+                          alt=""
+                          className={styles.selectIcon}
+                        />
+                      </div>
+                      <div className={styles.selectWrapper}>
+                        <select
+                          value={formData.month}
+                          onChange={(e) => setFormData({...formData, month: e.target.value})}
+                          className={styles.select}
+                        >
+                          <option value="สิงหาคม">สิงหาคม</option>
+                        </select>
+                        <img 
+                          src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
+                          alt=""
+                          className={styles.selectIcon}
+                        />
+                      </div>
+                      <div className={styles.selectWrapper}>
+                        <select
+                          value={formData.year}
+                          onChange={(e) => setFormData({...formData, year: e.target.value})}
+                          className={styles.select}
+                        >
+                          <option value="2567">2567</option>
+                        </select>
+                        <img 
+                          src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
+                          alt=""
+                          className={styles.selectIcon}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className={styles.saveButtonContainer}>
+                    <button className={styles.saveButton}>
+                      บันทึก
+                    </button>
+                  </div>
+                </div>
+
+                {/* Profile Picture */}
+                <div className={styles.profilePicSection}>
+                  <img 
+                    src="https://api.builder.io/api/v1/image/assets/TEMP/4af760aa421324ef2f06ed9aaab02411ae07cf1e"
+                    alt="Profile Picture"
+                    className={styles.profilePic}
+                  />
+                  <button className={styles.uploadButton}>
+                    เลือกรูป
+                  </button>
+                  <p className={styles.uploadNote}>
+                    ขนาดไฟล์: สูงสุด 1 MB<br/>
+                    ไฟล์ที่รองรับ: .JPEG, .PNG
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  )
+}

@@ -1,0 +1,141 @@
+/* Banner Section - เหมือน BannerCarousel */
+.bannerSection {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background-color: #F7F7F7;
+  padding: 0 0 1.5rem 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .bannerSection {
+    height: 520px;
+    padding: 0 0 2rem 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+/* Banner Container */
+.bannerContainer {
+  max-width: 1440px;
+  margin: 0 auto;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image Container */
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 280px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 5;
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 800px;
+    height: 400px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 900px;
+    height: 450px;
+  }
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+.transitioning {
+  opacity: 0.5;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Dots Container - อยู่กลางล่างของ bannerSection */
+.dotsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0);
+  border-radius: 20px;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (min-width: 768px) {
+  .dotsContainer {
+    gap: 0.75rem;
+    padding: 0.75rem 2rem;
+    bottom: 15px;
+  }
+}
+
+/* Dots */
+.dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  background-color: #FFEEE0;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .dot {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.dotActive {
+  width: 2rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  background-color: #FF4D00;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .dotActive {
+    width: 2.5625rem;
+    height: 1rem;
+  }
+}
+
+
+
+
+

@@ -1,0 +1,132 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.dropdown {
+  position: absolute;
+  top: 85px;
+  right: 50px;
+  width: 432px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.profileImage {
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+}
+
+.username {
+  color: black;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  line-height: normal;
+  letter-spacing: -0.333px;
+}
+
+.menu {
+  padding: 0.5rem 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background-color: #f9fafb;
+}
+
+.menuText {
+  color: black;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  line-height: normal;
+  letter-spacing: -0.333px;
+}
+
+.menuTextSmall {
+  font-size: 14px;
+}
+
+.menuTextLogout {
+  color: #FF4D00;
+}
+
+.arrow {
+  width: 15px;
+  height: 15px;
+  color: #666;
+}
+
+.languageToggle {
+  position: relative;
+  width: 75px;
+  height: 22px;
+  border-radius: 36px;
+  box-shadow: 
+    0 2px 4px 0 rgba(0, 0, 0, 0.25) inset,
+    -2px -2px 4px 0 rgba(0, 0, 0, 0.10) inset;
+  overflow: hidden;
+}
+
+.languageSlider {
+  position: absolute;
+  top: 0;
+  height: 22px;
+  width: 41px;
+  border-radius: 36px;
+  box-shadow: 0 -4px 10px 0 rgba(0, 0, 0, 0.10) inset;
+  background-color: #FF4D00;
+  transition: all 0.3s;
+}
+
+.languageSlider.th {
+  left: 0;
+}
+
+.languageSlider.en {
+  left: 34px;
+}
+
+.languageText {
+  position: absolute;
+  top: 2px;
+  font-size: 13px;
+  font-family: 'Mitr', sans-serif;
+  line-height: 18px;
+  transition: color 0.3s;
+}
+
+.languageText.left {
+  left: 12px;
+}
+
+.languageText.right {
+  right: 12px;
+}
+
+.languageText.active {
+  color: white;
+}
+
+.languageText.inactive {
+  color: #FD560B;
+}

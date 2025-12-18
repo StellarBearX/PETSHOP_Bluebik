@@ -1,0 +1,387 @@
+.main {
+  min-height: 100vh;
+  background-color: #F7F7F7;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Hero Banner */
+.heroBanner {
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.heroBannerContent {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.heroBannerTitle {
+  color: white;
+  font-size: 1.75rem;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+    margin-bottom: 0.5rem;
+}
+
+.heroBannerSubtitle {
+  color: white;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.heroBannerDate {
+  color: white;
+  font-size: 0.875rem;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Section */
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionHeader {
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  border-radius: 8px 8px 0 0;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+/* Coupon Card */
+.couponCard {
+  background: white;
+  border-radius: 0 0 8px 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.couponCard:first-of-type {
+  border-radius: 0 0 8px 8px;
+}
+
+.couponCard:not(:first-of-type) {
+  border-radius: 8px;
+}
+
+.couponContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+  }
+
+/* Coupon Badge */
+.couponBadge {
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.couponBadgeGreen {
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+}
+
+.couponBadgeIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.couponBadgeText {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Coupon Details */
+.couponDetails {
+  flex: 1;
+}
+
+.couponDetailsTitle {
+  color: #333;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.couponDetailsMinimum {
+  color: #666;
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.couponDetailsInfo {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.couponDetailsExpiry {
+  color: #999;
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.couponDetailsLink {
+  color: #0038FF;
+  font-size: 0.75rem;
+  text-decoration: underline;
+  font-family: 'Inter', sans-serif;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.couponDetailsLink:hover {
+  color: #0028CC;
+}
+
+/* Save Button */
+.saveBtn {
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  flex-shrink: 0;
+}
+
+.saveBtn:hover {
+  opacity: 0.9;
+  }
+
+.saveBtnGreen {
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+}
+
+.saveBtnSaved {
+  background: #D9D9D9;
+  color: #666;
+}
+
+/* Expired Card */
+.expiredCard {
+  opacity: 0.6;
+}
+
+.expiredText {
+  color: #FF4444;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  background: white;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #E0E0E0;
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+.modalTitle {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  flex: 1;
+}
+
+.modalClose {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.modalClose:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.modalBody {
+  padding: 1.5rem;
+}
+
+.conditionsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.conditionItem {
+  color: #333;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: #F7F7F7;
+  border-radius: 8px;
+  border-left: 4px solid #FF4D00;
+  line-height: 1.5;
+}
+
+.conditionItem:last-child {
+  margin-bottom: 0;
+}
+
+.modalFooter {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #E0E0E0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modalButton {
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.modalButton:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .heroBannerTitle {
+    font-size: 1.25rem;
+  }
+
+  .couponCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .saveBtn {
+    width: 100%;
+  }
+
+  .modalContent {
+    max-height: 80vh;
+  }
+
+  .modalHeader {
+    padding: 1rem;
+  }
+
+  .modalTitle {
+    font-size: 1rem;
+  }
+
+  .modalBody {
+    padding: 1rem;
+  }
+
+  .conditionItem {
+    font-size: 0.875rem;
+  }
+}

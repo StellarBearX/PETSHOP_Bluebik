@@ -1,0 +1,149 @@
+.main {
+  min-height: 100vh;
+  background-color: #F7F7F7;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  margin-bottom: 0;
+}
+
+.tab {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tabLeft {
+  border-radius: 12px 0 0 0;
+}
+
+.tabRight {
+  border-radius: 0 12px 0 0;
+}
+
+.tabActive {
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  color: white;
+}
+
+.tabInactive {
+  background: #E0E0E0;
+  color: #666;
+}
+
+.tabInactiveRight {
+  background: #E0E0E0;
+  color: #666;
+}
+
+/* Content */
+.content {
+  background: white;
+  border-radius: 0 0 12px 12px;
+  padding: 2rem;
+  min-height: 400px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Promotion Grid */
+.promotionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.promotionCard {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.promotionCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.promotionImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.newBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #FF4D00 0%, #F99D20 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  color: #999;
+  font-size: 1.125rem;
+  font-family: 'Inter', sans-serif;
+  padding: 4rem 0;
+  }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+}
+
+  .tab {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .promotionGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .promotionGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

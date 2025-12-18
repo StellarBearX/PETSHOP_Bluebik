@@ -1,0 +1,135 @@
+.sidebar {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: 203px;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.profileImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+@media (min-width: 768px) {
+  .profileImage {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.username {
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.333px;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .username {
+    font-size: 15px;
+  }
+}
+
+.editText {
+  font-size: 9px;
+  color: #656565;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.333px;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .editText {
+    font-size: 10px;
+  }
+}
+
+.editIcon {
+  width: 12px;
+  height: 12px;
+}
+
+@media (min-width: 768px) {
+  .editIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.menuItem {
+  display: block;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.menuItem:hover {
+  background-color: #f9fafb;
+}
+
+.menuItemActive {
+  color: #FF4D00;
+  background-color: #f9fafb;
+}
+
+.menuLabel {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.333px;
+  overflow-wrap: break-word;
+}
+
+.menuLabelLarge {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .menuLabelLarge {
+    font-size: 15px;
+  }
+}
+
+.menuLabelSmall {
+  font-size: 13px;
+}
+
+@media (min-width: 768px) {
+  .menuLabelSmall {
+    font-size: 14px;
+  }
+}
+
+.logoutButton {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.logoutButton:hover {
+  background-color: #f9fafb;
+}

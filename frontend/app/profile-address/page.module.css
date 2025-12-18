@@ -1,0 +1,580 @@
+/* Profile Address page styles */
+
+.main {
+  min-height: calc(100vh - 105px);
+  background: #F7F7F7;
+  padding: 2rem 0;
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding: 3rem 0;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.headerTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #171717;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .headerTitle {
+    font-size: 32px;
+  }
+}
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .flexContainer {
+    flex-direction: row;
+    gap: 3rem;
+    align-items: flex-start;
+  }
+}
+
+.mainContent {
+  flex: 1;
+  min-width: 0;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 768px) {
+  .mainContent {
+    padding: 2.5rem;
+  }
+}
+
+.contentHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .contentHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #171717;
+  margin-bottom: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .sectionTitle {
+    font-size: 24px;
+  }
+}
+
+.sectionDescription {
+  font-size: 14px;
+  color: #666666;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .sectionDescription {
+    font-size: 16px;
+  }
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(to right, #FF4D00, #FF7A00);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 77, 0, 0.2);
+  text-align: center;
+}
+
+.addButton:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 77, 0, 0.3);
+}
+
+.addButton:active {
+  transform: translateY(0);
+}
+
+.addIcon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.divider {
+  height: 1px;
+  background: #E5E5E5;
+  margin: 1.5rem 0;
+}
+
+.addressList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.addressItem {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 0;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .addressItem {
+    padding: 2rem 0;
+    gap: 1.5rem;
+  }
+}
+
+.addressIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .addressIcon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.addressContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.addressHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.addressLabel {
+  font-size: 16px;
+  font-weight: 600;
+  color: #171717;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .addressLabel {
+    font-size: 18px;
+  }
+}
+
+.defaultBadge {
+  padding: 0.25rem 0.75rem;
+  background: #FFF5F0;
+  color: #FF4D00;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+}
+
+.addressName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .addressName {
+    font-size: 15px;
+  }
+}
+
+.addressText {
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .addressText {
+    font-size: 15px;
+  }
+}
+
+.deleteButton {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #E5E5E5;
+  border-radius: 6px;
+  color: #DC2626;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.deleteButton:hover {
+  background: #FEF2F2;
+  border-color: #DC2626;
+}
+
+.deleteButton:active {
+  transform: scale(0.98);
+}
+
+.addressActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-left: 2.5rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .addressActions {
+    flex-direction: row;
+    padding-left: 3.5rem;
+    gap: 1rem;
+  }
+}
+
+.editButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #F99D20;
+  border-radius: 6px;
+  color: #F99D20;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.editButton:hover {
+  background: #FFF5F0;
+  border-color: #FF4D00;
+  color: #FF4D00;
+}
+
+.editButton:active {
+  transform: scale(0.98);
+}
+
+.editText {
+  font-family: 'Inter', sans-serif;
+}
+
+.editIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.setDefaultButton {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  color: #666666;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.setDefaultButton:hover {
+  background: #FAFAFA;
+  border-color: #BDBDBD;
+  color: #333333;
+}
+
+.setDefaultButton:active {
+  transform: scale(0.98);
+}
+
+.saveButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #E5E5E5;
+}
+
+.saveButton {
+  min-width: 120px;
+  height: 44px;
+  background: linear-gradient(to right, #FF4D00, #FF7A00);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 77, 0, 0.2);
+}
+
+.saveButton:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 77, 0, 0.3);
+}
+
+.saveButton:active {
+  transform: translateY(0);
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.modalIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #171717;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .modalTitle {
+    font-size: 24px;
+  }
+}
+
+.form {
+  padding: 2rem;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .formRow {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}
+
+.formGroup {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.formLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.formInput {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+  padding: 0 1rem;
+  font-size: 15px;
+  color: #171717;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+  background: white;
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: #FF4D00;
+  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.1);
+}
+
+.formInput::placeholder {
+  color: #999999;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 15px;
+  color: #171717;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+  transition: all 0.2s;
+  background: white;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #FF4D00;
+  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.1);
+}
+
+.select {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+  padding: 0 1rem;
+  font-size: 15px;
+  color: #171717;
+  font-family: 'Inter', sans-serif;
+  appearance: none;
+  background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E") no-repeat right 1rem center;
+  background-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #FF4D00;
+  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.1);
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #E5E5E5;
+}
+
+.cancelButton {
+  min-width: 120px;
+  height: 44px;
+  background: white;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+  color: #666666;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background: #FAFAFA;
+  border-color: #BDBDBD;
+  color: #333333;
+}
+
+.cancelButton:active {
+  transform: scale(0.98);
+}
+
+.submitButton {
+  min-width: 120px;
+  height: 44px;
+  background: linear-gradient(to right, #FF4D00, #FF7A00);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 77, 0, 0.2);
+}
+
+.submitButton:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 77, 0, 0.3);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+

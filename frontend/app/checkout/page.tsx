@@ -95,7 +95,7 @@ export default function CheckoutPage() {
           {/* Order Items */}
           <div className={styles.orderItems}>
             {orderItems.map((item, index) => (
-              <div key={index}>
+              <div key={index} className={styles.orderItemCard}>
                 {/* Section Header */}
                 <h3 className={styles.orderTitle}>รายการสินค้าที่สั่งซื้อ</h3>
 

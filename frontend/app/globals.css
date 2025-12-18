@@ -80,8 +80,8 @@ img {
   
   .card-header {
     @apply bg-[#FF4D00] h-[45px] flex items-center justify-between px-4 md:px-8 rounded-t-lg overflow-hidden;
-  }
-  
+}
+
   .card-title {
     @apply text-white text-base md:text-xl font-bold overflow-wrap-break;
   }

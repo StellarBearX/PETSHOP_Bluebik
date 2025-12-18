@@ -1,73 +1,211 @@
 /* Profile Orders page uses global classes */
 
+.main {
+  min-height: calc(100vh - 105px);
+  background: #F7F7F7;
+  padding: 2rem 0;
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding: 3rem 0;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.headerTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #171717;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .headerTitle {
+    font-size: 32px;
+  }
+}
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .flexContainer {
+    flex-direction: row;
+    gap: 3rem;
+    align-items: flex-start;
+  }
+}
+
 .mainContent {
   flex: 1;
+  min-width: 0;
 }
 
 /* Section titles use global classes: profile-section-title, profile-section-description */
 .infoCard {
   background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .infoCard {
+    padding: 2.5rem;
+  }
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #171717;
+  margin-bottom: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .sectionTitle {
+    font-size: 24px;
+  }
+}
+
+.sectionDescription {
+  font-size: 14px;
+  color: #666666;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .sectionDescription {
+    font-size: 16px;
+  }
 }
 
 .orderList {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .orderCard {
   background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #E5E5E5;
+}
+
+.orderCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .orderHeader {
-  padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #E5E5E5;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: #FAFAFA;
+}
+
+@media (min-width: 768px) {
+  .orderHeader {
+    padding: 1.5rem 2rem;
+  }
 }
 
 .shopInfo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .shopIcon {
-  width: 0.625rem;
-  height: 0.625rem;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 .shopName {
-  font-size: 10px;
-  font-family: 'Inter';
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: #171717;
+}
+
+@media (min-width: 768px) {
+  .shopName {
+    font-size: 16px;
+  }
 }
 
 .orderStatus {
-  font-size: 8px;
-  font-family: 'Inter';
-  color: #656565;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  background: #FFF5F0;
+  color: #FF4D00;
+}
+
+.orderStatus.success {
+  background: #F0FDF4;
+  color: #10B981;
+}
+
+.orderStatus.shipping {
+  background: #EFF6FF;
+  color: #3B82F6;
 }
 
 .orderBody {
-  padding: 1rem;
+  padding: 1.5rem;
   display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
+@media (min-width: 768px) {
+  .orderBody {
+    flex-direction: row;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+}
+
 .productImage {
-  width: 102px;
-  height: 102px;
-  border: 1px solid #979797;
-  border-radius: 0.25rem;
+  width: 100%;
+  max-width: 120px;
+  height: 120px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
+  background: #FAFAFA;
+}
+
+@media (min-width: 768px) {
+  .productImage {
+    width: 140px;
+    height: 140px;
+  }
 }
 
 .productImageImg {
@@ -78,63 +216,120 @@
 
 .productDetails {
   flex: 1;
+  min-width: 0;
 }
 
 .productName {
-  font-size: 0.875rem;
-  font-family: 'Inter';
-  color: #333;
-  margin-bottom: 0.5rem;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  color: #171717;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
+@media (min-width: 768px) {
+  .productName {
+    font-size: 16px;
+    margin-bottom: 1rem;
+  }
+}
+
 .variantBadge {
   background: #F4F4F4;
-  border-radius: 0.25rem;
-  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .variantText {
-  font-size: 10px;
-  font-family: 'Inter';
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  color: #666666;
 }
 
 .variantIcon {
-  width: 1rem;
-  height: 1rem;
+  width: 14px;
+  height: 14px;
+  opacity: 0.6;
 }
 
 .productPrice {
-  font-size: 0.875rem;
-  font-family: 'Inter';
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  color: #FF4D00;
+}
+
+@media (min-width: 768px) {
+  .productPrice {
+    font-size: 20px;
+  }
 }
 
 .orderSummary {
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E5E5E5;
+}
+
+@media (min-width: 768px) {
+  .orderSummary {
+    padding-top: 0;
+    border-top: none;
+    min-width: 150px;
+    align-items: flex-end;
+  }
 }
 
 .orderTotal {
-  font-size: 10px;
-  font-family: 'Inter';
-  margin-bottom: 0.25rem;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: #171717;
+}
+
+@media (min-width: 768px) {
+  .orderTotal {
+    font-size: 16px;
+  }
 }
 
 .historySection {
-  margin-top: 2rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #E5E5E5;
 }
 
 .historyTitle {
-  font-size: 15px;
-  font-family: 'Inter';
-  margin-bottom: 1rem;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  color: #171717;
+  margin-bottom: 1.5rem;
 }
+
+@media (min-width: 768px) {
+  .historyTitle {
+    font-size: 24px;
+    margin-bottom: 2rem;
+  }
+}
+
+
+
+
 
 
 

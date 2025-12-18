@@ -2,10 +2,11 @@
 .main {
   min-height: 100vh;
   background-color: #F7F7F7;
+  padding-bottom: 3rem;
 }
 
 .container {
-  max-width: 1340px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -13,93 +14,116 @@
 /* Header */
 .header {
   background: linear-gradient(to right, #FF4D00, #F99D20);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  border-radius: 0.75rem;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
   display: flex;
   align-items: center;
   gap: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .headerIcon {
   width: 50px;
   height: 50px;
+  filter: brightness(0) invert(1);
 }
 
 .headerTitle {
   color: white;
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   font-family: 'Inter', sans-serif;
+  letter-spacing: -0.02em;
 }
 
 /* Address Section */
 .addressSection {
-  margin-bottom: 1.5rem;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .addressHeader {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .addressIcon {
-  width: 38px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
 }
 
 .addressTitle {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
+  color: #1F2937;
 }
 
 .addressText {
-  color: #656565;
-  font-size: 1rem;
+  color: #4B5563;
+  font-size: 0.9375rem;
   font-family: 'Inter', sans-serif;
-  line-height: 1.625;
-  max-width: 1214px;
+  line-height: 1.75;
 }
 
 /* Order Items */
 .orderItems {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.orderItemCard {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .orderTitle {
   font-size: 1.125rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
-  margin-bottom: 1rem;
+  color: #1F2937;
+  margin-bottom: 1.25rem;
 }
 
 .shopBadge {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .badge {
   background-color: #FF4D00;
-  border-radius: 0.25rem;
-  padding: 0.125rem 0.25rem;
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
 }
 
 .badgeText {
   color: white;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
 }
 
 .shopName {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
   font-family: 'Inter', sans-serif;
+  color: #374151;
 }
 
 .tableHeaders {
@@ -107,11 +131,16 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 1rem;
   margin-bottom: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 2px solid #E5E7EB;
 }
 
 .tableHeader {
   font-size: 0.875rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
+  color: #6B7280;
+  text-align: center;
 }
 
 .productRow {
@@ -120,6 +149,8 @@
   gap: 1rem;
   align-items: center;
   margin-bottom: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #F3F4F6;
 }
 
 .productInfo {
@@ -131,10 +162,11 @@
 .productImage {
   width: 120px;
   height: 120px;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #E5E7EB;
   border-radius: 0.75rem;
   overflow: hidden;
   flex-shrink: 0;
+  background: #F9FAFB;
 }
 
 .productDetails {
@@ -181,63 +213,89 @@
 
 .price {
   grid-column: span 2;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
   font-family: 'Inter', sans-serif;
+  color: #1F2937;
+  text-align: center;
 }
 
 .quantity {
   grid-column: span 2;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
   font-family: 'Inter', sans-serif;
+  color: #1F2937;
+  text-align: center;
 }
 
 .total {
   grid-column: span 2;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
+  color: #FF4D00;
+  text-align: center;
 }
 
 /* Coupon */
 .couponSection {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: 0.5rem;
+  border: 1px solid #E5E7EB;
 }
 
 .couponIcon {
-  width: 41px;
+  width: 32px;
   height: 32px;
 }
 
 .couponText {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
   font-family: 'Inter', sans-serif;
+  color: #374151;
+  flex: 1;
 }
 
 .changeButton {
-  color: #0038FF;
-  font-size: 0.875rem;
+  color: #2563EB;
+  font-size: 0.9375rem;
+  font-weight: 500;
   font-family: 'Inter', sans-serif;
   text-decoration: underline;
-  margin-left: auto;
   background: transparent;
   border: none;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.changeButton:hover {
+  color: #1D4ED8;
 }
 
 .divider {
-  border-bottom: 1px solid #D1D5DB;
-  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #E5E7EB;
+  margin: 1rem 0 2rem 0;
 }
 
 /* Payment Method */
 .paymentSection {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
   margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .paymentTitle {
   font-size: 1.25rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: #FF4D00;
   margin-bottom: 1.5rem;
@@ -246,31 +304,50 @@
 .paymentButtons {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .paymentButton {
-  width: 156px;
-  height: 60px;
+  flex: 1;
+  min-width: 180px;
+  height: 64px;
   border-radius: 0.75rem;
-  border: 1px solid black;
+  border: 2px solid #D1D5DB;
   background-color: white;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paymentButton:hover {
+  border-color: #FF4D00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(255, 77, 0, 0.1);
 }
 
 .paymentButtonActive {
   border-color: #FF4D00;
+  background-color: #FFF5F0;
 }
 
 .paymentButtonGradient {
   background: linear-gradient(to right, #FF4D00, #F99D20);
   border: none;
+  box-shadow: 0 4px 6px -1px rgba(255, 77, 0, 0.2);
+}
+
+.paymentButtonGradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px -1px rgba(255, 77, 0, 0.3);
 }
 
 .paymentButtonText {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
   font-family: 'Inter', sans-serif;
-  color: black;
+  color: #1F2937;
 }
 
 .paymentButtonTextWhite {
@@ -279,7 +356,11 @@
 
 /* Payment Info */
 .paymentInfoSection {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
   margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .paymentInfoHeader {
@@ -287,58 +368,71 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .paymentInfoIcon {
-  width: 2rem;
-  height: 1.75rem;
+  width: 28px;
+  height: 28px;
 }
 
 .paymentInfoTitle {
   font-size: 1.25rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: #FF4D00;
 }
 
 .accountTitle {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
-  margin-bottom: 1rem;
+  color: #1F2937;
+  margin-bottom: 1.25rem;
 }
 
 .accountInfo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: 0.5rem;
+  border: 1px solid #E5E7EB;
 }
 
 .cardIcon {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .cardIconGradient {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   background: linear-gradient(to bottom, #FF4D00, #EDA46E);
-  border-radius: 0.125rem;
+  border-radius: 0.375rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 4px rgba(255, 77, 0, 0.2);
 }
 
 .cardText {
   font-size: 1rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
+  color: #1F2937;
 }
 
 .cardNumber {
   font-size: 0.875rem;
   font-family: 'Inter', sans-serif;
-  font-weight: 300;
+  font-weight: 400;
+  color: #6B7280;
   margin-left: 0.75rem;
 }
 
@@ -347,11 +441,18 @@
   background: transparent;
   border: none;
   cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease;
+}
+
+.editButton:hover {
+  background-color: #E5E7EB;
 }
 
 .editIcon {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 }
 
 /* Order Summary */
@@ -359,30 +460,39 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .summaryBox {
-  width: 300px;
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .summaryRow {
   display: flex;
   justify-content: space-between;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-family: 'Inter', sans-serif;
+  color: #4B5563;
 }
 
 .summaryTotal {
   display: flex;
   justify-content: space-between;
-  font-size: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
   font-family: 'Inter', sans-serif;
   padding-top: 1rem;
-  border-top: 1px solid #D1D5DB;
+  margin-top: 0.5rem;
+  border-top: 2px solid #E5E7EB;
+  color: #1F2937;
 }
 
 .summaryTotalAmount {
@@ -395,48 +505,71 @@
   align-items: flex-start;
   gap: 0.75rem;
   max-width: 543px;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: 0.5rem;
+  border: 1px solid #E5E7EB;
 }
 
 .checkbox {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   margin-top: 0.125rem;
   cursor: pointer;
   accent-color: #FF4D00;
+  flex-shrink: 0;
 }
 
 .agreementText {
-  font-size: 1.125rem;
-  font-weight: 300;
+  font-size: 0.9375rem;
+  font-weight: 400;
   font-family: 'Inter', sans-serif;
+  color: #374151;
+  line-height: 1.5;
 }
 
 .link {
-  color: #0038FF;
+  color: #2563EB;
   text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #1D4ED8;
 }
 
 /* Buy Button */
 .buyButton {
-  width: 192px;
-  height: 45px;
+  width: 100%;
+  max-width: 400px;
+  height: 52px;
   background: linear-gradient(to right, #FF4D00, #F99D20);
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   color: white;
-  font-size: 0.9375rem;
+  font-size: 1rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
   border: none;
   cursor: pointer;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(255, 77, 0, 0.2);
 }
 
-.buyButton:hover {
-  opacity: 0.9;
+.buyButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px -1px rgba(255, 77, 0, 0.3);
+}
+
+.buyButton:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .buyButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Modals */

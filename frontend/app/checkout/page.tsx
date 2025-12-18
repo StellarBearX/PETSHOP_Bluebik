@@ -8,7 +8,7 @@ import type { UserCoupon } from '@/lib/coupon'
 import styles from './page.module.css'
 
 export default function CheckoutPage() {
-  const { subtotal, selectedCoupon, setSelectedCoupon, discount, finalTotal } = useCart()
+  const { subtotal, selectedCoupon, setSelectedCoupon, productDiscount, shippingDiscount } = useCart()
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showCouponModal, setShowCouponModal] = useState(false)
@@ -40,9 +40,12 @@ export default function CheckoutPage() {
     }
   ]
 
-  const orderSubtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-  const shipping = 10
-  const total = orderSubtotal + shipping - discount
+  // Use subtotal from Cart Context instead of calculating from mock data
+  const orderSubtotal = subtotal
+  const baseShipping = 10
+  // Calculate actual shipping after discount
+  const actualShipping = Math.max(0, baseShipping - shippingDiscount)
+  const total = orderSubtotal - productDiscount + actualShipping
 
   const handleBuyNow = () => {
     if (agreed) {
@@ -168,7 +171,9 @@ export default function CheckoutPage() {
                   />
                   <span className={styles.couponText}>
                     {selectedCoupon 
-                      ? `${selectedCoupon.title} - ลด ฿${discount}` 
+                      ? selectedCoupon.type === 'freeship'
+                        ? `${selectedCoupon.title} - ส่งฟรี`
+                        : `${selectedCoupon.title} - ลด ฿${productDiscount}`
                       : "เลือกคูปอง"}
                   </span>
                   <button 
@@ -259,14 +264,31 @@ export default function CheckoutPage() {
                 <span>รวมการสั่งซื้อ</span>
                 <span>฿{orderSubtotal.toLocaleString()}</span>
               </div>
+              {selectedCoupon && productDiscount > 0 && (
+                <div className={styles.summaryRow}>
+                  <span>ส่วนลดสินค้า ({selectedCoupon.title})</span>
+                  <span style={{ color: '#10b981' }}>-฿{productDiscount}</span>
+                </div>
+              )}
               <div className={styles.summaryRow}>
                 <span>การจัดส่ง</span>
-                <span>฿{shipping}</span>
+                <span>
+                  {shippingDiscount > 0 ? (
+                    <>
+                      <span style={{ textDecoration: 'line-through', color: '#999', marginRight: '0.5rem' }}>
+                        ฿{baseShipping}
+                      </span>
+                      <span>฿{actualShipping}</span>
+                    </>
+                  ) : (
+                    `฿${baseShipping}`
+                  )}
+                </span>
               </div>
-              {selectedCoupon && discount > 0 && (
+              {selectedCoupon && shippingDiscount > 0 && (
                 <div className={styles.summaryRow}>
-                  <span>ส่วนลด ({selectedCoupon.title})</span>
-                  <span style={{ color: '#10b981' }}>-฿{discount}</span>
+                  <span>ส่วนลดค่าส่ง ({selectedCoupon.title})</span>
+                  <span style={{ color: '#10b981' }}>-฿{shippingDiscount}</span>
                 </div>
               )}
               <div className={styles.summaryTotal}>

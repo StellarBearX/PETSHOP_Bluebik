@@ -30,7 +30,7 @@ const initialCoupons: Coupon[] = [
     id: "platform-2",
     code: "FREESHIP100",
     title: "ส่งฟรี!!! เมื่อใช้คู่กับร้านโค้ดคุ้ม",
-    discountAmount: 0,
+    discountAmount: 10, // Amount to discount from shipping
     minSpend: 100,
     type: "freeship",
     status: "available",
@@ -41,7 +41,7 @@ const initialCoupons: Coupon[] = [
       "ใช้ได้เฉพาะสินค้าในร้านโค้ดคุ้ม",
       "สั่งซื้อขั้นต่ำ ฿100",
       "ใช้ได้ถึง 20 ธันวาคม 2025",
-      "ต้องใช้ร่วมกับโค้ดส่วนลดของร้าน",
+      "ลดค่าจัดส่ง ฿10",
       "ใช้ได้ครั้งเดียวต่อ 1 คำสั่งซื้อ",
       "จัดส่งในพื้นที่กรุงเทพและปริมณฑลเท่านั้น",
     ],
@@ -70,7 +70,7 @@ const initialCoupons: Coupon[] = [
     id: "platform-4",
     code: "EXPIRED1DAY",
     title: "ส่งฟรี!!! เพียงวันนี้เท่านั้น",
-    discountAmount: 0,
+    discountAmount: 10, // Amount to discount from shipping
     minSpend: 0,
     type: "freeship",
     status: "expired",
@@ -80,6 +80,7 @@ const initialCoupons: Coupon[] = [
     conditions: [
       "ใช้ได้เฉพาะวันที่ 1 ธันวาคม 2025",
       "ไม่มีขั้นต่ำ",
+      "ลดค่าจัดส่ง ฿10",
       "ใช้ได้กับสินค้าทุกชิ้นในร้าน",
       "ใช้ได้ครั้งเดียวต่อ 1 บัญชี",
       "จัดส่งภายใน 3-5 วันทำการ",

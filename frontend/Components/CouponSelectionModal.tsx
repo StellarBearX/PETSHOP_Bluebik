@@ -92,7 +92,6 @@ export default function CouponSelectionModal({
               <div className={styles.sectionTitle}>คูปองที่ใช้ได้</div>
               {availableCoupons.map((coupon) => {
                 const isSelected = selectedCouponId === coupon.id;
-                const savings = coupon.discountAmount;
 
                 return (
                   <div
@@ -109,8 +108,8 @@ export default function CouponSelectionModal({
                       <div className={styles.couponTitle}>{coupon.title}</div>
                       <div className={styles.couponSubtitle}>
                         {coupon.type === "freeship"
-                          ? "ส่งฟรี"
-                          : `ลด ฿${savings}`}
+                          ? `ส่งฟรี (ลดค่าส่ง ฿${coupon.discountAmount || 10})`
+                          : `ลดสินค้า ฿${coupon.discountAmount}`}
                       </div>
                       {coupon.minSpend > 0 && (
                         <div className={styles.couponMinSpend}>
@@ -151,8 +150,8 @@ export default function CouponSelectionModal({
                       <div className={styles.couponTitle}>{coupon.title}</div>
                       <div className={styles.couponSubtitle}>
                         {coupon.type === "freeship"
-                          ? "ส่งฟรี"
-                          : `ลด ฿${coupon.discountAmount}`}
+                          ? `ส่งฟรี (ลดค่าส่ง ฿${coupon.discountAmount || 10})`
+                          : `ลดสินค้า ฿${coupon.discountAmount}`}
                       </div>
                       <div className={styles.couponMinSpend}>
                         ขาดอีก ฿{remaining} เพื่อใช้คูปอง

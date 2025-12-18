@@ -29,7 +29,6 @@ export default function ProductDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
-  const [collectedCoupons, setCollectedCoupons] = useState<Set<number>>(new Set());
 
   // Map productId to storeId (mock logic - different products have different stores)
   const getStoreIdForProduct = (prodId: string): string => {
@@ -58,12 +57,6 @@ export default function ProductDetailPage() {
   // Calculate discount percentage (mock data)
   const discountPercent = sku ? Math.floor(Math.random() * 20) + 10 : 15;
   const originalPrice = sku ? Math.floor(sku.price * (1 + discountPercent / 100)) : 0;
-
-  // Mock coupons
-  const coupons = [
-    { id: 1, title: "รับโค้ดส่วนลด฿100", minSpend: 200, code: "MEGAMMEOW2024" },
-    { id: 2, title: "ส่วนลด฿500", minSpend: 800, code: "SAVE500" },
-  ];
 
   // Recommendations - get random products excluding current
   const recommendations = useMemo(() => {
@@ -311,48 +304,8 @@ export default function ProductDetailPage() {
               <div className={styles.descriptionText}>{product.description}</div>
             </div>
 
-            {/* Store Profile Section */}
+            {/* Store Profile Section - Shows store info and store coupons */}
             <StoreProfile storeId={storeId} />
-
-            {/* Coupons Section */}
-            <div className={styles.couponsSection}>
-              <div className={styles.sectionTitle}>รับโค้ดส่วนลด</div>
-              <div className={styles.couponsGrid}>
-                {coupons.map((coupon) => {
-                  const isCollected = collectedCoupons.has(coupon.id);
-                  return (
-                    <div key={coupon.id} className={styles.couponCard}>
-                      <div className={styles.couponLeft}>
-                        <div className={styles.couponIcon}>🎫</div>
-                        <div>
-                          <div className={styles.couponTitle}>{coupon.title}</div>
-                          <div className={styles.couponCondition}>
-                            สั่งซื้อขั้นต่ำ ฿{coupon.minSpend}
-                          </div>
-                        </div>
-                      </div>
-                      <button 
-                        className={`${styles.couponButton} ${isCollected ? styles.couponButtonCollected : ''}`}
-                        onClick={() => {
-                          setCollectedCoupons((prev) => {
-                            const next = new Set(prev);
-                            if (next.has(coupon.id)) {
-                              next.delete(coupon.id);
-                            } else {
-                              next.add(coupon.id);
-                            }
-                            return next;
-                          });
-                        }}
-                        disabled={isCollected}
-                      >
-                        {isCollected ? "เก็บแล้ว" : "เก็บ"}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
 
             {/* Recommendations Section */}
             <div className={styles.recommendationsSection}>

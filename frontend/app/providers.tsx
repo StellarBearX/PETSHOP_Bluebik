@@ -108,7 +108,8 @@ type CartContextValue = {
   totalItems: number;
   selectedCoupon: UserCoupon | null;
   setSelectedCoupon: (coupon: UserCoupon | null) => void;
-  discount: number;
+  productDiscount: number;
+  shippingDiscount: number;
   finalTotal: number;
 };
 
@@ -228,18 +229,31 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     [cartState.lines]
   );
 
-  // Calculate discount based on selected coupon
-  const discount = useMemo(() => {
+  // Calculate discount based on selected coupon type
+  const productDiscount = useMemo(() => {
     if (!selectedCoupon) return 0;
+    // Only discount type coupons reduce product price
+    if (selectedCoupon.type !== 'discount') return 0;
     // Check if subtotal meets minimum spend requirement
     if (subtotal < selectedCoupon.minSpend) return 0;
     return selectedCoupon.discountAmount;
   }, [selectedCoupon, subtotal]);
 
-  // Calculate final total after discount
+  // Calculate shipping discount (for freeship coupons)
+  const shippingDiscount = useMemo(() => {
+    if (!selectedCoupon) return 0;
+    // Only freeship type coupons reduce shipping
+    if (selectedCoupon.type !== 'freeship') return 0;
+    // Check if subtotal meets minimum spend requirement
+    if (subtotal < selectedCoupon.minSpend) return 0;
+    // Return the discount amount (for freeship, this represents shipping discount)
+    return selectedCoupon.discountAmount || 0;
+  }, [selectedCoupon, subtotal]);
+
+  // Calculate final total after discount (only product discount in cart)
   const finalTotal = useMemo(() => {
-    return Math.max(0, subtotal - discount);
-  }, [subtotal, discount]);
+    return Math.max(0, subtotal - productDiscount);
+  }, [subtotal, productDiscount]);
 
   const addToCart: CartContextValue["addToCart"] = ({ product, selection, quantity = 1 }) => {
     const sku = findSku(product, selection);
@@ -288,10 +302,11 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       totalItems,
       selectedCoupon,
       setSelectedCoupon,
-      discount,
+      productDiscount,
+      shippingDiscount,
       finalTotal,
     }),
-    [cartState, subtotal, totalItems, selectedCoupon, discount, finalTotal]
+    [cartState, subtotal, totalItems, selectedCoupon, productDiscount, shippingDiscount, finalTotal]
   );
 
   const toggleFavorite = (productId: string) => {

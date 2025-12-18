@@ -8,7 +8,7 @@ import CouponSelectionModal from "@/Components/CouponSelectionModal";
 import type { UserCoupon } from "@/lib/coupon";
 
 export default function CartPage() {
-  const { state, setQty, removeFromCart, subtotal, selectedCoupon, setSelectedCoupon, discount, finalTotal } = useCart();
+  const { state, setQty, removeFromCart, subtotal, selectedCoupon, setSelectedCoupon, productDiscount, shippingDiscount, finalTotal } = useCart();
   const { getProductById } = useCatalog();
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -164,7 +164,9 @@ export default function CartPage() {
                   onClick={() => setShowCouponModal(true)}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">🎟️</span>
+                    <span className="text-xl">
+                      {selectedCoupon?.type === 'freeship' ? '🚚' : '🎟️'}
+                    </span>
                     <div>
                       {selectedCoupon ? (
                         <>
@@ -172,7 +174,9 @@ export default function CartPage() {
                             {selectedCoupon.title}
                           </div>
                           <div className="text-[11px] font-['Mitr'] text-[#10b981]">
-                            ลด ฿{discount}
+                            {selectedCoupon.type === 'freeship' 
+                              ? `ส่งฟรี (ลดค่าส่ง ฿${shippingDiscount})` 
+                              : `ลด ฿${productDiscount}`}
                           </div>
                         </>
                       ) : (
@@ -199,15 +203,23 @@ export default function CartPage() {
                     <span className="text-[14px] font-['Mitr']">ยอดรวมทั้งหมด</span>
                     <span className="text-[14px] font-['Mitr']">{formatPriceTHB(subtotal)}</span>
                   </div>
-                  {selectedCoupon && (
+                  {selectedCoupon && productDiscount > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-[14px] font-['Mitr']">ส่วนลด</span>
+                      <span className="text-[14px] font-['Mitr']">ส่วนลดสินค้า</span>
                       <span className="text-[14px] font-['Mitr'] text-[#10b981]">
-                        -฿{discount}
+                        -฿{productDiscount}
                       </span>
                     </div>
                   )}
-                  {selectedCoupon && (
+                  {selectedCoupon && shippingDiscount > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-[14px] font-['Mitr']">ส่วนลดค่าส่ง (ใช้ที่หน้าชำระเงิน)</span>
+                      <span className="text-[14px] font-['Mitr'] text-[#10b981]">
+                        -฿{shippingDiscount}
+                      </span>
+                    </div>
+                  )}
+                  {selectedCoupon && productDiscount > 0 && (
                     <div className="flex justify-between items-center pt-2 border-t border-[#e5e7eb]">
                       <span className="text-[15px] font-['Mitr'] font-bold">ยอดชำระ</span>
                       <span className="text-[18px] font-['Mitr'] font-bold text-[#FF4D00]">

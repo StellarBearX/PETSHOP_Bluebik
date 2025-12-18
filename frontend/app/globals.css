@@ -271,7 +271,7 @@ img {
   }
 
   .page-header-banner h1 {
-    @apply text-white text-2xl md:text-[32px] font-bold font-['Kanit'];
+    @apply text-white text-2xl md:text-[32px] font-bold font-sans;
   }
 
   /* Product Badge */
@@ -280,6 +280,6 @@ img {
   }
 
   .product-badge span {
-    @apply text-white text-[8px] font-['Kanit'] leading-normal tracking-[-0.333px];
+    @apply text-white text-[8px] font-sans leading-normal tracking-[-0.333px];
   }
 }

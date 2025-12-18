@@ -30,7 +30,7 @@ export default function FavoritePage() {
             alt="Favorite"
             className="w-10 h-10 md:w-[50px] md:h-[50px]"
           />
-          <h1 className="text-white text-2xl md:text-[32px] font-bold font-['Kanit'] overflow-wrap-break">รายการโปรด</h1>
+          <h1 className="text-white text-2xl md:text-[32px] font-bold font-sans overflow-wrap-break">รายการโปรด</h1>
         </div>
         <div className="max-w-[1000px] mx-auto">
           <div className="bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] rounded">

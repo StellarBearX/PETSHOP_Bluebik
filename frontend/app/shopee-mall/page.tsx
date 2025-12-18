@@ -18,7 +18,7 @@ export default function ShopeeMallPage() {
     <main className="min-h-screen bg-[#F7F7F7]">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 py-4 sm:py-6 text-sm sm:text-base lg:text-[20px] font-['Kanit']">
+        <div className="flex items-center gap-2 py-4 sm:py-6 text-sm sm:text-base lg:text-[20px] font-sans">
           <Link href="/" className="text-black hover:text-[#FF4D00]">Home</Link>
           <ChevronRightIcon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-[22px] lg:h-[22px] text-gray-500" />
           <span className="text-[#FF4D00]">Shopee Mall</span>
@@ -33,11 +33,11 @@ export default function ShopeeMallPage() {
                 alt="Flash Deal"
                 className="w-[50px] h-[50px] sm:w-[65px] sm:h-[65px] lg:w-[83px] lg:h-[83px]"
               />
-              <h1 className="text-white text-xl sm:text-2xl lg:text-[32px] font-bold font-['Kanit'] leading-normal -tracking-[0.333px]">
+              <h1 className="text-white text-xl sm:text-2xl lg:text-[32px] font-bold font-sans leading-normal -tracking-[0.333px]">
                 Flash Deal
               </h1>
             </div>
-            <p className="text-white text-sm sm:text-base lg:text-[20px] font-['Kanit'] leading-normal -tracking-[0.333px]">
+            <p className="text-white text-sm sm:text-base lg:text-[20px] font-sans leading-normal -tracking-[0.333px]">
               00:00 | 12:00 | 18:00 | 21:00 น.
             </p>
           </div>
@@ -47,7 +47,7 @@ export default function ShopeeMallPage() {
         <div className="mb-8">
           {/* Header */}
           <div className="bg-white h-[40px] sm:h-[45px] flex items-center justify-between px-4 rounded-t mb-0 shadow-[0_1px_4px_0_rgba(0,0,0,0.25)]">
-            <h2 className="text-[#FF4D00] text-base sm:text-lg lg:text-[20px] font-bold font-['Kanit'] leading-normal -tracking-[0.333px]">
+            <h2 className="text-[#FF4D00] text-base sm:text-lg lg:text-[20px] font-bold font-sans leading-normal -tracking-[0.333px]">
               Shopee Mall สินค้าขายดี
             </h2>
           </div>

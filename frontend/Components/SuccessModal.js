@@ -24,21 +24,21 @@ export default function SuccessModal({ isOpen, onClose, title = "ทำราย
                 </div>
 
                 {/* Success Message */}
-                <h2 className="text-black text-2xl font-bold text-center mb-10 font-['Kanit']">
+                <h2 className="text-black text-2xl font-bold text-center mb-10 font-sans">
                     {title}
                 </h2>
 
                 {/* Close Button */}
                 {redirectUrl ? (
                     <Link href={redirectUrl}>
-                        <button className="w-[120px] h-[38px] rounded-full border-2 border-[#F7921E] bg-white text-[#F7921E] text-base font-['Kanit'] font-medium hover:bg-[#F7921E] hover:text-white transition-all">
+                        <button className="w-[120px] h-[38px] rounded-full border-2 border-[#F7921E] bg-white text-[#F7921E] text-base font-sans font-medium hover:bg-[#F7921E] hover:text-white transition-all">
                             ปิด
                         </button>
                     </Link>
                 ) : (
                     <button 
                         onClick={onClose}
-                        className="w-[120px] h-[38px] rounded-full border-2 border-[#F7921E] bg-white text-[#F7921E] text-base font-['Inter'] font-medium hover:bg-[#F7921E] hover:text-white transition-all"
+                        className="w-[120px] h-[38px] rounded-full border-2 border-[#F7921E] bg-white text-[#F7921E] text-base font-sans font-medium hover:bg-[#F7921E] hover:text-white transition-all"
                     >
                         ปิด
                     </button>

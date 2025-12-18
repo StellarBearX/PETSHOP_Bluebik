@@ -29,6 +29,13 @@ dependencies {
     // Kotlinx Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     
+    // Jackson for JSON handling
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
+    
+    // Password hashing
+    implementation("org.mindrot:jbcrypt:0.4")
+    
     testImplementation(kotlin("test"))
 }
 

@@ -28,12 +28,12 @@ object DatabaseFactory {
     }
 
     fun init() {
-        // Initialize database schema if needed
+        // Database schema is created via migration script
+        // Run migration.sql manually or use a migration tool like Flyway
         dataSource.connection.use { connection ->
+            // Test connection
             connection.createStatement().use { statement ->
-                // Create tables here if needed
-                // Example:
-                // statement.execute("CREATE TABLE IF NOT EXISTS ...")
+                statement.execute("SELECT 1")
             }
         }
     }

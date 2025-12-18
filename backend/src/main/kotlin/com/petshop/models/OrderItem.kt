@@ -1,10 +1,8 @@
 package com.petshop.models
 
-import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.util.*
 
-@Serializable
 data class OrderItem(
     val id: UUID = UUID.randomUUID(),
     val orderId: UUID,

@@ -1,12 +1,10 @@
 package com.petshop.models
 
-import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-@Serializable
 data class Coupon(
     val id: UUID = UUID.randomUUID(),
     val storeId: UUID? = null,

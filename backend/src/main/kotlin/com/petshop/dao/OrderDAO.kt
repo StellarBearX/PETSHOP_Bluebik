@@ -160,7 +160,7 @@ object OrderDAO {
             productId = UUID.fromString(rs.getString("product_id")),
             skuId = UUID.fromString(rs.getString("sku_id")),
             productName = rs.getString("product_name"),
-            variantSelection = rs.getJsonbMap("variant_selection"),
+            variantSelection = JsonUtils.fromJsonString(rs.getString("variant_selection") ?: "{}"),
             price = rs.getBigDecimal("price"),
             quantity = rs.getInt("quantity"),
             subtotal = rs.getBigDecimal("subtotal")

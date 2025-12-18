@@ -70,7 +70,7 @@ export default function CartPage() {
                     />
                     <span className="text-black text-base font-bold font-['Inter']">ทั้งหมด</span>
                   </div>
-                  <div className="flex-1 grid grid-cols-12 gap-4 text-sm font-['Mitr']">
+                  <div className="flex-1 grid grid-cols-12 gap-4 text-sm font-['Inter']">
                     <div className="col-span-4"></div>
                     <div className="col-span-2">ราคาต่อชิ้น</div>
                     <div className="col-span-2">จำนวน</div>
@@ -101,7 +101,7 @@ export default function CartPage() {
                                 <img src={line.image} alt={line.name} className="w-full h-full object-cover" />
                               </div>
                               <div className="flex flex-col gap-2 min-w-0">
-                                <h3 className="text-[14px] font-['Mitr'] text-[#333] line-clamp-2 leading-5 overflow-wrap-break">
+                                <h3 className="text-[14px] font-['Inter'] text-[#333] line-clamp-2 leading-5 overflow-wrap-break">
                                   {line.name}
                                 </h3>
                                 {variantText ? (
@@ -110,7 +110,7 @@ export default function CartPage() {
                               </div>
                             </div>
 
-                            <div className="col-span-2 text-[14px] font-['Mitr']">{formatPriceTHB(line.price)}</div>
+                            <div className="col-span-2 text-[14px] font-['Inter']">{formatPriceTHB(line.price)}</div>
 
                             <div className="col-span-2">
                               <div className="flex items-center border border-[#D9D9D9] rounded-lg w-[96px] h-[32px] overflow-hidden">
@@ -122,7 +122,7 @@ export default function CartPage() {
                                 >
                                   −
                                 </button>
-                                <span className="flex-1 text-center text-[14px] font-['Mitr']">{line.quantity}</span>
+                                <span className="flex-1 text-center text-[14px] font-['Inter']">{line.quantity}</span>
                                 <button
                                   type="button"
                                   onClick={() => setQty(line.id, line.quantity + 1)}
@@ -134,7 +134,7 @@ export default function CartPage() {
                               </div>
                             </div>
 
-                            <div className="col-span-2 text-[14px] font-['Mitr']">
+                            <div className="col-span-2 text-[14px] font-['Inter']">
                               {formatPriceTHB(line.price * line.quantity)}
                             </div>
 
@@ -170,23 +170,23 @@ export default function CartPage() {
                     <div>
                       {selectedCoupon ? (
                         <>
-                          <div className="text-[13px] font-['Mitr'] text-[#333] font-semibold">
+                          <div className="text-[13px] font-['Inter'] text-[#333] font-semibold">
                             {selectedCoupon.title}
                           </div>
-                          <div className="text-[11px] font-['Mitr'] text-[#10b981]">
+                          <div className="text-[11px] font-['Inter'] text-[#10b981]">
                             {selectedCoupon.type === 'freeship' 
                               ? `ส่งฟรี (ลดค่าส่ง ฿${shippingDiscount})` 
                               : `ลด ฿${productDiscount}`}
                           </div>
                         </>
                       ) : (
-                        <div className="text-[13px] font-['Mitr'] text-[#666]">
+                        <div className="text-[13px] font-['Inter'] text-[#666]">
                           เลือกคูปอง
                         </div>
                       )}
                     </div>
                   </div>
-                  <button className="text-[12px] font-['Mitr'] text-[#ff6b35] hover:underline">
+                  <button className="text-[12px] font-['Inter'] text-[#ff6b35] hover:underline">
                     เปลี่ยน
                   </button>
                 </div>
@@ -194,35 +194,35 @@ export default function CartPage() {
                 {/* Price Summary */}
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-[14px] font-['Mitr']">ยอดรวม (เลือก)</span>
-                    <span className="text-[20px] font-['Mitr'] text-[#FF4D00]">
+                    <span className="text-[14px] font-['Inter']">ยอดรวม (เลือก)</span>
+                    <span className="text-[20px] font-['Inter'] text-[#FF4D00]">
                       {formatPriceTHB(selectedSubtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-[14px] font-['Mitr']">ยอดรวมทั้งหมด</span>
-                    <span className="text-[14px] font-['Mitr']">{formatPriceTHB(subtotal)}</span>
+                    <span className="text-[14px] font-['Inter']">ยอดรวมทั้งหมด</span>
+                    <span className="text-[14px] font-['Inter']">{formatPriceTHB(subtotal)}</span>
                   </div>
                   {selectedCoupon && productDiscount > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-[14px] font-['Mitr']">ส่วนลดสินค้า</span>
-                      <span className="text-[14px] font-['Mitr'] text-[#10b981]">
+                      <span className="text-[14px] font-['Inter']">ส่วนลดสินค้า</span>
+                      <span className="text-[14px] font-['Inter'] text-[#10b981]">
                         -฿{productDiscount}
                       </span>
                     </div>
                   )}
                   {selectedCoupon && shippingDiscount > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-[14px] font-['Mitr']">ส่วนลดค่าส่ง (ใช้ที่หน้าชำระเงิน)</span>
-                      <span className="text-[14px] font-['Mitr'] text-[#10b981]">
+                      <span className="text-[14px] font-['Inter']">ส่วนลดค่าส่ง (ใช้ที่หน้าชำระเงิน)</span>
+                      <span className="text-[14px] font-['Inter'] text-[#10b981]">
                         -฿{shippingDiscount}
                       </span>
                     </div>
                   )}
                   {selectedCoupon && productDiscount > 0 && (
                     <div className="flex justify-between items-center pt-2 border-t border-[#e5e7eb]">
-                      <span className="text-[15px] font-['Mitr'] font-bold">ยอดชำระ</span>
-                      <span className="text-[18px] font-['Mitr'] font-bold text-[#FF4D00]">
+                      <span className="text-[15px] font-['Inter'] font-bold">ยอดชำระ</span>
+                      <span className="text-[18px] font-['Inter'] font-bold text-[#FF4D00]">
                         {formatPriceTHB(finalTotal)}
                       </span>
                     </div>

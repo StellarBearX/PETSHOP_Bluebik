@@ -24,14 +24,14 @@ export default function SuccessModal({ isOpen, onClose, title = "ทำราย
                 {/* Close Button */}
                 {redirectUrl ? (
                     <Link href={redirectUrl}>
-                        <button className="w-[198px] h-[38px] btn-outline-primary text-base font-['Mitr']">
+                        <button className="w-[198px] h-[38px] btn-outline-primary text-base font-['Inter']">
                             ปิด
                         </button>
                     </Link>
                 ) : (
                     <button 
                         onClick={onClose}
-                        className="w-[198px] h-[38px] btn-outline-primary text-base font-['Mitr']"
+                        className="w-[198px] h-[38px] btn-outline-primary text-base font-['Inter']"
                     >
                         ปิด
                     </button>

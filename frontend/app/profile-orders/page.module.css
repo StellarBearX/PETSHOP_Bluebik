@@ -46,12 +46,12 @@
 
 .shopName {
   font-size: 10px;
-  font-family: 'Mitr';
+  font-family: 'Inter';
 }
 
 .orderStatus {
   font-size: 8px;
-  font-family: 'Mitr';
+  font-family: 'Inter';
   color: #656565;
 }
 
@@ -82,7 +82,7 @@
 
 .productName {
   font-size: 0.875rem;
-  font-family: 'Mitr';
+  font-family: 'Inter';
   color: #333;
   margin-bottom: 0.5rem;
   display: -webkit-box;
@@ -103,7 +103,7 @@
 
 .variantText {
   font-size: 10px;
-  font-family: 'Mitr';
+  font-family: 'Inter';
 }
 
 .variantIcon {
@@ -113,7 +113,7 @@
 
 .productPrice {
   font-size: 0.875rem;
-  font-family: 'Mitr';
+  font-family: 'Inter';
 }
 
 .orderSummary {
@@ -122,7 +122,7 @@
 
 .orderTotal {
   font-size: 10px;
-  font-family: 'Mitr';
+  font-family: 'Inter';
   margin-bottom: 0.25rem;
 }
 

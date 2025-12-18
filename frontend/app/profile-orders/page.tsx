@@ -68,7 +68,9 @@ export default function OrdersPage() {
                         />
                         <span className={styles.shopName}>{order.shop}</span>
                       </div>
-                      <span className={styles.orderStatus}>{order.status}</span>
+                      <span className={`${styles.orderStatus} ${order.status === 'สำเร็จ' ? styles.success : styles.shipping}`}>
+                        {order.status}
+                      </span>
                     </div>
 
                     <div className={styles.orderBody}>

@@ -36,7 +36,7 @@
 
 .username {
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   letter-spacing: -0.333px;
   overflow-wrap: break-word;
 }
@@ -50,7 +50,7 @@
 .editText {
   font-size: 9px;
   color: #656565;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   letter-spacing: -0.333px;
   overflow-wrap: break-word;
 }
@@ -98,7 +98,7 @@
 }
 
 .menuLabel {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   letter-spacing: -0.333px;
   overflow-wrap: break-word;
 }

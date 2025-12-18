@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ProductVariantSelector from "@/Components/ProductVariantSelector";
 import ProductReviews from "@/Components/ProductReviews";
+import StoreProfile from "@/Components/StoreProfile";
 import { HeartIcon } from "@/Components/Icons";
 import { useCatalog, useCart, useFavorites } from "@/app/providers";
 import type { ProductVariantSelection } from "@/lib/catalog";
@@ -28,6 +29,17 @@ export default function ProductDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
+  const [collectedCoupons, setCollectedCoupons] = useState<Set<number>>(new Set());
+
+  // Map productId to storeId (mock logic - different products have different stores)
+  const getStoreIdForProduct = (prodId: string): string => {
+    // Use simple hash to assign different stores to different products
+    const stores = ["store1", "store2", "store3", "store4"];
+    const hash = prodId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return stores[hash % stores.length];
+  };
+
+  const storeId = productId ? getStoreIdForProduct(productId) : "store1";
 
   const sku = useMemo(() => (product ? findSku(product, selection) : null), [product, selection]);
 
@@ -299,24 +311,46 @@ export default function ProductDetailPage() {
               <div className={styles.descriptionText}>{product.description}</div>
             </div>
 
+            {/* Store Profile Section */}
+            <StoreProfile storeId={storeId} />
+
             {/* Coupons Section */}
             <div className={styles.couponsSection}>
               <div className={styles.sectionTitle}>รับโค้ดส่วนลด</div>
               <div className={styles.couponsGrid}>
-                {coupons.map((coupon) => (
-                  <div key={coupon.id} className={styles.couponCard}>
-                    <div className={styles.couponLeft}>
-                      <div className={styles.couponIcon}>🎫</div>
-                      <div>
-                        <div className={styles.couponTitle}>{coupon.title}</div>
-                        <div className={styles.couponCondition}>
-                          สั่งซื้อขั้นต่ำ ฿{coupon.minSpend}
+                {coupons.map((coupon) => {
+                  const isCollected = collectedCoupons.has(coupon.id);
+                  return (
+                    <div key={coupon.id} className={styles.couponCard}>
+                      <div className={styles.couponLeft}>
+                        <div className={styles.couponIcon}>🎫</div>
+                        <div>
+                          <div className={styles.couponTitle}>{coupon.title}</div>
+                          <div className={styles.couponCondition}>
+                            สั่งซื้อขั้นต่ำ ฿{coupon.minSpend}
+                          </div>
                         </div>
                       </div>
+                      <button 
+                        className={`${styles.couponButton} ${isCollected ? styles.couponButtonCollected : ''}`}
+                        onClick={() => {
+                          setCollectedCoupons((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(coupon.id)) {
+                              next.delete(coupon.id);
+                            } else {
+                              next.add(coupon.id);
+                            }
+                            return next;
+                          });
+                        }}
+                        disabled={isCollected}
+                      >
+                        {isCollected ? "เก็บแล้ว" : "เก็บ"}
+                      </button>
                     </div>
-                    <button className={styles.couponButton}>เก็บ</button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

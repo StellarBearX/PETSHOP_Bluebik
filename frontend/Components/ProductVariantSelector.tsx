@@ -49,10 +49,17 @@ export default function ProductVariantSelector({ product, selection, onChange }:
                         : !isAvailable
                           ? styles.optionButtonDisabled
                           : ''
-                    }`}
+                    } ${opt.image ? styles.optionButtonWithImage : ''}`}
                     aria-pressed={isActive}
                   >
-                    {opt.label}
+                    {opt.image && (
+                      <img 
+                        src={opt.image} 
+                        alt={opt.label}
+                        className={styles.optionImage}
+                      />
+                    )}
+                    <span>{opt.label}</span>
                   </button>
                 );
               })}

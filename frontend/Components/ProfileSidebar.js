@@ -18,7 +18,7 @@ export default function ProfileSidebar() {
     { href: '/profile-orders', label: 'การสั่งซื้อล่าสุด', fontSize: 'text-sm' },
     { href: '/profile-address', label: 'ที่อยู่ที่บันทึกไว้', fontSize: 'text-sm' },
     { href: '/profile-cards', label: 'บัตรเครดิต / บัตรเดบิต', fontSize: 'text-sm' },
-    { href: '/coupons', label: 'โค้ดส่วนลดของฉัน', fontSize: 'text-sm' }
+    { href: '/profile-coupons', label: 'โค้ดส่วนลดของฉัน', fontSize: 'text-sm' }
   ]
 
   return (

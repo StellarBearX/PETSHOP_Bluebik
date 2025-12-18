@@ -2,13 +2,22 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import SuccessModal from '@/Components/SuccessModal'
+import CouponSelectionModal from '@/Components/CouponSelectionModal'
+import { useCart } from '../providers'
+import type { UserCoupon } from '@/lib/coupon'
 import styles from './page.module.css'
 
 export default function CheckoutPage() {
+  const { subtotal, selectedCoupon, setSelectedCoupon, discount, finalTotal } = useCart()
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showCouponModal, setShowCouponModal] = useState(false)
   const [agreed, setAgreed] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card' | 'qr'>('card')
+
+  const handleSelectCoupon = (coupon: UserCoupon | null) => {
+    setSelectedCoupon(coupon)
+  }
 
   const orderItems = [
     {
@@ -31,10 +40,9 @@ export default function CheckoutPage() {
     }
   ]
 
-  const subtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  const orderSubtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const shipping = 10
-  const discount = 0
-  const total = subtotal + shipping - discount
+  const total = orderSubtotal + shipping - discount
 
   const handleBuyNow = () => {
     if (agreed) {
@@ -159,9 +167,14 @@ export default function CheckoutPage() {
                     className={styles.couponIcon}
                   />
                   <span className={styles.couponText}>
-                    {index === 0 ? "ดูโค้ดร้านค้าทั้งหมด" : "ใช้โค้ดลด ฿0 แล้ว"}
+                    {selectedCoupon 
+                      ? `${selectedCoupon.title} - ลด ฿${discount}` 
+                      : "เลือกคูปอง"}
                   </span>
-                  <button className={styles.changeButton}>
+                  <button 
+                    className={styles.changeButton}
+                    onClick={() => setShowCouponModal(true)}
+                  >
                     เปลี่ยน
                   </button>
                 </div>
@@ -244,16 +257,18 @@ export default function CheckoutPage() {
               </div>
               <div className={styles.summaryRow}>
                 <span>รวมการสั่งซื้อ</span>
-                <span>฿{subtotal.toLocaleString()}</span>
+                <span>฿{orderSubtotal.toLocaleString()}</span>
               </div>
               <div className={styles.summaryRow}>
                 <span>การจัดส่ง</span>
                 <span>฿{shipping}</span>
               </div>
-              <div className={styles.summaryRow}>
-                <span>ส่วนลด</span>
-                <span>฿{discount}</span>
-              </div>
+              {selectedCoupon && discount > 0 && (
+                <div className={styles.summaryRow}>
+                  <span>ส่วนลด ({selectedCoupon.title})</span>
+                  <span style={{ color: '#10b981' }}>-฿{discount}</span>
+                </div>
+              )}
               <div className={styles.summaryTotal}>
                 <span>ยอดชำระเงินทั้งหมด</span>
                 <span className={styles.summaryTotalAmount}>฿{total.toLocaleString()}</span>
@@ -324,6 +339,15 @@ export default function CheckoutPage() {
         onClose={() => setShowSuccessModal(false)}
         title="ทำรายการสั่งซื้อสำเร็จ"
         redirectUrl="/profile-orders"
+      />
+
+      {/* Coupon Selection Modal */}
+      <CouponSelectionModal
+        isOpen={showCouponModal}
+        onClose={() => setShowCouponModal(false)}
+        onSelectCoupon={handleSelectCoupon}
+        currentSubtotal={orderSubtotal}
+        selectedCouponId={selectedCoupon?.id}
       />
 
     </>

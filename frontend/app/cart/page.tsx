@@ -4,12 +4,15 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useCart, useCatalog } from "../providers";
 import { formatPriceTHB, formatSelection } from "@/lib/format";
+import CouponSelectionModal from "@/Components/CouponSelectionModal";
+import type { UserCoupon } from "@/lib/coupon";
 
 export default function CartPage() {
-  const { state, setQty, removeFromCart, subtotal } = useCart();
+  const { state, setQty, removeFromCart, subtotal, selectedCoupon, setSelectedCoupon, discount, finalTotal } = useCart();
   const { getProductById } = useCatalog();
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showCouponModal, setShowCouponModal] = useState(false);
 
   const allIds = useMemo(() => state.lines.map((l) => l.id), [state.lines]);
 
@@ -29,7 +32,9 @@ export default function CartPage() {
       .reduce((sum, l) => sum + l.price * l.quantity, 0);
   }, [state.lines, selectedIds]);
 
-  const discount = 0;
+  const handleSelectCoupon = (coupon: UserCoupon | null) => {
+    setSelectedCoupon(coupon);
+  };
 
   return (
     <main className="min-h-screen bg-[#F7F7F7] overflow-auto">
@@ -153,6 +158,36 @@ export default function CartPage() {
 
             <div className="mt-6 flex flex-col md:flex-row md:justify-end gap-4">
               <div className="bg-white rounded-lg shadow p-4 w-full md:w-[320px] overflow-auto">
+                {/* Coupon Selection */}
+                <div 
+                  className="flex items-center justify-between p-3 mb-3 border border-[#e5e7eb] rounded-lg cursor-pointer hover:border-[#ff6b35] transition-colors"
+                  onClick={() => setShowCouponModal(true)}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">🎟️</span>
+                    <div>
+                      {selectedCoupon ? (
+                        <>
+                          <div className="text-[13px] font-['Mitr'] text-[#333] font-semibold">
+                            {selectedCoupon.title}
+                          </div>
+                          <div className="text-[11px] font-['Mitr'] text-[#10b981]">
+                            ลด ฿{discount}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-[13px] font-['Mitr'] text-[#666]">
+                          เลือกคูปอง
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button className="text-[12px] font-['Mitr'] text-[#ff6b35] hover:underline">
+                    เปลี่ยน
+                  </button>
+                </div>
+
+                {/* Price Summary */}
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between items-center">
                     <span className="text-[14px] font-['Mitr']">ยอดรวม (เลือก)</span>
@@ -164,10 +199,22 @@ export default function CartPage() {
                     <span className="text-[14px] font-['Mitr']">ยอดรวมทั้งหมด</span>
                     <span className="text-[14px] font-['Mitr']">{formatPriceTHB(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-[14px] font-['Mitr']">ส่วนลด</span>
-                    <span className="text-[14px] font-['Mitr']">{discount}%</span>
-                  </div>
+                  {selectedCoupon && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-[14px] font-['Mitr']">ส่วนลด</span>
+                      <span className="text-[14px] font-['Mitr'] text-[#10b981]">
+                        -฿{discount}
+                      </span>
+                    </div>
+                  )}
+                  {selectedCoupon && (
+                    <div className="flex justify-between items-center pt-2 border-t border-[#e5e7eb]">
+                      <span className="text-[15px] font-['Mitr'] font-bold">ยอดชำระ</span>
+                      <span className="text-[18px] font-['Mitr'] font-bold text-[#FF4D00]">
+                        {formatPriceTHB(finalTotal)}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <Link href="/checkout">
@@ -178,6 +225,15 @@ export default function CartPage() {
           </>
         )}
       </div>
+
+      {/* Coupon Selection Modal */}
+      <CouponSelectionModal
+        isOpen={showCouponModal}
+        onClose={() => setShowCouponModal(false)}
+        onSelectCoupon={handleSelectCoupon}
+        currentSubtotal={subtotal}
+        selectedCouponId={selectedCoupon?.id}
+      />
     </main>
   );
 }

@@ -20,7 +20,7 @@
   padding: 1rem;
   font-size: 1.125rem;
   font-weight: 600;
-  font-family: 'Kanit', sans-serif;
+  font-family: 'Inter', sans-serif;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -95,7 +95,7 @@
   color: white;
   font-size: 0.75rem;
   font-weight: bold;
-  font-family: 'Kanit', sans-serif;
+  font-family: 'Inter', sans-serif;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -117,7 +117,7 @@
   text-align: center;
   color: #999;
   font-size: 1.125rem;
-  font-family: 'Kanit', sans-serif;
+  font-family: 'Inter', sans-serif;
   padding: 4rem 0;
   }
 

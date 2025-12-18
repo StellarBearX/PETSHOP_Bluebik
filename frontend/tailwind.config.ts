@@ -13,9 +13,6 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
-      fontFamily: {
-        sans: ['Kanit', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-      },
     },
   },
   plugins: [],

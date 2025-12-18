@@ -72,7 +72,7 @@ export default function AddressPage() {
                   <img 
                     src="https://api.builder.io/api/v1/image/assets/TEMP/85456dbddef44f1ec86f5e003221c58a31f1e87a"
                     alt="Add"
-                    className={styles.addIcon}
+                    className="w-4 h-4"
                   />
                   เพิ่มที่อยู่
                 </button>

@@ -30,7 +30,7 @@ export default function FavoritePage() {
             alt="Favorite"
             className="w-10 h-10 md:w-[50px] md:h-[50px]"
           />
-          <h1 className="text-white text-2xl md:text-[32px] font-bold font-sans overflow-wrap-break">รายการโปรด</h1>
+          <h1 className="text-white text-2xl md:text-[32px] font-bold font-['Inter'] overflow-wrap-break">รายการโปรด</h1>
         </div>
         <div className="max-w-[1000px] mx-auto">
           <div className="bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] rounded">
@@ -67,14 +67,11 @@ export default function FavoritePage() {
 
                         <div className={styles.productBadges}>
                           {(product.badges ?? []).slice(0, 1).map((badge) => (
-                            <div key={badge} className={styles.badge}>
-                              <span className={styles.badgeText}>{badge}</span>
+                            <div key={badge} className="product-badge">
+                              <span>{badge}</span>
                             </div>
                           ))}
-                          <StarRatingIcon 
-                            rating={product.rating || 5} 
-                            className={styles.ratingIcon}
-                          />
+                          <StarRatingIcon className="w-[42px] h-[42px]" />
                         </div>
 
                         <div className={styles.productPrice}>

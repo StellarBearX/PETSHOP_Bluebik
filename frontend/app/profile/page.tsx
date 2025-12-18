@@ -179,11 +179,7 @@ export default function ProfilePage() {
                           onChange={(e) => setFormData({...formData, day: e.target.value})}
                           className={styles.select}
                         >
-                          {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                            <option key={day} value={day.toString()}>
-                              {day}
-                            </option>
-                          ))}
+                          <option value="9">9</option>
                         </select>
                         <img 
                           src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
@@ -197,18 +193,7 @@ export default function ProfilePage() {
                           onChange={(e) => setFormData({...formData, month: e.target.value})}
                           className={styles.select}
                         >
-                          <option value="มกราคม">มกราคม</option>
-                          <option value="กุมภาพันธ์">กุมภาพันธ์</option>
-                          <option value="มีนาคม">มีนาคม</option>
-                          <option value="เมษายน">เมษายน</option>
-                          <option value="พฤษภาคม">พฤษภาคม</option>
-                          <option value="มิถุนายน">มิถุนายน</option>
-                          <option value="กรกฎาคม">กรกฎาคม</option>
                           <option value="สิงหาคม">สิงหาคม</option>
-                          <option value="กันยายน">กันยายน</option>
-                          <option value="ตุลาคม">ตุลาคม</option>
-                          <option value="พฤศจิกายน">พฤศจิกายน</option>
-                          <option value="ธันวาคม">ธันวาคม</option>
                         </select>
                         <img 
                           src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
@@ -222,11 +207,7 @@ export default function ProfilePage() {
                           onChange={(e) => setFormData({...formData, year: e.target.value})}
                           className={styles.select}
                         >
-                          {Array.from({ length: 100 }, (_, i) => 2567 - i).map((year) => (
-                            <option key={year} value={year.toString()}>
-                              {year}
-                            </option>
-                          ))}
+                          <option value="2567">2567</option>
                         </select>
                         <img 
                           src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"

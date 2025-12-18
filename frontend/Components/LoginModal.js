@@ -78,7 +78,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
                         <button 
                             type="button"
                             onClick={handleForgotPassword}
-                            className="flex-1 h-[38px] btn-outline-primary text-lg font-sans"
+                            className="flex-1 h-[38px] btn-outline-primary text-lg font-['DBHelvethaicaX']"
                         >
                             ลืมรหัสผ่าน
                         </button>

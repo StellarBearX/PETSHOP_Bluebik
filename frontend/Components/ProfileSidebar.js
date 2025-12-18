@@ -58,7 +58,7 @@ export default function ProfileSidebar() {
                 : 'hover:bg-gray-50'
             }`}
           >
-            <span className={`${item.fontSize} font-sans -tracking-[0.333px]`}>
+            <span className={`${item.fontSize} font-['Inter'] -tracking-[0.333px]`}>
               {item.label}
             </span>
           </Link>
@@ -69,7 +69,7 @@ export default function ProfileSidebar() {
           onClick={onLogout}
           className="w-full text-left p-2 rounded hover:bg-gray-50"
         >
-          <span className="text-sm font-sans -tracking-[0.333px] text-red-500">
+          <span className="text-sm font-['Inter'] -tracking-[0.333px] text-red-500">
             ออกจากระบบ
           </span>
         </button>

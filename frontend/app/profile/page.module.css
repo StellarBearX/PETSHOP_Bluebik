@@ -2,179 +2,58 @@
 /* Profile layout uses: profile-header, profile-header-title, profile-flex-container, profile-main-content */
 /* Section titles use: profile-section-title, profile-section-description */
 
-.main {
-  min-height: calc(100vh - 105px);
-  background: #F7F7F7;
-  padding: 2rem 0;
-}
-
-@media (min-width: 768px) {
-  .main {
-    padding: 3rem 0;
-  }
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.header {
-  margin-bottom: 2rem;
-}
-
-.headerTitle {
-  font-size: 24px;
-  font-weight: 700;
-  color: #171717;
-  font-family: 'Kanit', sans-serif;
-}
-
-@media (min-width: 768px) {
-  .headerTitle {
-    font-size: 32px;
-  }
-}
-
-.flexContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-@media (min-width: 1024px) {
-  .flexContainer {
-    flex-direction: row;
-    gap: 3rem;
-    align-items: flex-start;
-  }
-}
-
-.mainContent {
-  flex: 1;
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-@media (min-width: 768px) {
-  .mainContent {
-    padding: 2.5rem;
-  }
-}
-
-.sectionTitle {
-  font-size: 20px;
-  font-weight: 700;
-  color: #171717;
-  margin-bottom: 0.5rem;
-  font-family: 'Kanit', sans-serif;
-}
-
-@media (min-width: 768px) {
-  .sectionTitle {
-    font-size: 24px;
-  }
-}
-
-.sectionDescription {
-  font-size: 14px;
-  color: #666666;
-  margin-bottom: 2rem;
-  font-family: 'Kanit', sans-serif;
-}
-
-@media (min-width: 768px) {
-  .sectionDescription {
-    font-size: 16px;
-    margin-bottom: 2.5rem;
-  }
-}
-
 .formContainer {
   display: flex;
-  flex-direction: column;
   gap: 3rem;
-}
-
-@media (min-width: 1024px) {
-  .formContainer {
-    flex-direction: row;
-    gap: 4rem;
-  }
 }
 
 .formSection {
   flex: 1;
-  min-width: 0;
 }
 
 .formGroup {
-  margin-bottom: 2rem;
-}
-
-.formGroupTitle {
-  font-size: 16px;
-  font-weight: 600;
-  font-family: 'Kanit', sans-serif;
-  color: #171717;
-  margin-bottom: 1.25rem;
-}
-
-.inputGroup {
   margin-bottom: 1.5rem;
 }
 
+.formGroupTitle {
+  font-size: 15px;
+  font-family: 'Inter';
+  letter-spacing: -0.333px;
+  margin-bottom: 1rem;
+}
+
+.inputGroup {
+  margin-bottom: 1.25rem;
+}
+
 .label {
-  font-size: 14px;
-  font-weight: 500;
-  font-family: 'Kanit', sans-serif;
-  color: #333333;
+  font-size: 15px;
+  font-family: 'Inter';
+  letter-spacing: -0.333px;
   display: block;
   margin-bottom: 0.5rem;
 }
 
 .input {
-  width: 100%;
-  max-width: 400px;
-  height: 44px;
-  border: 1px solid #D9D9D9;
-  border-radius: 8px;
+  width: 250px;
+  height: 36px;
+  border: 1px solid #656565;
+  border-radius: 0.25rem;
   padding: 0 1rem;
   font-size: 15px;
-  color: #171717;
-  font-family: 'Kanit', sans-serif;
-  transition: all 0.2s;
-  background: white;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #FF4D00;
-  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.1);
-}
-
-.input::placeholder {
-  color: #999999;
+  color: #656565;
+  font-family: 'Inter';
+  letter-spacing: -0.333px;
 }
 
 .inputEmail {
-  max-width: 100%;
-  text-decoration: none;
+  width: 364px;
+  text-decoration: underline;
 }
 
 .genderOptions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-
-@media (min-width: 640px) {
-  .genderOptions {
-    gap: 3rem;
-  }
+  gap: 3rem;
 }
 
 .radioLabel {
@@ -182,27 +61,19 @@
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.radioLabel:hover {
-  opacity: 0.8;
 }
 
 .radioOuter {
   position: relative;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .radioCircle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #BDBDBD;
-  transition: all 0.2s;
-  background: white;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  border: 1px solid #656565;
 }
 
 .radioCircleActive {
@@ -214,374 +85,108 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 9999px;
   background: #FF4D00;
 }
 
 .radioText {
   font-size: 15px;
-  font-family: 'Kanit', sans-serif;
-  color: #333333;
-  user-select: none;
+  font-family: 'Inter';
+  letter-spacing: -0.333px;
 }
 
 .dateInputs {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.75rem;
 }
 
 .selectWrapper {
   position: relative;
-  flex: 1;
-  min-width: 100px;
 }
 
 .select {
-  width: 100%;
-  height: 44px;
-  border: 1px solid #D9D9D9;
-  border-radius: 8px;
-  padding: 0 2.5rem 0 1rem;
+  width: 108px;
+  height: 36px;
+  border: 1px solid #656565;
+  border-radius: 0.25rem;
+  padding: 0 0.75rem;
   font-size: 15px;
-  font-family: 'Kanit', sans-serif;
-  color: #171717;
+  font-family: 'Inter';
+  letter-spacing: -0.333px;
   appearance: none;
-  background: white;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.select:focus {
-  outline: none;
-  border-color: #FF4D00;
-  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.1);
 }
 
 .selectIcon {
   position: absolute;
-  right: 1rem;
+  right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
   pointer-events: none;
-  opacity: 0.6;
 }
 
 .saveButtonContainer {
   display: flex;
   justify-content: flex-end;
-  margin-top: 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid #E5E5E5;
+  margin-top: 2rem;
 }
 
 .saveButton {
-  min-width: 120px;
-  height: 44px;
-  background: linear-gradient(to right, #FF4D00, #FF7A00);
-  border: none;
-  border-radius: 8px;
+  width: 100px;
+  height: 36px;
+  background: linear-gradient(to right, #FF4D00, #F99D20);
+  border-radius: 0.25rem;
   color: white;
   font-size: 15px;
-  font-weight: 600;
-  font-family: 'Kanit', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(255, 77, 0, 0.2);
+  font-family: 'Inter';
+  letter-spacing: -0.333px;
+  transition: opacity 0.2s;
 }
 
 .saveButton:hover {
   opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 77, 0, 0.3);
-}
-
-.saveButton:active {
-  transform: translateY(0);
 }
 
 .profilePicSection {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
-  background: #FAFAFA;
-  border-radius: 12px;
-  border: 1px solid #E5E5E5;
-}
-
-@media (min-width: 1024px) {
-  .profilePicSection {
-    min-width: 280px;
-    padding: 2.5rem 2rem;
-  }
+  padding-top: 4rem;
 }
 
 .profilePic {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  margin-bottom: 1.5rem;
-  object-fit: cover;
-  border: 3px solid white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-@media (min-width: 768px) {
-  .profilePic {
-    width: 140px;
-    height: 140px;
-  }
+  width: 91px;
+  height: 91px;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
 }
 
 .uploadButton {
-  min-width: 140px;
-  height: 40px;
-  border: 2px solid #F99D20;
-  border-radius: 8px;
+  width: 100px;
+  height: 30px;
+  border: 1px solid #F99D20;
+  border-radius: 0.25rem;
   color: #F99D20;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: 'Kanit', sans-serif;
-  background: white;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-size: 15px;
+  font-family: 'Inter';
+  letter-spacing: -0.333px;
+  transition: background 0.2s;
 }
 
 .uploadButton:hover {
-  background: #FFF5F0;
-  border-color: #FF4D00;
-  color: #FF4D00;
-}
-
-.uploadButton:active {
-  transform: scale(0.98);
+  background: #f9fafb;
 }
 
 .uploadNote {
-  font-size: 11px;
-  color: #666666;
-  font-family: 'Kanit', sans-serif;
-  margin-top: 1rem;
+  font-size: 8px;
+  color: #656565;
+  font-family: 'Inter';
+  margin-top: 0.5rem;
   text-align: center;
-  max-width: 200px;
-  line-height: 1.5;
-}
-
-/* Modal Overlay */
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 1rem;
-}
-
-/* Confirm Save Modal */
-.confirmModal {
-  background: white;
-  border-radius: 12px;
-  padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-.warningIconContainer {
-  margin-bottom: 1.5rem;
-}
-
-.warningIconCircle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(to right, #FF4D00, #FF7A00);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 4px 16px rgba(255, 77, 0, 0.3);
-}
-
-.bellIcon {
-  width: 40px;
-  height: 40px;
-  color: white;
-  stroke-width: 2;
-}
-
-.exclamationMark {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FF4D00;
-  font-size: 18px;
-  font-weight: 700;
-  font-family: 'Kanit', sans-serif;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.warningMessage {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.warningText {
-  font-size: 18px;
-  font-weight: 500;
-  color: #171717;
-  margin-bottom: 0.5rem;
-  font-family: 'Kanit', sans-serif;
-}
-
-@media (min-width: 768px) {
-  .warningText {
-    font-size: 20px;
-  }
-}
-
-.confirmModalButtons {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-}
-
-.cancelSaveButton {
-  flex: 1;
-  height: 44px;
-  border: 2px solid #FF4D00;
-  border-radius: 8px;
-  background: white;
-  color: #FF4D00;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: 'Kanit', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.cancelSaveButton:hover {
-  background: #FFF5F0;
-}
-
-.cancelSaveButton:active {
-  transform: scale(0.98);
-}
-
-.confirmSaveButton {
-  flex: 1;
-  height: 44px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(to right, #FF4D00, #FF7A00);
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: 'Kanit', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(255, 77, 0, 0.2);
-}
-
-.confirmSaveButton:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 77, 0, 0.3);
-}
-
-.confirmSaveButton:active {
-  transform: translateY(0);
-}
-
-/* Success Modal */
-
-.successModal {
-  background: white;
-  border-radius: 12px;
-  padding: 3rem 2rem;
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-.successIconContainer {
-  margin-bottom: 2rem;
-}
-
-.successIconCircle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(to right, #FF4D00, #FF7A00);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px rgba(255, 77, 0, 0.3);
-}
-
-.successCheckmark {
-  width: 40px;
-  height: 40px;
-  color: white;
-  stroke-width: 3;
-}
-
-.successTitle {
-  font-size: 24px;
-  font-weight: 700;
-  color: #171717;
-  margin-bottom: 2rem;
-  text-align: center;
-  font-family: 'Kanit', sans-serif;
-}
-
-@media (min-width: 768px) {
-  .successTitle {
-    font-size: 28px;
-  }
-}
-
-.successCloseButton {
-  min-width: 198px;
-  height: 38px;
-  border: 2px solid #F7921E;
-  border-radius: 9999px;
-  background: white;
-  color: #F7921E;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: 'Kanit', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.successCloseButton:hover {
-  background: #F7921E;
-  color: white;
-}
-
-.successCloseButton:active {
-  transform: scale(0.98);
+  max-width: 100px;
 }
 
 

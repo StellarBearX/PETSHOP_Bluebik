@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/app/providers'
+import styles from './ProfileSidebar.module.css'
 
 export default function ProfileSidebar() {
   const pathname = usePathname()
@@ -22,18 +23,18 @@ export default function ProfileSidebar() {
   ]
 
   return (
-    <div className="w-[203px] bg-white rounded-lg shadow p-4">
+    <div className={styles.sidebar}>
       {/* Profile Header */}
-      <div className="flex items-center gap-3 pb-4 border-b mb-4">
+      <div className={styles.header}>
         <img 
           src="https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd"
           alt="Profile"
-          className="w-12 h-12 rounded-full"
+          className={styles.profileImage}
         />
         <div>
-          <p className="text-[15px] font-['Inter'] -tracking-[0.333px]">Meow Meow</p>
+          <p className={styles.username}>Meow Meow</p>
           <div className="flex items-center gap-1">
-            <p className="text-[10px] text-[#656565] font-['Inter'] -tracking-[0.333px]">
+            <p className={styles.editText}>
               แก้ไขข้อมูลส่วนตัว
             </p>
             <img 

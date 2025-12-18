@@ -5,12 +5,44 @@ import { useAuth } from '@/app/providers'
 export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [emailError, setEmailError] = useState('')
     const { handleLogin } = useAuth()
 
     if (!isOpen) return null
 
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return emailRegex.test(email)
+    }
+
+    const handleEmailChange = (e) => {
+        const value = e.target.value
+        setEmail(value)
+        if (value && !validateEmail(value)) {
+            setEmailError('กรุณากรอกอีเมลล์ที่ถูกต้อง')
+        } else {
+            setEmailError('')
+        }
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
+        
+        // Validate email
+        if (!email) {
+            setEmailError('กรุณากรอกอีเมลล์')
+            return
+        }
+        
+        if (!validateEmail(email)) {
+            setEmailError('กรุณากรอกอีเมลล์ที่ถูกต้อง')
+            return
+        }
+        
+        if (!password) {
+            return
+        }
+        
         console.log('Login:', { email, password })
         handleLogin()
         onClose()
@@ -40,13 +72,18 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
                                 <path fillRule="evenodd" clipRule="evenodd" d="M9.56522 0C4.29105 0 0 4.48609 0 10C0 15.5139 4.29105 20 9.56522 20C14.8394 20 19.1304 15.5139 19.1304 10C19.1304 4.48609 14.8394 0 9.56522 0ZM9.56522 2.91668C12.0923 2.91668 14.1486 5.06633 14.1486 7.70836C14.1486 10.3504 12.0923 12.5 9.56522 12.5C7.03809 12.5 4.98187 10.3504 4.98187 7.70832C4.98187 5.06629 7.03809 2.91668 9.56522 2.91668ZM3.19564 14.989C4.65109 17.0148 6.96068 18.3333 9.56522 18.3333C12.1698 18.3333 14.4794 17.0147 15.9348 14.9889C14.3406 14.187 12.0633 13.3333 9.56522 13.3333C7.06735 13.3333 4.79019 14.1869 3.19564 14.989Z" fill="#F7921E"/>
                             </svg>
                             <input 
-                                type="text"
+                                type="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleEmailChange}
+                                onBlur={handleEmailChange}
                                 placeholder="อิเมลล์"
                                 className="input-field"
+                                required
                             />
                         </div>
+                        {emailError && (
+                            <p className="text-red-500 text-sm mt-1 ml-1">{emailError}</p>
+                        )}
                     </div>
 
                     {/* Password Input */}
@@ -56,11 +93,12 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
                                 <path fillRule="evenodd" clipRule="evenodd" d="M18.3006 7.5H16.732V5.83332C16.732 2.6168 13.4482 0 9.41177 0C5.37529 0 2.09152 2.6168 2.09152 5.83332V7.5H0.522892C0.233873 7.5 0 7.68637 0 7.91668V18.3334C0 19.2525 0.93799 20 2.09152 20H16.7321C17.8855 20 18.8235 19.2525 18.8235 18.3333V7.91668C18.8235 7.68637 18.5897 7.5 18.3006 7.5ZM10.9774 16.204C10.9937 16.3216 10.9462 16.4396 10.8472 16.5279C10.7481 16.6162 10.6061 16.6667 10.4575 16.6667H8.36603C8.21745 16.6667 8.07549 16.6162 7.97642 16.5279C7.87735 16.4396 7.82985 16.3216 7.84623 16.204L8.17608 13.8404C7.64044 13.5299 7.32029 13.0388 7.32029 12.5C7.32029 11.5808 8.25828 10.8333 9.41181 10.8333C10.5653 10.8333 11.5033 11.5808 11.5033 12.5C11.5033 13.0388 11.1832 13.5299 10.6475 13.8404L10.9774 16.204ZM5.22877 5.83332V7.5H13.5948V5.83332C13.5948 3.99535 11.7182 2.5 9.41176 2.5C7.10529 2.5 5.22877 3.99535 5.22877 5.83332Z" fill="#F7921E"/>
                             </svg>
                             <input 
-                                type="text"
+                                type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="รหัสผ่าน"
                                 className="input-field"
+                                required
                             />
                         </div>
                     </div>

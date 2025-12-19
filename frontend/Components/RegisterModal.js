@@ -46,7 +46,9 @@ export default function RegisterModal({ isOpen, onClose }) {
     } else if (!validateEmail(email)) {
       setEmailError("กรุณากรอกอีเมลล์ที่ถูกต้อง");
       hasError = true;
-    } else setEmailError("");
+    } else {
+      setEmailError("");
+    }
 
     if (!password) {
       setPasswordError("กรุณากรอกรหัสผ่าน");
@@ -56,13 +58,16 @@ export default function RegisterModal({ isOpen, onClose }) {
       if (pwdError) {
         setPasswordError(pwdError);
         hasError = true;
-      } else setPasswordError("");
+      } else {
+        setPasswordError("");
+      }
     }
 
     if (hasError) return;
 
     try {
       localStorage.setItem("registeredUser", JSON.stringify({ email, password }));
+      localStorage.setItem("hasRegistered", "true");
     } catch {}
 
     setIsSuccessOpen(true);
@@ -77,7 +82,10 @@ export default function RegisterModal({ isOpen, onClose }) {
   return (
     <>
       {!isSuccessOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={onClose}
+        >
           <div
             className="bg-white w-[550px] h-[700px] shadow-[0_18px_45px_rgba(0,0,0,0.18)] flex flex-col items-center justify-center"
             onClick={(e) => e.stopPropagation()}
@@ -86,7 +94,7 @@ export default function RegisterModal({ isOpen, onClose }) {
             <div className="mb-12">
               <img
                 src="https://api.builder.io/api/v1/image/assets/TEMP/0aede5d0e28cb7e974e8566560f084f298d19463"
-                alt="logo"
+                alt="Meow Meow"
                 className="w-[392px] h-[221px] object-contain"
               />
             </div>
@@ -154,11 +162,7 @@ export default function RegisterModal({ isOpen, onClose }) {
         </div>
       )}
 
-      <SuccessModal
-        isOpen={isSuccessOpen}
-        onClose={closeSuccess}
-        message="ลงทะเบียนสำเร็จ"
-      />
+      <SuccessModal isOpen={isSuccessOpen} onClose={closeSuccess} message="ลงทะเบียนสำเร็จ" />
     </>
   );
 }

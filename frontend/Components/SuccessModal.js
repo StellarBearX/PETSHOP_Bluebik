@@ -11,23 +11,14 @@ export default function SuccessModal({ isOpen, onClose, message }) {
       <div
         className="bg-white shadow-[0_18px_45px_rgba(0,0,0,0.18)] flex flex-col items-center"
         onClick={(e) => e.stopPropagation()}
-        style={{
-          width: 400,
-          height: 400,
-        }}
+        style={{ width: 400, height: 400 }}
       >
-        {/* รูป */}
         <img
           src="/images/auth/icon-success.png"
           alt="success"
-          style={{
-            width: 120,
-            height: 120,
-            marginTop: 62,
-          }}
+          style={{ width: 120, height: 120, marginTop: 62 }}
         />
 
-        {/* ข้อความ */}
         <p
           style={{
             marginTop: 30,
@@ -44,7 +35,6 @@ export default function SuccessModal({ isOpen, onClose, message }) {
           {message || "ลงทะเบียนสำเร็จ"}
         </p>
 
-        {/* ปุ่ม */}
         <button
           onClick={onClose}
           style={{

@@ -6,6 +6,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [emailError, setEmailError] = useState('')
+    const [passwordError, setPasswordError] = useState('')
     const { handleLogin } = useAuth()
 
     if (!isOpen) return null
@@ -40,8 +41,11 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
         }
         
         if (!password) {
+            setPasswordError('กรุณากรอกรหัสผ่าน')
             return
         }
+        
+        setPasswordError('')
         
         console.log('Login:', { email, password })
         handleLogin()
@@ -95,12 +99,25 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
                             <input 
                                 type="password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                    if (passwordError) {
+                                        setPasswordError('')
+                                    }
+                                }}
+                                onBlur={(e) => {
+                                    if (!e.target.value) {
+                                        setPasswordError('กรุณากรอกรหัสผ่าน')
+                                    }
+                                }}
                                 placeholder="รหัสผ่าน"
                                 className="input-field"
                                 required
                             />
                         </div>
+                        {passwordError && (
+                            <p className="text-red-500 text-sm mt-1 ml-1">{passwordError}</p>
+                        )}
                     </div>
 
                     {/* Login Button */}
@@ -140,6 +157,12 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
                     <div className="flex gap-4">
                         <button 
                             type="button"
+                            onClick={() => {
+                                console.log('Facebook login')
+                                // Mock: Just login directly
+                                handleLogin()
+                                onClose()
+                            }}
                             className="social-btn-facebook"
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -149,6 +172,12 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
                         </button>
                         <button 
                             type="button"
+                            onClick={() => {
+                                console.log('Google login')
+                                // Mock: Just login directly
+                                handleLogin()
+                                onClose()
+                            }}
                             className="social-btn-google"
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -5,18 +5,81 @@ import { useAuth } from '@/app/providers'
 export default function RegisterModal({ isOpen, onClose, onSuccess }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [emailError, setEmailError] = useState('')
+    const [passwordError, setPasswordError] = useState('')
     const { handleLogin } = useAuth()
 
     if (!isOpen) return null
 
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return emailRegex.test(email)
+    }
+
+    const validatePassword = (password) => {
+        if (password.length < 6) {
+            return 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร'
+        }
+        if (password.length > 20) {
+            return 'รหัสผ่านต้องไม่เกิน 20 ตัวอักษร'
+        }
+        return ''
+    }
+
+    const handleEmailChange = (e) => {
+        const value = e.target.value
+        setEmail(value)
+        if (value && !validateEmail(value)) {
+            setEmailError('กรุณากรอกอีเมลล์ที่ถูกต้อง')
+        } else {
+            setEmailError('')
+        }
+    }
+
+    const handlePasswordChange = (e) => {
+        const value = e.target.value
+        setPassword(value)
+        const error = validatePassword(value)
+        setPasswordError(error)
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
+        
+        // Validate
+        let hasError = false
+        
+        if (!email) {
+            setEmailError('กรุณากรอกอีเมลล์')
+            hasError = true
+        } else if (!validateEmail(email)) {
+            setEmailError('กรุณากรอกอีเมลล์ที่ถูกต้อง')
+            hasError = true
+        }
+        
+        if (!password) {
+            setPasswordError('กรุณากรอกรหัสผ่าน')
+            hasError = true
+        } else {
+            const pwdError = validatePassword(password)
+            if (pwdError) {
+                setPasswordError(pwdError)
+                hasError = true
+            }
+        }
+        
+        if (hasError) {
+            return
+        }
+        
         console.log('Register:', { email, password })
         handleLogin()
         setTimeout(() => {
-        onSuccess()
+            onSuccess()
         }, 0)
     }
+
+    const isFormValid = email && password && !emailError && !passwordError
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -40,13 +103,17 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                                 className="w-5 h-5"
                             />
                             <input 
-                                type="text"
+                                type="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleEmailChange}
+                                onBlur={handleEmailChange}
                                 placeholder="อีเมลล์"
                                 className="input-field"
                             />
                         </div>
+                        {emailError && (
+                            <p className="text-red-500 text-sm mt-1 ml-1">{emailError}</p>
+                        )}
                     </div>
 
                     {/* Password Input */}
@@ -58,19 +125,33 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                                 className="w-5 h-5"
                             />
                             <input 
-                                type="text"
+                                type="password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={handlePasswordChange}
+                                onBlur={handlePasswordChange}
                                 placeholder="รหัสผ่าน"
                                 className="input-field"
                             />
                         </div>
+                        {passwordError && (
+                            <p className="text-red-500 text-sm mt-1 ml-1">{passwordError}</p>
+                        )}
+                        {!passwordError && password && (
+                            <p className="text-gray-500 text-xs mt-1 ml-1">
+                                รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร
+                            </p>
+                        )}
                     </div>
 
                     {/* Register Button */}
                     <button 
                         type="submit"
-                        className="w-full h-[50px] btn-primary text-xl font-normal mt-8"
+                        disabled={!isFormValid}
+                        className={`w-full h-[50px] text-xl font-normal mt-8 ${
+                            isFormValid 
+                                ? 'btn-primary' 
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
                     >
                         ลงทะเบียน
                     </button>

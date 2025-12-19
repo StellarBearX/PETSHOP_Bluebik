@@ -1,4 +1,5 @@
 "use client"
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/app/providers'
@@ -8,6 +9,59 @@ export default function ProfileSidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const { handleLogout } = useAuth()
+  const [profileName, setProfileName] = useState('Meow Meow')
+  const [profileImage, setProfileImage] = useState('https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd')
+
+  // Function to load profile data
+  const loadProfileData = () => {
+    const saved = localStorage.getItem('petshop_profile')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed.firstName && parsed.lastName) {
+          const fullName = `${parsed.firstName} ${parsed.lastName}`
+          setProfileName(fullName)
+        }
+      } catch (e) {
+        console.error('Error loading profile:', e)
+      }
+    } else {
+      setProfileName('Meow Meow')
+    }
+    
+    const savedImage = localStorage.getItem('petshop_profile_image')
+    if (savedImage) {
+      setProfileImage(savedImage)
+    } else {
+      setProfileImage('https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd')
+    }
+  }
+
+  // Load profile data on mount
+  useEffect(() => {
+    loadProfileData()
+  }, [])
+
+  // Listen for storage changes and custom events
+  useEffect(() => {
+    const handleStorageChange = () => {
+      loadProfileData()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('profileUpdated', handleStorageChange)
+    
+    // Poll localStorage every 500ms to catch updates
+    const interval = setInterval(() => {
+      loadProfileData()
+    }, 500)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('profileUpdated', handleStorageChange)
+      clearInterval(interval)
+    }
+  }, [])
 
   const onLogout = () => {
     handleLogout()
@@ -27,13 +81,16 @@ export default function ProfileSidebar() {
       {/* Profile Header */}
       <div className={styles.header}>
         <img 
-          src="https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd"
+          src={profileImage}
           alt="Profile"
           className={styles.profileImage}
         />
         <div>
-          <p className={styles.username}>Meow Meow</p>
-          <div className="flex items-center gap-1">
+          <p className={styles.username}>{profileName}</p>
+          <Link 
+            href="/profile"
+            className="flex items-center gap-1 hover:opacity-80 transition-opacity"
+          >
             <p className={styles.editText}>
               แก้ไขข้อมูลส่วนตัว
             </p>
@@ -42,7 +99,7 @@ export default function ProfileSidebar() {
               alt=""
               className="w-[14px] h-[14px]"
             />
-          </div>
+          </Link>
         </div>
       </div>
 

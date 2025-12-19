@@ -1,36 +1,156 @@
 "use client"
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { QRCodeSVG } from 'qrcode.react'
 import SuccessModal from '@/Components/SuccessModal'
 import CouponSelectionModal from '@/Components/CouponSelectionModal'
 import PaymentCardModal from '@/Components/PaymentCardModal'
-import { useCart } from '../providers'
+import { useCart, useCatalog } from '../providers'
+import { useToast } from '@/contexts/ToastContext'
+import { formatSelection } from '@/lib/format'
 import type { UserCoupon } from '@/lib/coupon'
 import styles from './page.module.css'
 
 interface Card {
   id: string
-  type: 'visa' | 'mastercard' | 'jcb'
+  type: 'visa' | 'mastercard' | 'jcb' | 'unionpay'
   last4: string
+  name?: string
+}
+
+interface Address {
+  id: number
   name: string
+  phone: string
+  address: string
+  addressEn?: string
+  isDefault: boolean
 }
 
 export default function CheckoutPage() {
-  const { subtotal, selectedCoupon, setSelectedCoupon, productDiscount, shippingDiscount } = useCart()
+  const router = useRouter()
+  const { showToast } = useToast()
+  const { state, subtotal, selectedCoupon, setSelectedCoupon, productDiscount, shippingDiscount, clear } = useCart()
+  const { getProductById } = useCatalog()
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showCouponModal, setShowCouponModal] = useState(false)
   const [showCardModal, setShowCardModal] = useState(false)
   const [agreed, setAgreed] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card' | 'qr'>('card')
-  const [selectedCard, setSelectedCard] = useState<Card>({
-    id: '1',
-    type: 'visa',
-    last4: '4747',
-    name: 'บัตรเครดิต VISA'
-  })
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null)
   const [qrExpiry, setQrExpiry] = useState(15 * 60) // 15 minutes in seconds
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Function to load cards
+  const loadCards = () => {
+    const saved = localStorage.getItem('petshop_cards')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Use first card as default if no card is selected
+          if (!selectedCard) {
+            const firstCard = parsed[0]
+            setSelectedCard({
+              id: firstCard.id,
+              type: firstCard.type,
+              last4: firstCard.last4,
+              name: getCardDisplayNameFromType(firstCard.type)
+            })
+          } else {
+            // Check if selected card still exists
+            const cardExists = parsed.find((c: any) => c.id === selectedCard.id)
+            if (!cardExists) {
+              // Selected card was deleted, use first card
+              const firstCard = parsed[0]
+              setSelectedCard({
+                id: firstCard.id,
+                type: firstCard.type,
+                last4: firstCard.last4,
+                name: getCardDisplayNameFromType(firstCard.type)
+              })
+            }
+          }
+        } else {
+          // No cards available
+          setSelectedCard(null)
+        }
+      } catch (e) {
+        console.error('Error loading cards:', e)
+      }
+    } else {
+      setSelectedCard(null)
+    }
+  }
+
+  // Load cards from localStorage on mount
+  useEffect(() => {
+    loadCards()
+  }, [])
+
+  // Listen for card updates
+  useEffect(() => {
+    const handleCardsUpdate = () => {
+      loadCards()
+    }
+    
+    window.addEventListener('cardsUpdated', handleCardsUpdate)
+    window.addEventListener('storage', handleCardsUpdate)
+    
+    return () => {
+      window.removeEventListener('cardsUpdated', handleCardsUpdate)
+      window.removeEventListener('storage', handleCardsUpdate)
+    }
+  }, [selectedCard])
+
+  // Get card display name from type
+  const getCardDisplayNameFromType = (type: string): string => {
+    const names: Record<string, string> = {
+      visa: 'บัตรเครดิต VISA',
+      mastercard: 'บัตรเครดิต Mastercard',
+      jcb: 'บัตรเครดิต JCB',
+      unionpay: 'บัตรเครดิต UnionPay'
+    }
+    return names[type] || 'บัตรเครดิต'
+  }
+
+  // Load address from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('petshop_addresses')
+    if (saved) {
+      try {
+        const addresses: Address[] = JSON.parse(saved)
+        const defaultAddress = addresses.find(addr => addr.isDefault) || addresses[0]
+        if (defaultAddress) {
+          setSelectedAddress(defaultAddress)
+        }
+      } catch (e) {
+        console.error('Error loading address:', e)
+        // Use default address if error
+        setSelectedAddress({
+          id: 0,
+          name: "Meow Meow",
+          phone: "(+66)090-000-0000",
+          address: "บริษัท บลูบิค วัลแคน  จำกัด  (สำนักงานใหญ่)  เลขประจำตัวผู้เสียภาษี 0105565196514 เลขที่ 199 อาคารเอส โอเอซิส ชั้น 11 ห้องเลขที่ 1103-1106 ถนนวิภาวดีรังสิต แขวงจอมพล เขตจตุจักร กรุงเทพมหานคร 10900",
+          addressEn: "Bluebik Vulcan Company Limited (Head Office) Tax ID : 0105565196514 No.199 S-OASIS Building, 11th Floor, Unit no. 1103-1106, Vibhavadi Rangsit Road, Chomphon, Chatuchak, Bangkok 10900",
+          isDefault: true
+        })
+      }
+    } else {
+      // Use default address if no saved address
+      setSelectedAddress({
+        id: 0,
+        name: "Meow Meow",
+        phone: "(+66)090-000-0000",
+        address: "บริษัท บลูบิค วัลแคน  จำกัด  (สำนักงานใหญ่)  เลขประจำตัวผู้เสียภาษี 0105565196514 เลขที่ 199 อาคารเอส โอเอซิส ชั้น 11 ห้องเลขที่ 1103-1106 ถนนวิภาวดีรังสิต แขวงจอมพล เขตจตุจักร กรุงเทพมหานคร 10900",
+        addressEn: "Bluebik Vulcan Company Limited (Head Office) Tax ID : 0105565196514 No.199 S-OASIS Building, 11th Floor, Unit no. 1103-1106, Vibhavadi Rangsit Road, Chomphon, Chatuchak, Bangkok 10900",
+        isDefault: true
+      })
+    }
+  }, [])
 
   const handleSelectCoupon = (coupon: UserCoupon | null) => {
     setSelectedCoupon(coupon)
@@ -38,6 +158,7 @@ export default function CheckoutPage() {
 
   const handleSelectCard = (card: Card) => {
     setSelectedCard(card)
+    setShowCardModal(false)
   }
 
   const formatTime = (seconds: number) => {
@@ -46,35 +167,35 @@ export default function CheckoutPage() {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const getCardDisplayName = (card: Card) => {
+  const getCardDisplayName = (card: Card | null) => {
+    if (!card) return 'ไม่มีบัตร'
     const typeMap: Record<string, string> = {
       visa: 'VISA',
       mastercard: 'Mastercard',
-      jcb: 'JCB'
+      jcb: 'JCB',
+      unionpay: 'UnionPay'
     }
-    return typeMap[card.type] || card.name
+    return typeMap[card.type] || card.name || 'บัตรเครดิต'
   }
 
-  const orderItems = [
-    {
-      shop: "90s.shop",
-      shopType: "recommended",
-      name: "Kaniva - อาหารแมว คานิว่า เกรด Premium ไทย (มีถุงแบ่ง) 7กก",
-      variant: "Urinary 8kg, แถมไม้แหย่แมว",
-      price: 1190,
-      quantity: 1,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/66a9416979682534bcc31cf585b69c3ea91e4e97"
-    },
-    {
-      shop: "Bite of Wild Official Shop",
-      shopType: "mall",
-      name: "Bite of Wild อาหารแมว 5Kg Grain Free โปรตีน 42% อาหารเม็ดผสมฟรีซดราย 3 ชนิด เหมาะสำหรับทุกช่วงวัย",
-      variant: "5 กก. + 1 *ขนมรสปลา",
-      price: 1789,
-      quantity: 1,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/a9b9acd324c7adcbbdd98ac6bd64f51d5fbce990"
-    }
-  ]
+  // Convert cart lines to order items format
+  const orderItems = useMemo(() => {
+    return state.lines.map((line) => {
+      const product = getProductById(line.productId)
+      const variantText = product ? formatSelection(product, line.selection) : ''
+      
+      return {
+        id: line.id,
+        shop: product?.shopName || 'Unknown Shop',
+        shopType: 'recommended', // Default shop type
+        name: line.name,
+        variant: variantText,
+        price: line.price,
+        quantity: line.quantity,
+        image: line.image
+      }
+    })
+  }, [state.lines, getProductById])
 
   // Use subtotal from Cart Context instead of calculating from mock data
   const orderSubtotal = subtotal
@@ -134,14 +255,103 @@ export default function CheckoutPage() {
   }, [paymentMethod])
 
   const handleBuyNow = () => {
-    if (agreed) {
-      setShowConfirmModal(true)
+    if (!agreed) {
+      showToast('กรุณายอมรับข้อกำหนดและเงื่อนไข', 'error')
+      return
     }
+    
+    // Check if card payment method is selected but no card is available
+    if (paymentMethod === 'card' && !selectedCard) {
+      showToast('กรุณาเลือกบัตรการชำระเงิน', 'error')
+      return
+    }
+    
+    setShowConfirmModal(true)
   }
 
   const handleConfirm = () => {
+    // Check if address is selected
+    if (!selectedAddress) {
+      showToast('กรุณาเลือกที่อยู่ในการจัดส่ง', 'error')
+      return
+    }
+    
+    // Check if card payment method is selected but no card is available
+    if (paymentMethod === 'card' && !selectedCard) {
+      showToast('กรุณาเลือกบัตรการชำระเงิน', 'error')
+      return
+    }
+    
+    // Save order to localStorage (mock)
+    const order = {
+      id: Date.now().toString(),
+      items: orderItems,
+      address: selectedAddress,
+      paymentMethod,
+      total,
+      orderDate: new Date().toISOString(),
+      status: paymentMethod === 'cod' ? 'pending' : 'shipping'
+    }
+    
+    const savedOrders = localStorage.getItem('petshop_orders')
+    const orders = savedOrders ? JSON.parse(savedOrders) : []
+    orders.unshift(order)
+    localStorage.setItem('petshop_orders', JSON.stringify(orders))
+    
+    // Clear cart
+    clear()
+    
     setShowConfirmModal(false)
     setShowSuccessModal(true)
+    showToast('ทำรายการสั่งซื้อสำเร็จ', 'success')
+  }
+
+  // Set mounted state to prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  // Redirect to cart if cart is empty (only on client-side)
+  useEffect(() => {
+    if (isMounted && state.lines.length === 0) {
+      router.push('/cart')
+    }
+  }, [isMounted, state.lines.length, router])
+
+  // Show loading state during hydration
+  if (!isMounted) {
+    return (
+      <main className={styles.main}>
+        <div className={styles.container}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            minHeight: '400px' 
+          }}>
+            <p>กำลังโหลด...</p>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
+  // Don't render if cart is empty (only after mounted)
+  if (state.lines.length === 0) {
+    return (
+      <main className={styles.main}>
+        <div className={styles.container}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            minHeight: '400px' 
+          }}>
+            <p>กำลังเปลี่ยนหน้า...</p>
+          </div>
+        </div>
+      </main>
+    )
   }
 
   return (
@@ -167,15 +377,42 @@ export default function CheckoutPage() {
                 className={styles.addressIcon}
               />
               <h2 className={styles.addressTitle}>ที่อยู่</h2>
+              <button
+                onClick={() => router.push('/profile-address')}
+                style={{
+                  marginLeft: 'auto',
+                  padding: '0.5rem 1rem',
+                  background: 'transparent',
+                  color: '#FF4D00',
+                  border: '1px solid #FF4D00',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+              >
+                เปลี่ยนที่อยู่
+              </button>
             </div>
-            <p className={styles.addressText}>
-              บริษัท บลูบิค วัลแคน  จำกัด  (สำนักงานใหญ่)  เลขประจำตัวผู้เสียภาษี 0105565196514 
-              เลขที่ 199 อาคารเอส โอเอซิส ชั้น 11 ห้องเลขที่ 1103-1106 ถนนวิภาวดีรังสิต 
-              แขวงจอมพล เขตจตุจักร กรุงเทพมหานคร 10900
-              <br/><br/>
-              Bluebik Vulcan Company Limited (Head Office)<br/>
-              Tax ID : 0105565196514 No.199 S-OASIS Building, 11th Floor, Unit no. 1103-1106, Vibhavadi Rangsit Road, Chomphon, Chatuchak, Bangkok 10900
-            </p>
+            {selectedAddress ? (
+              <div>
+                <p className={styles.addressText}>
+                  {selectedAddress.name} | {selectedAddress.phone}
+                </p>
+                <p className={styles.addressText}>
+                  {selectedAddress.address}
+                </p>
+                {selectedAddress.addressEn && (
+                  <p className={styles.addressText}>
+                    {selectedAddress.addressEn}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className={styles.addressText}>
+                กรุณาเพิ่มที่อยู่ในการจัดส่ง
+              </p>
+            )}
           </div>
 
           {/* Order Items */}
@@ -352,29 +589,72 @@ export default function CheckoutPage() {
               </div>
 
               <h4 className={styles.accountTitle}>เลือกบัญชีการชำระเงิน</h4>
-              <div className={styles.accountInfo}>
-                <div className={styles.cardIcon}>
-                  <div className={styles.cardIconGradient}>
-                    <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
-                      <path d="M25.3333 2.4V17.6C25.3333 18.2667 25.1 18.8333 24.6333 19.3C24.1667 19.7667 23.6 20 22.9333 20H2.4C1.73333 20 1.16667 19.7667 0.7 19.3C0.233333 18.8333 0 18.2667 0 17.6V2.4C0 1.73333 0.233333 1.16667 0.7 0.7C1.16667 0.233333 1.73333 0 2.4 0H22.9333C23.6 0 24.1667 0.233333 24.6333 0.7C25.1 1.16667 25.3333 1.73333 25.3333 2.4Z" fill="white"/>
-                    </svg>
+              {selectedCard ? (
+                <div className={styles.accountInfo}>
+                  <div className={styles.cardIcon}>
+                    <div className={styles.cardIconGradient}>
+                      <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
+                        <path d="M25.3333 2.4V17.6C25.3333 18.2667 25.1 18.8333 24.6333 19.3C24.1667 19.7667 23.6 20 22.9333 20H2.4C1.73333 20 1.16667 19.7667 0.7 19.3C0.233333 18.8333 0 18.2667 0 17.6V2.4C0 1.73333 0.233333 1.16667 0.7 0.7C1.16667 0.233333 1.73333 0 2.4 0H22.9333C23.6 0 24.1667 0.233333 24.6333 0.7C25.1 1.16667 25.3333 1.73333 25.3333 2.4Z" fill="white"/>
+                      </svg>
+                    </div>
                   </div>
+                  <div>
+                    <span className={styles.cardText}>{getCardDisplayName(selectedCard)}</span>
+                    <span className={styles.cardNumber}>XXXX-XXXX-XXXX-{selectedCard.last4}</span>
+                  </div>
+                  <button 
+                    className={styles.editButton}
+                    onClick={() => setShowCardModal(true)}
+                  >
+                    <img 
+                      src="https://api.builder.io/api/v1/image/assets/TEMP/d83ca65e259bb78dd9793cd40aeae177c9bf6c4c"
+                      alt="edit"
+                      className={styles.editIcon}
+                    />
+                  </button>
                 </div>
-                <div>
-                  <span className={styles.cardText}>{getCardDisplayName(selectedCard)}</span>
-                  <span className={styles.cardNumber}>XXXX-XXXX-XXXX-{selectedCard.last4}</span>
+              ) : (
+                <div style={{
+                  padding: '1rem',
+                  background: '#f9f9f9',
+                  borderRadius: '8px',
+                  textAlign: 'center',
+                  marginBottom: '1rem'
+                }}>
+                  <p style={{ color: '#666', marginBottom: '0.5rem' }}>ยังไม่มีบัตรที่บันทึกไว้</p>
+                  <button
+                    onClick={() => setShowCardModal(true)}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      background: '#FF4D00',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      marginRight: '0.5rem'
+                    }}
+                  >
+                    เลือกบัตร
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push('/profile-cards')
+                    }}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      background: 'transparent',
+                      color: '#FF4D00',
+                      border: '1px solid #FF4D00',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14px'
+                    }}
+                  >
+                    เพิ่มบัตรใหม่
+                  </button>
                 </div>
-                <button 
-                  className={styles.editButton}
-                  onClick={() => setShowCardModal(true)}
-                >
-                  <img 
-                    src="https://api.builder.io/api/v1/image/assets/TEMP/d83ca65e259bb78dd9793cd40aeae177c9bf6c4c"
-                    alt="edit"
-                    className={styles.editIcon}
-                  />
-                </button>
-              </div>
+              )}
             </div>
           )}
 
@@ -568,7 +848,7 @@ export default function CheckoutPage() {
         isOpen={showCardModal}
         onClose={() => setShowCardModal(false)}
         onSelectCard={handleSelectCard}
-        selectedCardId={selectedCard.id}
+        selectedCardId={selectedCard?.id}
       />
 
     </>

@@ -14,8 +14,8 @@
 **Props:**
 ```typescript
 interface BannerCarouselProps {
-  images: string[]           // Array ของ URL รูปภาพ
-  autoPlayInterval?: number  // (Optional) เวลาหมุนอัตโนมัติ
+  images: string[]           
+  autoPlayInterval?: number  
 }
 ```
 

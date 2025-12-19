@@ -565,162 +565,292 @@
   height: 24px;
 }
 
-/* COD Payment Info */
+/* COD Info */
 .codInfo {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  padding: 2rem;
+  background: linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%);
   border-radius: 0.75rem;
-  border: 2px solid #10B981;
+  border: 1.5px solid #E5E7EB;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
-.codIcon {
+@media (max-width: 767px) {
+  .codInfo {
+    padding: 1.5rem;
+  }
+}
+
+.codContent {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  background: white;
-  border-radius: 50%;
-  flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-}
-
-.codText {
-  flex: 1;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .codTitle {
-  font-size: 1.125rem;
+  font-size: 1.375rem;
   font-weight: 700;
   font-family: 'Kanit', sans-serif;
-  color: #10B981;
-  margin-bottom: 0.25rem;
+  color: #1F2937;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 767px) {
+  .codTitle {
+    font-size: 1.25rem;
+    text-align: center;
+  }
 }
 
 .codDescription {
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-family: 'Kanit', sans-serif;
-  color: #065F46;
+  color: #6B7280;
+  line-height: 1.75;
   margin: 0;
+  padding: 0;
 }
 
-/* QR Payment Info */
-.qrPaymentInfo {
+@media (max-width: 767px) {
+  .codDescription {
+    font-size: 0.9375rem;
+    text-align: center;
+  }
+}
+
+.codNote {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #FFF5F0 0%, #FFE4D6 100%);
+  border-radius: 0.625rem;
+  border: 1.5px solid #FFB088;
+  box-shadow: 0 2px 4px -1px rgba(255, 77, 0, 0.1);
+}
+
+.codNoteIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.codNoteText {
+  font-size: 0.9375rem;
+  font-family: 'Kanit', sans-serif;
+  color: #DC2626;
+  font-weight: 600;
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* QR Info */
+.qrInfo {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+  padding: 2rem;
+  background: #F9FAFB;
+  border-radius: 0.75rem;
+  border: 1.5px solid #E5E7EB;
 }
 
 @media (min-width: 768px) {
-  .qrPaymentInfo {
+  .qrInfo {
     flex-direction: row;
     align-items: flex-start;
+    gap: 2.5rem;
   }
 }
 
 .qrCodeContainer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: #F9FAFB;
-  border-radius: 0.75rem;
-  border: 1.5px solid #E5E7EB;
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .qrCodeContainer {
-    width: 300px;
-    flex-shrink: 0;
-  }
-}
-
-.qrCode {
-  width: 200px;
-  height: 200px;
-  background: white;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
   justify-content: center;
-  overflow: hidden;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.qrCodeImage {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.qrCodeWrapper {
+  padding: 1.25rem;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
 }
 
-.qrCodeLabel {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  font-family: 'Kanit', sans-serif;
-  color: #374151;
-  text-align: center;
-  margin: 0;
+.qrCodeWrapper:hover {
+  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.qrDetails {
-  flex: 1;
+.qrContent {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: #F9FAFB;
-  border-radius: 0.75rem;
-  border: 1.5px solid #E5E7EB;
+  gap: 1.5rem;
+  flex: 1;
 }
 
-.qrDetailRow {
+.qrHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #E5E7EB;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
 }
 
-.qrDetailRow:last-of-type {
-  border-bottom: none;
-  padding-bottom: 0;
+.qrTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: 'Kanit', sans-serif;
+  color: #1F2937;
+  margin: 0;
+  flex: 1;
+  letter-spacing: -0.01em;
 }
 
-.qrDetailLabel {
+@media (min-width: 768px) {
+  .qrTitle {
+    font-size: 1.375rem;
+  }
+}
+
+.qrTimer {
+  background: linear-gradient(to right, #FF4D00, #F99D20);
+  color: white;
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(255, 77, 0, 0.25);
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.qrTimerIcon {
+  font-size: 1rem;
+  width: 0;
+  height: 0;
+}
+
+.qrTimerText {
+  font-size: 0.9375rem;
+  font-family: 'Kanit', sans-serif;
+  color: white;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.qrCodeExpired {
+  width: 250px;
+  height: 250px;
+  background: white;
+  border: 2px dashed #EF4444;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.qrCodeExpiredIcon {
+  font-size: 4rem;
+}
+
+.qrCodeExpiredText {
+  font-size: 1rem;
+  font-family: 'Kanit', sans-serif;
+  color: #EF4444;
+  font-weight: 600;
+  text-align: center;
+}
+
+.qrRefreshButton {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(to right, #FF4D00, #F99D20);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.qrRefreshButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(255, 77, 0, 0.3);
+}
+
+.qrDescription {
   font-size: 0.9375rem;
   font-family: 'Kanit', sans-serif;
   color: #6B7280;
+  line-height: 1.7;
+  margin: 0;
+  padding: 0;
+}
+
+.qrAmount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: white;
+  border-radius: 0.75rem;
+  border: 1.5px solid #E5E7EB;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.qrAmountLabel {
+  font-size: 1rem;
+  font-family: 'Kanit', sans-serif;
+  color: #4B5563;
   font-weight: 500;
 }
 
-.qrDetailValue {
-  font-size: 1rem;
+.qrAmountValue {
+  font-size: 1.75rem;
   font-family: 'Kanit', sans-serif;
-  color: #1F2937;
-  font-weight: 600;
+  color: #FF4D00;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .qrAmountValue {
+    font-size: 2rem;
+  }
 }
 
 .qrNote {
-  margin-top: 0.5rem;
-  padding: 1rem;
-  background: #FEF3C7;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(to right, #FEF3C7, #FDE68A);
   border-radius: 0.5rem;
-  border: 1px solid #FCD34D;
+  border: 1.5px solid #FCD34D;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.qrNote p {
+.qrNoteIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+}
+
+.qrNoteText {
   font-size: 0.875rem;
   font-family: 'Kanit', sans-serif;
   color: #92400E;
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 /* Order Summary */

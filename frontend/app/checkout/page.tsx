@@ -1,22 +1,58 @@
 "use client"
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
+import { QRCodeSVG } from 'qrcode.react'
 import SuccessModal from '@/Components/SuccessModal'
 import CouponSelectionModal from '@/Components/CouponSelectionModal'
+import PaymentCardModal from '@/Components/PaymentCardModal'
 import { useCart } from '../providers'
 import type { UserCoupon } from '@/lib/coupon'
 import styles from './page.module.css'
+
+interface Card {
+  id: string
+  type: 'visa' | 'mastercard' | 'jcb'
+  last4: string
+  name: string
+}
 
 export default function CheckoutPage() {
   const { subtotal, selectedCoupon, setSelectedCoupon, productDiscount, shippingDiscount } = useCart()
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showCouponModal, setShowCouponModal] = useState(false)
+  const [showCardModal, setShowCardModal] = useState(false)
   const [agreed, setAgreed] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card' | 'qr'>('card')
+  const [selectedCard, setSelectedCard] = useState<Card>({
+    id: '1',
+    type: 'visa',
+    last4: '4747',
+    name: 'บัตรเครดิต VISA'
+  })
+  const [qrExpiry, setQrExpiry] = useState(15 * 60) // 15 minutes in seconds
 
   const handleSelectCoupon = (coupon: UserCoupon | null) => {
     setSelectedCoupon(coupon)
+  }
+
+  const handleSelectCard = (card: Card) => {
+    setSelectedCard(card)
+  }
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const getCardDisplayName = (card: Card) => {
+    const typeMap: Record<string, string> = {
+      visa: 'VISA',
+      mastercard: 'Mastercard',
+      jcb: 'JCB'
+    }
+    return typeMap[card.type] || card.name
   }
 
   const orderItems = [
@@ -46,6 +82,56 @@ export default function CheckoutPage() {
   // Calculate actual shipping after discount
   const actualShipping = Math.max(0, baseShipping - shippingDiscount)
   const total = orderSubtotal - productDiscount + actualShipping
+
+  // Generate QR Code data for PromptPay
+  const qrCodeValue = useMemo(() => {
+    if (paymentMethod === 'qr') {
+      // Generate a realistic PromptPay QR code data
+      // Format: PromptPay payment request with amount
+      const amount = Math.round(total * 100) // Convert to satang
+      const merchantId = '0812345678' // Mock phone number / tax ID
+      
+      // Create a payment data string that can be used with PromptPay apps
+      // This is a simplified format - in production, you would use proper PromptPay QR standard
+      const paymentData = {
+        type: 'promptpay',
+        merchantId: merchantId,
+        amount: total,
+        reference: `ORDER-${Date.now()}`,
+        description: 'ชำระเงินออนไลน์'
+      }
+      
+      // Return JSON string or use proper PromptPay format
+      // For demo purposes, using a readable format that QR code scanners can interpret
+      return JSON.stringify(paymentData)
+    }
+    return ''
+  }, [paymentMethod, total])
+
+  // Countdown timer for QR Code
+  useEffect(() => {
+    if (paymentMethod === 'qr' && qrExpiry > 0) {
+      const timer = setInterval(() => {
+        setQrExpiry((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+      return () => clearInterval(timer)
+    } else if (paymentMethod === 'qr') {
+      setQrExpiry(15 * 60) // Reset when switching back to QR
+    }
+  }, [paymentMethod, qrExpiry])
+
+  // Reset QR timer when switching to QR payment
+  useEffect(() => {
+    if (paymentMethod === 'qr') {
+      setQrExpiry(15 * 60)
+    }
+  }, [paymentMethod])
 
   const handleBuyNow = () => {
     if (agreed) {
@@ -231,14 +317,17 @@ export default function CheckoutPage() {
                 <h3 className={styles.paymentInfoTitle}>ข้อมูลการชำระเงิน</h3>
               </div>
               <div className={styles.codInfo}>
-                <div className={styles.codIcon}>
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#10b981"/>
-                  </svg>
-                </div>
-                <div className={styles.codText}>
+                <div className={styles.codContent}>
                   <h4 className={styles.codTitle}>เก็บเงินปลายทาง</h4>
-                  <p className={styles.codDescription}>ชำระเงินเมื่อได้รับสินค้า</p>
+                  <p className={styles.codDescription}>
+                    คุณจะชำระเงินเมื่อได้รับสินค้าแล้ว โดยจะมีการเรียกเก็บเงินจากผู้จัดส่ง
+                  </p>
+                  <div className={styles.codNote}>
+                    <span className={styles.codNoteIcon}>ℹ️</span>
+                    <span className={styles.codNoteText}>
+                      กรุณาเตรียมเงินสดจำนวน {total.toLocaleString()} บาท สำหรับการชำระเงิน
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -265,10 +354,13 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <div>
-                  <span className={styles.cardText}>บัตรเครดิต VISA</span>
-                  <span className={styles.cardNumber}>XXXX-XXXX-XXXX-4747</span>
+                  <span className={styles.cardText}>{getCardDisplayName(selectedCard)}</span>
+                  <span className={styles.cardNumber}>XXXX-XXXX-XXXX-{selectedCard.last4}</span>
                 </div>
-                <button className={styles.editButton}>
+                <button 
+                  className={styles.editButton}
+                  onClick={() => setShowCardModal(true)}
+                >
                   <img 
                     src="https://api.builder.io/api/v1/image/assets/TEMP/d83ca65e259bb78dd9793cd40aeae177c9bf6c4c"
                     alt="edit"
@@ -289,34 +381,57 @@ export default function CheckoutPage() {
                 />
                 <h3 className={styles.paymentInfoTitle}>ข้อมูลการชำระเงิน</h3>
               </div>
-
-              <div className={styles.qrPaymentInfo}>
+              <div className={styles.qrInfo}>
                 <div className={styles.qrCodeContainer}>
-                  <div className={styles.qrCode}>
-                    <img 
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PROMPTPAY|TOTAL:${total}&format=png`}
-                      alt="QR Code"
-                      className={styles.qrCodeImage}
-                      onError={(e) => {
-                        // Fallback to placeholder if QR generation fails
-                        e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNzAiIHk9IjIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOTAiIHk9IjIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTEwIiB5PSIyMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjEzMCIgeT0iMjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTAiIHk9IjIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjcwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOTAiIHk9IjcwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTEwIiB5PSI3MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1MCIgeT0iNzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iOTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI5MCIgeT0iOTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxMTAiIHk9IjkwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTUwIiB5PSI5MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIxNTAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI3MCIgeT0iMTUwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOTAiIHk9IjE1MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1MCIgeT0iMTUwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9ImJsYWNrIi8+PC9zdmc+'
-                      }}
-                    />
-                  </div>
-                  <p className={styles.qrCodeLabel}>สแกน QR Code เพื่อชำระเงิน</p>
+                  {qrExpiry > 0 ? (
+                    <div className={styles.qrCodeWrapper}>
+                      <QRCodeSVG
+                        value={qrCodeValue}
+                        size={250}
+                        level="M"
+                        includeMargin={true}
+                        bgColor="#FFFFFF"
+                        fgColor="#000000"
+                      />
+                    </div>
+                  ) : (
+                    <div className={styles.qrCodeExpired}>
+                      <div className={styles.qrCodeExpiredIcon}>⏰</div>
+                      <div className={styles.qrCodeExpiredText}>QR Code หมดอายุแล้ว</div>
+                      <button
+                        className={styles.qrRefreshButton}
+                        onClick={() => setQrExpiry(15 * 60)}
+                      >
+                        สร้าง QR Code ใหม่
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <div className={styles.qrDetails}>
-                  <div className={styles.qrDetailRow}>
-                    <span className={styles.qrDetailLabel}>ยอดชำระ</span>
-                    <span className={styles.qrDetailValue}>฿{total.toLocaleString()}</span>
+                <div className={styles.qrContent}>
+                  <div className={styles.qrHeader}>
+                    <h4 className={styles.qrTitle}>สแกน QR Code เพื่อชำระเงิน</h4>
+                    {qrExpiry > 0 && (
+                      <div className={styles.qrTimer}>
+                        
+                        <span className={styles.qrTimerText}>{formatTime(qrExpiry)}</span>
+                      </div>
+                    )}
                   </div>
-                  <div className={styles.qrDetailRow}>
-                    <span className={styles.qrDetailLabel}>เลขที่อ้างอิง</span>
-                    <span className={styles.qrDetailValue}>REF{Date.now().toString().slice(-8)}</span>
+                  <p className={styles.qrDescription}>
+                    เปิดแอปพลิเคชันพร้อมเพย์ (PromptPay) และสแกน QR Code ด้านบนเพื่อทำการชำระเงิน
+                  </p>
+                  <div className={styles.qrAmount}>
+                    <span className={styles.qrAmountLabel}>จำนวนเงิน</span>
+                    <span className={styles.qrAmountValue}>฿{total.toLocaleString()}</span>
                   </div>
-                  <div className={styles.qrNote}>
-                    <p>กรุณาชำระเงินภายใน 15 นาที</p>
-                  </div>
+                  {qrExpiry > 0 && (
+                    <div className={styles.qrNote}>
+                      <span className={styles.qrNoteIcon}></span>
+                      <span className={styles.qrNoteText}>
+                        QR Code จะหมดอายุใน {formatTime(qrExpiry)}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -439,6 +554,14 @@ export default function CheckoutPage() {
         onSelectCoupon={handleSelectCoupon}
         currentSubtotal={orderSubtotal}
         selectedCouponId={selectedCoupon?.id}
+      />
+
+      {/* Payment Card Selection Modal */}
+      <PaymentCardModal
+        isOpen={showCardModal}
+        onClose={() => setShowCardModal(false)}
+        onSelectCard={handleSelectCard}
+        selectedCardId={selectedCard.id}
       />
 
     </>

@@ -249,12 +249,15 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Coupon Section */}
-                <div className={styles.couponSection}>
-                  <img 
-                    src="https://api.builder.io/api/v1/image/assets/TEMP/cc66f65bd5c29a6b8242142387c4db02eb904746"
-                    alt="coupon"
-                    className={styles.couponIcon}
-                  />
+                <div 
+                  className={styles.couponSection}
+                  onClick={() => setShowCouponModal(true)}
+                >
+                  <div className={styles.couponIconWrapper}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM15.5 10C14.67 10 14 9.33 14 8.5C14 7.67 14.67 7 15.5 7C16.33 7 17 7.67 17 8.5C17 9.33 16.33 10 15.5 10ZM8.5 10C7.67 10 7 9.33 7 8.5C7 7.67 7.67 7 8.5 7C9.33 7 10 7.67 10 8.5C10 9.33 9.33 10 8.5 10ZM20 15H4V13H20V15ZM20 11H4V9H5C5.83 9 6.5 8.33 6.5 7.5C6.5 6.67 5.83 6 5 6H4V5H20V6H19C18.17 6 17.5 6.67 17.5 7.5C17.5 8.33 18.17 9 19 9H20V11Z" fill="#F7921E"/>
+                    </svg>
+                  </div>
                   <span className={styles.couponText}>
                     {selectedCoupon 
                       ? selectedCoupon.type === 'freeship'
@@ -262,12 +265,16 @@ export default function CheckoutPage() {
                         : `${selectedCoupon.title} - ลด ฿${productDiscount}`
                       : "เลือกคูปอง"}
                   </span>
-                  <button 
-                    className={styles.changeButton}
-                    onClick={() => setShowCouponModal(true)}
+                  <svg 
+                    className={styles.couponChevron}
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    เปลี่ยน
-                  </button>
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
 
                 {/* Divider */}

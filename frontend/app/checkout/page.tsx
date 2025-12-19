@@ -220,38 +220,107 @@ export default function CheckoutPage() {
           </div>
 
           {/* Payment Information */}
-          <div className={styles.paymentInfoSection}>
-            <div className={styles.paymentInfoHeader}>
-              <img 
-                src="https://api.builder.io/api/v1/image/assets/TEMP/cd56be3f878321fa1cf48fd2996b12b69b9485f2"
-                alt="Payment"
-                className={styles.paymentInfoIcon}
-              />
-              <h3 className={styles.paymentInfoTitle}>ข้อมูลการชำระเงิน</h3>
-            </div>
-
-            <h4 className={styles.accountTitle}>เลือกบัญชีการชำระเงิน</h4>
-            <div className={styles.accountInfo}>
-              <div className={styles.cardIcon}>
-                <div className={styles.cardIconGradient}>
-                  <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
-                    <path d="M25.3333 2.4V17.6C25.3333 18.2667 25.1 18.8333 24.6333 19.3C24.1667 19.7667 23.6 20 22.9333 20H2.4C1.73333 20 1.16667 19.7667 0.7 19.3C0.233333 18.8333 0 18.2667 0 17.6V2.4C0 1.73333 0.233333 1.16667 0.7 0.7C1.16667 0.233333 1.73333 0 2.4 0H22.9333C23.6 0 24.1667 0.233333 24.6333 0.7C25.1 1.16667 25.3333 1.73333 25.3333 2.4Z" fill="white"/>
+          {paymentMethod === 'cod' && (
+            <div className={styles.paymentInfoSection}>
+              <div className={styles.paymentInfoHeader}>
+                <img 
+                  src="https://api.builder.io/api/v1/image/assets/TEMP/cd56be3f878321fa1cf48fd2996b12b69b9485f2"
+                  alt="Payment"
+                  className={styles.paymentInfoIcon}
+                />
+                <h3 className={styles.paymentInfoTitle}>ข้อมูลการชำระเงิน</h3>
+              </div>
+              <div className={styles.codInfo}>
+                <div className={styles.codIcon}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#10b981"/>
                   </svg>
                 </div>
+                <div className={styles.codText}>
+                  <h4 className={styles.codTitle}>เก็บเงินปลายทาง</h4>
+                  <p className={styles.codDescription}>ชำระเงินเมื่อได้รับสินค้า</p>
+                </div>
               </div>
-              <div>
-                <span className={styles.cardText}>บัตรเครดิต VISA</span>
-                <span className={styles.cardNumber}>XXXX-XXXX-XXXX-4747</span>
-              </div>
-              <button className={styles.editButton}>
-                <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/d83ca65e259bb78dd9793cd40aeae177c9bf6c4c"
-                  alt="edit"
-                  className={styles.editIcon}
-                />
-              </button>
             </div>
-          </div>
+          )}
+
+          {paymentMethod === 'card' && (
+            <div className={styles.paymentInfoSection}>
+              <div className={styles.paymentInfoHeader}>
+                <img 
+                  src="https://api.builder.io/api/v1/image/assets/TEMP/cd56be3f878321fa1cf48fd2996b12b69b9485f2"
+                  alt="Payment"
+                  className={styles.paymentInfoIcon}
+                />
+                <h3 className={styles.paymentInfoTitle}>ข้อมูลการชำระเงิน</h3>
+              </div>
+
+              <h4 className={styles.accountTitle}>เลือกบัญชีการชำระเงิน</h4>
+              <div className={styles.accountInfo}>
+                <div className={styles.cardIcon}>
+                  <div className={styles.cardIconGradient}>
+                    <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
+                      <path d="M25.3333 2.4V17.6C25.3333 18.2667 25.1 18.8333 24.6333 19.3C24.1667 19.7667 23.6 20 22.9333 20H2.4C1.73333 20 1.16667 19.7667 0.7 19.3C0.233333 18.8333 0 18.2667 0 17.6V2.4C0 1.73333 0.233333 1.16667 0.7 0.7C1.16667 0.233333 1.73333 0 2.4 0H22.9333C23.6 0 24.1667 0.233333 24.6333 0.7C25.1 1.16667 25.3333 1.73333 25.3333 2.4Z" fill="white"/>
+                    </svg>
+                  </div>
+                </div>
+                <div>
+                  <span className={styles.cardText}>บัตรเครดิต VISA</span>
+                  <span className={styles.cardNumber}>XXXX-XXXX-XXXX-4747</span>
+                </div>
+                <button className={styles.editButton}>
+                  <img 
+                    src="https://api.builder.io/api/v1/image/assets/TEMP/d83ca65e259bb78dd9793cd40aeae177c9bf6c4c"
+                    alt="edit"
+                    className={styles.editIcon}
+                  />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {paymentMethod === 'qr' && (
+            <div className={styles.paymentInfoSection}>
+              <div className={styles.paymentInfoHeader}>
+                <img 
+                  src="https://api.builder.io/api/v1/image/assets/TEMP/cd56be3f878321fa1cf48fd2996b12b69b9485f2"
+                  alt="Payment"
+                  className={styles.paymentInfoIcon}
+                />
+                <h3 className={styles.paymentInfoTitle}>ข้อมูลการชำระเงิน</h3>
+              </div>
+
+              <div className={styles.qrPaymentInfo}>
+                <div className={styles.qrCodeContainer}>
+                  <div className={styles.qrCode}>
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PROMPTPAY|TOTAL:${total}&format=png`}
+                      alt="QR Code"
+                      className={styles.qrCodeImage}
+                      onError={(e) => {
+                        // Fallback to placeholder if QR generation fails
+                        e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNzAiIHk9IjIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOTAiIHk9IjIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTEwIiB5PSIyMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjEzMCIgeT0iMjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTAiIHk9IjIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjcwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOTAiIHk9IjcwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTEwIiB5PSI3MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1MCIgeT0iNzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iOTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI5MCIgeT0iOTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxMTAiIHk9IjkwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTUwIiB5PSI5MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIxNTAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI3MCIgeT0iMTUwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOTAiIHk9IjE1MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1MCIgeT0iMTUwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9ImJsYWNrIi8+PC9zdmc+'
+                      }}
+                    />
+                  </div>
+                  <p className={styles.qrCodeLabel}>สแกน QR Code เพื่อชำระเงิน</p>
+                </div>
+                <div className={styles.qrDetails}>
+                  <div className={styles.qrDetailRow}>
+                    <span className={styles.qrDetailLabel}>ยอดชำระ</span>
+                    <span className={styles.qrDetailValue}>฿{total.toLocaleString()}</span>
+                  </div>
+                  <div className={styles.qrDetailRow}>
+                    <span className={styles.qrDetailLabel}>เลขที่อ้างอิง</span>
+                    <span className={styles.qrDetailValue}>REF{Date.now().toString().slice(-8)}</span>
+                  </div>
+                  <div className={styles.qrNote}>
+                    <p>กรุณาชำระเงินภายใน 15 นาที</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Order Summary */}
           <div className={styles.summarySection}>

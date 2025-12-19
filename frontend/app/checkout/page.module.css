@@ -565,6 +565,164 @@
   height: 24px;
 }
 
+/* COD Payment Info */
+.codInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  border-radius: 0.75rem;
+  border: 2px solid #10B981;
+}
+
+.codIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: white;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.codText {
+  flex: 1;
+}
+
+.codTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: 'Kanit', sans-serif;
+  color: #10B981;
+  margin-bottom: 0.25rem;
+}
+
+.codDescription {
+  font-size: 0.9375rem;
+  font-family: 'Kanit', sans-serif;
+  color: #065F46;
+  margin: 0;
+}
+
+/* QR Payment Info */
+.qrPaymentInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .qrPaymentInfo {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.qrCodeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #F9FAFB;
+  border-radius: 0.75rem;
+  border: 1.5px solid #E5E7EB;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .qrCodeContainer {
+    width: 300px;
+    flex-shrink: 0;
+  }
+}
+
+.qrCode {
+  width: 200px;
+  height: 200px;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.qrCodeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.qrCodeLabel {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: 'Kanit', sans-serif;
+  color: #374151;
+  text-align: center;
+  margin: 0;
+}
+
+.qrDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #F9FAFB;
+  border-radius: 0.75rem;
+  border: 1.5px solid #E5E7EB;
+}
+
+.qrDetailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.qrDetailRow:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.qrDetailLabel {
+  font-size: 0.9375rem;
+  font-family: 'Kanit', sans-serif;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.qrDetailValue {
+  font-size: 1rem;
+  font-family: 'Kanit', sans-serif;
+  color: #1F2937;
+  font-weight: 600;
+}
+
+.qrNote {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background: #FEF3C7;
+  border-radius: 0.5rem;
+  border: 1px solid #FCD34D;
+}
+
+.qrNote p {
+  font-size: 0.875rem;
+  font-family: 'Kanit', sans-serif;
+  color: #92400E;
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
 /* Order Summary */
 .summarySection {
   display: flex;

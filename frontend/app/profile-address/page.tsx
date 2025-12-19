@@ -1,12 +1,26 @@
 "use client"
-import { useState } from 'react'
+// Profile Address Page - จัดการที่อยู่
+// Features: Add/Edit/Delete addresses, Set default, Form validation, Data persistence, เชื่อมกับ Checkout
+import { useState, useEffect } from 'react'
 import ProfileSidebar from '@/Components/ProfileSidebar'
+import { useToast } from '@/contexts/ToastContext'
 import styles from './page.module.css'
 
+interface Address {
+  id: number
+  name: string
+  phone: string
+  address: string
+  addressEn?: string
+  isDefault: boolean
+}
+
 export default function AddressPage() {
+  const { showToast } = useToast()
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState<number | null>(null)
+  const [addresses, setAddresses] = useState<Address[]>([])
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -19,7 +33,37 @@ export default function AddressPage() {
     postalCode: ''
   })
 
-  const addresses = [
+  // Load addresses from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('petshop_addresses')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setAddresses(parsed)
+        } else {
+          // Use default mock data if empty
+          setAddresses(getDefaultAddresses())
+        }
+      } catch (e) {
+        console.error('Error loading addresses:', e)
+        setAddresses(getDefaultAddresses())
+      }
+    } else {
+      // Use default mock data
+      setAddresses(getDefaultAddresses())
+    }
+  }, [])
+
+  // Save addresses to localStorage whenever addresses change
+  useEffect(() => {
+    if (addresses.length > 0) {
+      localStorage.setItem('petshop_addresses', JSON.stringify(addresses))
+    }
+  }, [addresses])
+
+  // Default mock addresses
+  const getDefaultAddresses = (): Address[] => [
     {
       id: 1,
       name: "Meow Meow",
@@ -38,9 +82,159 @@ export default function AddressPage() {
     }
   ]
 
+  // Handle delete address
+  const handleDelete = (id: number) => {
+    if (confirm('คุณต้องการลบที่อยู่นี้หรือไม่?')) {
+      const updatedAddresses = addresses.filter(addr => addr.id !== id)
+      // If deleted address was default, set first address as default
+      const deletedAddress = addresses.find(addr => addr.id === id)
+      if (deletedAddress?.isDefault && updatedAddresses.length > 0) {
+        updatedAddresses[0].isDefault = true
+      }
+      setAddresses(updatedAddresses)
+      localStorage.setItem('petshop_addresses', JSON.stringify(updatedAddresses))
+      showToast('ลบที่อยู่สำเร็จ', 'success')
+    }
+  }
+
+  // Handle set default address
+  const handleSetDefault = (id: number) => {
+    const updatedAddresses = addresses.map(addr => ({
+      ...addr,
+      isDefault: addr.id === id
+    }))
+    setAddresses(updatedAddresses)
+    localStorage.setItem('petshop_addresses', JSON.stringify(updatedAddresses))
+    showToast('ตั้งเป็นที่อยู่หลักสำเร็จ', 'success')
+  }
+
+  // Handle edit
   const handleEdit = (id: number) => {
-    setSelectedAddress(id)
-    setShowEditModal(true)
+    const address = addresses.find(addr => addr.id === id)
+    if (address) {
+      setSelectedAddress(id)
+      // Parse name to firstName and lastName
+      const nameParts = address.name.split(' ')
+      setFormData({
+        firstName: nameParts[0] || '',
+        lastName: nameParts.slice(1).join(' ') || '',
+        phone: address.phone.replace(/[()]/g, '').replace(/\s/g, ''),
+        address: address.address,
+        province: '',
+        district: '',
+        road: '',
+        postalCode: ''
+      })
+      setShowEditModal(true)
+    }
+  }
+
+  // Handle add submit
+  const handleAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Validate
+    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.phone.trim() || !formData.address.trim()) {
+      showToast('กรุณากรอกข้อมูลให้ครบถ้วน', 'error')
+      return
+    }
+
+    const newAddress: Address = {
+      id: Date.now(),
+      name: `${formData.firstName} ${formData.lastName}`,
+      phone: formData.phone,
+      address: formData.address,
+      addressEn: formData.address, // Use same address for now
+      isDefault: addresses.length === 0 // First address is default
+    }
+
+    // If this is first address, set as default
+    // Otherwise, if no default exists, set this as default
+    if (addresses.length === 0 || !addresses.some(addr => addr.isDefault)) {
+      newAddress.isDefault = true
+    }
+
+    const updatedAddresses = [...addresses, newAddress]
+    setAddresses(updatedAddresses)
+    localStorage.setItem('petshop_addresses', JSON.stringify(updatedAddresses))
+    
+    // Reset form
+    setFormData({
+      firstName: '',
+      lastName: '',
+      phone: '',
+      address: '',
+      province: '',
+      district: '',
+      road: '',
+      postalCode: ''
+    })
+    setShowAddModal(false)
+    showToast('เพิ่มที่อยู่สำเร็จ', 'success')
+  }
+
+  // Handle edit submit
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!selectedAddress) return
+
+    // Validate
+    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.phone.trim() || !formData.address.trim()) {
+      showToast('กรุณากรอกข้อมูลให้ครบถ้วน', 'error')
+      return
+    }
+
+    const updatedAddresses = addresses.map(addr => 
+      addr.id === selectedAddress
+        ? {
+            ...addr,
+            name: `${formData.firstName} ${formData.lastName}`,
+            phone: formData.phone,
+            address: formData.address,
+            addressEn: formData.address
+          }
+        : addr
+    )
+    
+    setAddresses(updatedAddresses)
+    localStorage.setItem('petshop_addresses', JSON.stringify(updatedAddresses))
+    
+    // Reset
+    setSelectedAddress(null)
+    setFormData({
+      firstName: '',
+      lastName: '',
+      phone: '',
+      address: '',
+      province: '',
+      district: '',
+      road: '',
+      postalCode: ''
+    })
+    setShowEditModal(false)
+    showToast('แก้ไขที่อยู่สำเร็จ', 'success')
+  }
+
+  // Handle save button (main page)
+  const handleSave = () => {
+    // Addresses are already saved to localStorage via useEffect
+    showToast('บันทึกข้อมูลเรียบร้อยแล้ว', 'success')
+  }
+
+  // Reset form when opening add modal
+  const handleOpenAddModal = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      phone: '',
+      address: '',
+      province: '',
+      district: '',
+      road: '',
+      postalCode: ''
+    })
+    setShowAddModal(true)
   }
 
   return (
@@ -66,13 +260,13 @@ export default function AddressPage() {
                   </p>
                 </div>
                 <button 
-                  onClick={() => setShowAddModal(true)}
+                  onClick={handleOpenAddModal}
                   className={styles.addButton}
                 >
                   <img 
                     src="https://api.builder.io/api/v1/image/assets/TEMP/85456dbddef44f1ec86f5e003221c58a31f1e87a"
                     alt="Add"
-                    className="w-4 h-4"
+                    className={styles.addIcon}
                   />
                   เพิ่มที่อยู่
                 </button>
@@ -82,7 +276,7 @@ export default function AddressPage() {
 
               {/* Addresses List */}
               <div className={styles.addressList}>
-                {addresses.map((address) => (
+                {addresses.map((address, index) => (
                   <div key={address.id}>
                     <div className={styles.addressItem}>
                       <img 
@@ -105,11 +299,16 @@ export default function AddressPage() {
                         <p className={styles.addressText}>
                           {address.address}
                         </p>
-                        <p className={styles.addressText}>
-                          {address.addressEn}
-                        </p>
+                        {address.addressEn && (
+                          <p className={styles.addressText}>
+                            {address.addressEn}
+                          </p>
+                        )}
                       </div>
-                      <button className={styles.deleteButton}>
+                      <button 
+                        onClick={() => handleDelete(address.id)}
+                        className={styles.deleteButton}
+                      >
                         ลบ
                       </button>
                     </div>
@@ -127,13 +326,16 @@ export default function AddressPage() {
                         />
                       </button>
                       {!address.isDefault && (
-                        <button className={styles.setDefaultButton}>
+                        <button 
+                          onClick={() => handleSetDefault(address.id)}
+                          className={styles.setDefaultButton}
+                        >
                           ตั้งเป็นที่อยู่หลัก
                         </button>
                       )}
                     </div>
                     
-                    {address.id !== addresses.length && (
+                    {index < addresses.length - 1 && (
                       <div className={styles.divider}></div>
                     )}
                   </div>
@@ -142,7 +344,10 @@ export default function AddressPage() {
 
               {/* Save Button */}
               <div className={styles.saveButtonContainer}>
-                <button className={styles.saveButton}>
+                <button 
+                  onClick={handleSave}
+                  className={styles.saveButton}
+                >
                   บันทึก
                 </button>
               </div>
@@ -164,12 +369,14 @@ export default function AddressPage() {
               <h2 className={styles.modalTitle}>เพิ่มที่อยู่</h2>
             </div>
 
-            <form className={styles.form}>
+            <form className={styles.form} onSubmit={handleAddSubmit}>
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>ชื่อ</label>
                   <input
                     type="text"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                     placeholder="ชื่อ"
                     className={styles.formInput}
                   />
@@ -178,6 +385,8 @@ export default function AddressPage() {
                   <label className={styles.formLabel}>นามสกุล</label>
                   <input
                     type="text"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                     placeholder="นามสกุล"
                     className={styles.formInput}
                   />
@@ -188,6 +397,8 @@ export default function AddressPage() {
                 <label className={styles.formLabel}>หมายเลขโทรศัพท์</label>
                 <input
                   type="text"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   placeholder="หมายเลขโทรศัพท์"
                   className={styles.formInput}
                 />
@@ -197,6 +408,8 @@ export default function AddressPage() {
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>ที่อยู่</label>
                   <textarea
+                    value={formData.address}
+                    onChange={(e) => setFormData({...formData, address: e.target.value})}
                     placeholder=""
                     rows={6}
                     className={styles.textarea}
@@ -206,28 +419,28 @@ export default function AddressPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>จังหวัด</label>
-                    <select className={styles.select}>
+                    <select className={styles.select} disabled>
                       <option>เลือกจังหวัด</option>
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>เขต/อำเภอ</label>
-                    <select className={styles.select}>
+                    <select className={styles.select} disabled>
                       <option>เลือกเขต</option>
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>ถนน</label>
-                    <select className={styles.select}>
+                    <select className={styles.select} disabled>
                       <option>เลือกถนน</option>
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>รหัสไปรษณีย์</label>
-                    <select className={styles.select}>
+                    <select className={styles.select} disabled>
                       <option>เลือกรหัสไปรษณีย์</option>
                     </select>
                   </div>
@@ -255,7 +468,7 @@ export default function AddressPage() {
       )}
 
       {/* Edit Address Modal */}
-      {showEditModal && (
+      {showEditModal && selectedAddress && (
         <div className={styles.modalOverlay} onClick={() => setShowEditModal(false)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
@@ -267,13 +480,14 @@ export default function AddressPage() {
               <h2 className={styles.modalTitle}>แก้ไขที่อยู่</h2>
             </div>
 
-            <form className={styles.form}>
+            <form className={styles.form} onSubmit={handleEditSubmit}>
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>ชื่อ</label>
                   <input
                     type="text"
-                    defaultValue="Meow"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                     className={styles.formInput}
                   />
                 </div>
@@ -281,7 +495,8 @@ export default function AddressPage() {
                   <label className={styles.formLabel}>นามสกุล</label>
                   <input
                     type="text"
-                    defaultValue="Meow"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                     className={styles.formInput}
                   />
                 </div>
@@ -291,7 +506,8 @@ export default function AddressPage() {
                 <label className={styles.formLabel}>หมายเลขโทรศัพท์</label>
                 <input
                   type="text"
-                  defaultValue="090-000-0000"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   className={styles.formInput}
                 />
               </div>
@@ -300,7 +516,8 @@ export default function AddressPage() {
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>ที่อยู่</label>
                   <textarea
-                    defaultValue="บริษัท บลูบิค วัลแคน  จำกัด  (สำนักงานใหญ่)"
+                    value={formData.address}
+                    onChange={(e) => setFormData({...formData, address: e.target.value})}
                     rows={6}
                     className={styles.textarea}
                   />
@@ -309,28 +526,28 @@ export default function AddressPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>จังหวัด</label>
-                    <select className={styles.select}>
+                    <select className={styles.select} disabled>
                       <option>กรุงเทพมหานคร</option>
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>เขต/อำเภอ</label>
-                    <select className={styles.select}>
+                    <select className={styles.select} disabled>
                       <option>จตุจักร</option>
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>ถนน</label>
-                    <select className={styles.select}>
+                    <select className={styles.select} disabled>
                       <option>วิภาวดีรังสิต</option>
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>รหัสไปรษณีย์</label>
-                    <select className={styles.select}>
+                    <select className={styles.select} disabled>
                       <option>10900</option>
                     </select>
                   </div>

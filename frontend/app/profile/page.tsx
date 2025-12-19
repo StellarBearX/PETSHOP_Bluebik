@@ -1,9 +1,13 @@
 "use client"
-import { useState } from 'react'
+// Profile Page - แก้ไขข้อมูลส่วนตัว
+// Features: Form validation, Image upload, Save to localStorage, Auto-update ProfileDropdown & ProfileSidebar
+import { useState, useRef, useEffect } from 'react'
 import ProfileSidebar from '@/Components/ProfileSidebar'
+import { useToast } from '@/contexts/ToastContext'
 import styles from './page.module.css'
 
 export default function ProfilePage() {
+  const { showToast } = useToast()
   const [formData, setFormData] = useState({
     firstName: 'Meow',
     lastName: 'Meow',
@@ -14,6 +18,133 @@ export default function ProfilePage() {
     month: 'สิงหาคม',
     year: '2567'
   })
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [profileImage, setProfileImage] = useState<string>('https://api.builder.io/api/v1/image/assets/TEMP/4af760aa421324ef2f06ed9aaab02411ae07cf1e')
+  const [imageError, setImageError] = useState<string>('')
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({})
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Load profile data from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('petshop_profile')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        setFormData(parsed)
+      } catch (e) {
+        console.error('Error loading profile:', e)
+      }
+    }
+    
+    const savedImage = localStorage.getItem('petshop_profile_image')
+    if (savedImage) {
+      setProfileImage(savedImage)
+    }
+  }, [])
+
+  // Validate form
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {}
+
+    // First Name
+    if (!formData.firstName.trim()) {
+      errors.firstName = 'กรุณากรอกชื่อ'
+    }
+
+    // Last Name
+    if (!formData.lastName.trim()) {
+      errors.lastName = 'กรุณากรอกนามสกุล'
+    }
+
+    // Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!formData.email.trim()) {
+      errors.email = 'กรุณากรอกอีเมล'
+    } else if (!emailRegex.test(formData.email)) {
+      errors.email = 'กรุณากรอกอีเมลที่ถูกต้อง'
+    }
+
+    // Phone
+    const phoneRegex = /^[0-9-]+$/
+    if (!formData.phone.trim()) {
+      errors.phone = 'กรุณากรอกหมายเลขโทรศัพท์'
+    } else if (!phoneRegex.test(formData.phone)) {
+      errors.phone = 'กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง'
+    }
+
+    setFormErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  const handleSave = () => {
+    if (validateForm()) {
+      setShowConfirmModal(true)
+    }
+  }
+
+  const handleConfirmSave = () => {
+    // Handle save logic here
+    console.log('Saving profile data:', formData)
+    // Save to localStorage (mock)
+    localStorage.setItem('petshop_profile', JSON.stringify(formData))
+    if (profileImage && profileImage !== 'https://api.builder.io/api/v1/image/assets/TEMP/4af760aa421324ef2f06ed9aaab02411ae07cf1e') {
+      localStorage.setItem('petshop_profile_image', profileImage)
+    }
+    
+    // Dispatch custom event to update other components
+    window.dispatchEvent(new Event('profileUpdated'))
+    
+    setShowConfirmModal(false)
+    setShowSuccessModal(true)
+    showToast('บันทึกข้อมูลสำเร็จ', 'success')
+  }
+
+  // Handle file upload
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setImageError('')
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png']
+    if (!validTypes.includes(file.type)) {
+      setImageError('กรุณาเลือกไฟล์ .JPEG หรือ .PNG เท่านั้น')
+      return
+    }
+
+    // Validate file size (1 MB = 1048576 bytes)
+    if (file.size > 1048576) {
+      setImageError('ขนาดไฟล์ต้องไม่เกิน 1 MB')
+      return
+    }
+
+    // Read file and create preview
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setProfileImage(reader.result as string)
+      showToast('อัปโหลดรูปภาพสำเร็จ', 'success')
+    }
+    reader.onerror = () => {
+      setImageError('เกิดข้อผิดพลาดในการอ่านไฟล์')
+      showToast('เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ', 'error')
+    }
+    reader.readAsDataURL(file)
+  }
+
+  // Handle upload button click
+  const handleUploadClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleCancelSave = () => {
+    setShowConfirmModal(false)
+  }
+
+  const handleCloseSuccess = () => {
+    setShowSuccessModal(false)
+  }
 
   return (
     <main className={styles.main}>
@@ -51,9 +182,19 @@ export default function ProfilePage() {
                       <input
                         type="text"
                         value={formData.firstName}
-                        onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                        onChange={(e) => {
+                          setFormData({...formData, firstName: e.target.value})
+                          if (formErrors.firstName) {
+                            setFormErrors({...formErrors, firstName: ''})
+                          }
+                        }}
                         className={styles.input}
                       />
+                      {formErrors.firstName && (
+                        <span style={{ color: '#ff4444', fontSize: '12px', marginTop: '0.25rem', display: 'block' }}>
+                          {formErrors.firstName}
+                        </span>
+                      )}
                     </div>
 
                     {/* Last Name */}
@@ -62,9 +203,19 @@ export default function ProfilePage() {
                       <input
                         type="text"
                         value={formData.lastName}
-                        onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                        onChange={(e) => {
+                          setFormData({...formData, lastName: e.target.value})
+                          if (formErrors.lastName) {
+                            setFormErrors({...formErrors, lastName: ''})
+                          }
+                        }}
                         className={styles.input}
                       />
+                      {formErrors.lastName && (
+                        <span style={{ color: '#ff4444', fontSize: '12px', marginTop: '0.25rem', display: 'block' }}>
+                          {formErrors.lastName}
+                        </span>
+                      )}
                     </div>
 
                     {/* Email */}
@@ -73,9 +224,19 @@ export default function ProfilePage() {
                       <input
                         type="email"
                         value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        onChange={(e) => {
+                          setFormData({...formData, email: e.target.value})
+                          if (formErrors.email) {
+                            setFormErrors({...formErrors, email: ''})
+                          }
+                        }}
                         className={`${styles.input} ${styles.inputEmail}`}
                       />
+                      {formErrors.email && (
+                        <span style={{ color: '#ff4444', fontSize: '12px', marginTop: '0.25rem', display: 'block' }}>
+                          {formErrors.email}
+                        </span>
+                      )}
                     </div>
 
                     {/* Phone */}
@@ -84,9 +245,19 @@ export default function ProfilePage() {
                       <input
                         type="tel"
                         value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        onChange={(e) => {
+                          setFormData({...formData, phone: e.target.value})
+                          if (formErrors.phone) {
+                            setFormErrors({...formErrors, phone: ''})
+                          }
+                        }}
                         className={`${styles.input} ${styles.inputEmail}`}
                       />
+                      {formErrors.phone && (
+                        <span style={{ color: '#ff4444', fontSize: '12px', marginTop: '0.25rem', display: 'block' }}>
+                          {formErrors.phone}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -158,7 +329,11 @@ export default function ProfilePage() {
                           onChange={(e) => setFormData({...formData, day: e.target.value})}
                           className={styles.select}
                         >
-                          <option value="9">9</option>
+                          {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                            <option key={day} value={day.toString()}>
+                              {day}
+                            </option>
+                          ))}
                         </select>
                         <img 
                           src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
@@ -172,7 +347,18 @@ export default function ProfilePage() {
                           onChange={(e) => setFormData({...formData, month: e.target.value})}
                           className={styles.select}
                         >
+                          <option value="มกราคม">มกราคม</option>
+                          <option value="กุมภาพันธ์">กุมภาพันธ์</option>
+                          <option value="มีนาคม">มีนาคม</option>
+                          <option value="เมษายน">เมษายน</option>
+                          <option value="พฤษภาคม">พฤษภาคม</option>
+                          <option value="มิถุนายน">มิถุนายน</option>
+                          <option value="กรกฎาคม">กรกฎาคม</option>
                           <option value="สิงหาคม">สิงหาคม</option>
+                          <option value="กันยายน">กันยายน</option>
+                          <option value="ตุลาคม">ตุลาคม</option>
+                          <option value="พฤศจิกายน">พฤศจิกายน</option>
+                          <option value="ธันวาคม">ธันวาคม</option>
                         </select>
                         <img 
                           src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
@@ -186,7 +372,11 @@ export default function ProfilePage() {
                           onChange={(e) => setFormData({...formData, year: e.target.value})}
                           className={styles.select}
                         >
-                          <option value="2567">2567</option>
+                          {Array.from({ length: 100 }, (_, i) => 2567 - i).map((year) => (
+                            <option key={year} value={year.toString()}>
+                              {year}
+                            </option>
+                          ))}
                         </select>
                         <img 
                           src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
@@ -199,7 +389,10 @@ export default function ProfilePage() {
 
                   {/* Save Button */}
                   <div className={styles.saveButtonContainer}>
-                    <button className={styles.saveButton}>
+                    <button 
+                      onClick={handleSave}
+                      className={styles.saveButton}
+                    >
                       บันทึก
                     </button>
                   </div>
@@ -208,13 +401,29 @@ export default function ProfilePage() {
                 {/* Profile Picture */}
                 <div className={styles.profilePicSection}>
                   <img 
-                    src="https://api.builder.io/api/v1/image/assets/TEMP/4af760aa421324ef2f06ed9aaab02411ae07cf1e"
+                    src={profileImage}
                     alt="Profile Picture"
                     className={styles.profilePic}
                   />
-                  <button className={styles.uploadButton}>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png"
+                    onChange={handleFileUpload}
+                    style={{ display: 'none' }}
+                  />
+                  <button 
+                    type="button"
+                    onClick={handleUploadClick}
+                    className={styles.uploadButton}
+                  >
                     เลือกรูป
                   </button>
+                  {imageError && (
+                    <p style={{ color: '#ff4444', fontSize: '12px', marginTop: '0.5rem', textAlign: 'center' }}>
+                      {imageError}
+                    </p>
+                  )}
                   <p className={styles.uploadNote}>
                     ขนาดไฟล์: สูงสุด 1 MB<br/>
                     ไฟล์ที่รองรับ: .JPEG, .PNG
@@ -225,6 +434,74 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Confirm Save Modal */}
+      {showConfirmModal && (
+        <div className={styles.modalOverlay} onClick={handleCancelSave}>
+          <div className={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
+            {/* Warning Icon */}
+            <div className={styles.warningIconContainer}>
+              <div className={styles.warningIconCircle}>
+                <svg className={styles.bellIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <div className={styles.exclamationMark}>!</div>
+              </div>
+            </div>
+
+            {/* Warning Message */}
+            <div className={styles.warningMessage}>
+              <p className={styles.warningText}>มีการแก้ไขข้อมูล</p>
+              <p className={styles.warningText}>ต้องการออกจากหน้านี้หรือไม่</p>
+            </div>
+
+            {/* Buttons */}
+            <div className={styles.confirmModalButtons}>
+              <button 
+                onClick={handleCancelSave}
+                className={styles.cancelSaveButton}
+              >
+                ยกเลิก
+              </button>
+              <button 
+                onClick={handleConfirmSave}
+                className={styles.confirmSaveButton}
+              >
+                ตกลง
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className={styles.modalOverlay} onClick={handleCloseSuccess}>
+          <div className={styles.successModal} onClick={(e) => e.stopPropagation()}>
+            {/* Success Icon */}
+            <div className={styles.successIconContainer}>
+              <div className={styles.successIconCircle}>
+                <svg className={styles.successCheckmark} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Success Message */}
+            <h2 className={styles.successTitle}>
+              แก้ไขข้อมูลสำเร็จ
+            </h2>
+
+            {/* Close Button */}
+            <button 
+              onClick={handleCloseSuccess}
+              className={styles.successCloseButton}
+            >
+              ปิด
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

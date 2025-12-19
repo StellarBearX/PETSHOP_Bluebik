@@ -60,7 +60,7 @@
 .addressSection {
   background: white;
   border-radius: 0.75rem;
-  padding: 1.25rem;
+  padding: 1.5rem;
   margin-bottom: 2rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   transition: box-shadow 0.2s ease;
@@ -68,7 +68,7 @@
 
 @media (min-width: 768px) {
   .addressSection {
-    padding: 1.5rem;
+    padding: 2rem;
   }
 }
 
@@ -79,29 +79,51 @@
 .addressHeader {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #E5E7EB;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1.5px solid #E5E7EB;
 }
 
 .addressIcon {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .addressIcon {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .addressTitle {
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   font-weight: 600;
   font-family: 'Kanit', sans-serif;
   color: #1F2937;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .addressTitle {
+    font-size: 1.5rem;
+  }
 }
 
 .addressText {
   color: #4B5563;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-family: 'Kanit', sans-serif;
-  line-height: 1.75;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+@media (min-width: 768px) {
+  .addressText {
+    font-size: 1.0625rem;
+  }
 }
 
 /* Order Items */

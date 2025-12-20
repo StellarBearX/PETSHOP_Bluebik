@@ -9,6 +9,13 @@ fun Application.configureRoutes() {
         get("/api/health") {
             call.respond(mapOf("status" to "ok", "message" to "Pet Shop API is running"))
         }
+        
+        productRoutes()
+        cartRoutes()
+        orderRoutes()
+        authRoutes()
+        couponRoutes()
+        addressRoutes()
     }
 }
 

@@ -1,12 +1,67 @@
 "use client"
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/app/providers'
+import styles from './ProfileSidebar.module.css'
 
 export default function ProfileSidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const { handleLogout } = useAuth()
+  const [profileName, setProfileName] = useState('Meow Meow')
+  const [profileImage, setProfileImage] = useState('https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd')
+
+  // Function to load profile data
+  const loadProfileData = () => {
+    const saved = localStorage.getItem('petshop_profile')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed.firstName && parsed.lastName) {
+          const fullName = `${parsed.firstName} ${parsed.lastName}`
+          setProfileName(fullName)
+        }
+      } catch (e) {
+        console.error('Error loading profile:', e)
+      }
+    } else {
+      setProfileName('Meow Meow')
+    }
+    
+    const savedImage = localStorage.getItem('petshop_profile_image')
+    if (savedImage) {
+      setProfileImage(savedImage)
+    } else {
+      setProfileImage('https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd')
+    }
+  }
+
+  // Load profile data on mount
+  useEffect(() => {
+    loadProfileData()
+  }, [])
+
+  // Listen for storage changes and custom events
+  useEffect(() => {
+    const handleStorageChange = () => {
+      loadProfileData()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('profileUpdated', handleStorageChange)
+    
+    // Poll localStorage every 500ms to catch updates
+    const interval = setInterval(() => {
+      loadProfileData()
+    }, 500)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('profileUpdated', handleStorageChange)
+      clearInterval(interval)
+    }
+  }, [])
 
   const onLogout = () => {
     handleLogout()
@@ -18,22 +73,25 @@ export default function ProfileSidebar() {
     { href: '/profile-orders', label: 'การสั่งซื้อล่าสุด', fontSize: 'text-sm' },
     { href: '/profile-address', label: 'ที่อยู่ที่บันทึกไว้', fontSize: 'text-sm' },
     { href: '/profile-cards', label: 'บัตรเครดิต / บัตรเดบิต', fontSize: 'text-sm' },
-    { href: '/coupons', label: 'โค้ดส่วนลดของฉัน', fontSize: 'text-sm' }
+    { href: '/profile-coupons', label: 'โค้ดส่วนลดของฉัน', fontSize: 'text-sm' }
   ]
 
   return (
-    <div className="w-[203px] bg-white rounded-lg shadow p-4">
+    <div className={styles.sidebar}>
       {/* Profile Header */}
-      <div className="flex items-center gap-3 pb-4 border-b mb-4">
+      <div className={styles.header}>
         <img 
-          src="https://api.builder.io/api/v1/image/assets/TEMP/009824bbfb5cd6b43e232e01931d42e92eb3bfbd"
+          src={profileImage}
           alt="Profile"
-          className="w-12 h-12 rounded-full"
+          className={styles.profileImage}
         />
         <div>
-          <p className="text-[15px] font-['Inter'] -tracking-[0.333px]">Meow Meow</p>
-          <div className="flex items-center gap-1">
-            <p className="text-[10px] text-[#656565] font-['Inter'] -tracking-[0.333px]">
+          <p className={styles.username}>{profileName}</p>
+          <Link 
+            href="/profile"
+            className="flex items-center gap-1 hover:opacity-80 transition-opacity"
+          >
+            <p className={styles.editText}>
               แก้ไขข้อมูลส่วนตัว
             </p>
             <img 
@@ -41,7 +99,7 @@ export default function ProfileSidebar() {
               alt=""
               className="w-[14px] h-[14px]"
             />
-          </div>
+          </Link>
         </div>
       </div>
 
@@ -57,7 +115,7 @@ export default function ProfileSidebar() {
                 : 'hover:bg-gray-50'
             }`}
           >
-            <span className={`${item.fontSize} font-['Inter'] -tracking-[0.333px]`}>
+            <span className={`${item.fontSize} font-['Kanit'] -tracking-[0.333px]`}>
               {item.label}
             </span>
           </Link>
@@ -68,7 +126,7 @@ export default function ProfileSidebar() {
           onClick={onLogout}
           className="w-full text-left p-2 rounded hover:bg-gray-50"
         >
-          <span className="text-sm font-['Inter'] -tracking-[0.333px] text-red-500">
+          <span className="text-sm font-['Kanit'] -tracking-[0.333px] text-red-500">
             ออกจากระบบ
           </span>
         </button>

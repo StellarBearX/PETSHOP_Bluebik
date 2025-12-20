@@ -33,7 +33,7 @@
   color: black;
   font-size: 15px;
   font-weight: bold;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   line-height: normal;
   letter-spacing: -0.333px;
 }
@@ -57,7 +57,7 @@
 .menuText {
   color: black;
   font-size: 15px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Kanit', sans-serif;
   line-height: normal;
   letter-spacing: -0.333px;
 }
@@ -110,7 +110,7 @@
   position: absolute;
   top: 2px;
   font-size: 13px;
-  font-family: 'Mitr', sans-serif;
+  font-family: 'Kanit', sans-serif;
   line-height: 18px;
   transition: color 0.3s;
 }

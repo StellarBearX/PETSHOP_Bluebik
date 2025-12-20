@@ -1,6 +1,7 @@
 export type ProductVariantOption = {
   id: string;
   label: string;
+  image?: string; // Optional image for variant option
 };
 
 export type ProductVariantDimension = {
@@ -166,7 +167,14 @@ export const mockCatalog: Product[] = [
     brand: "kaniva",
     catAge: "adult",
     dimensions: [
-      { key: "color", label: "สีแพ็คเกจ", options: [{ id: "orange", label: "ส้ม" }, { id: "blue", label: "น้ำเงิน" }] },
+      { 
+        key: "color", 
+        label: "สีแพ็คเกจ", 
+        options: [
+          { id: "orange", label: "ส้ม", image: "https://ui-avatars.com/api/?name=O&background=FF6B35&color=fff&size=48" }, 
+          { id: "blue", label: "น้ำเงิน", image: "https://ui-avatars.com/api/?name=B&background=3B82F6&color=fff&size=48" }
+        ] 
+      },
       { key: "size", label: "ขนาด", options: [{ id: "2kg", label: "2 กก." }, { id: "7kg", label: "7 กก." }] },
     ],
     skus: [

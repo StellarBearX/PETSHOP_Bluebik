@@ -347,7 +347,7 @@ function CategoryPageContent() {
             {/* Search Results Header */}
             {(searchQuery || query) && (
               <div className={styles.searchHeader}>
-                <h2 className={styles.searchTitle}>ผลการค้นหา: "{searchQuery || query}"</h2>
+                <h2 className={styles.searchTitle}>ผลการค้นหา: &quot;{searchQuery || query}&quot;</h2>
                 <p className={styles.searchCount}>พบ {filteredProducts.length} รายการ</p>
               </div>
             )}

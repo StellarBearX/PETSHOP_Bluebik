@@ -443,11 +443,21 @@
   border-radius: 9999px;
   font-weight: bold;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
 }
 
-.couponButton:hover {
+.couponButton:hover:not(:disabled) {
   opacity: 0.9;
+}
+
+.couponButtonCollected {
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.couponButtonCollected:hover {
+  opacity: 1;
 }
 
 /* Recommendations Section */

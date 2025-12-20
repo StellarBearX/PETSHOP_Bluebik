@@ -69,13 +69,13 @@ export default function Navbar() {
     <nav className={`gradient-navbar ${styles.navbar}`}>
       <div className={styles.container}>
         {/* Logo */}
-        <div className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           <img
             src="https://api.builder.io/api/v1/image/assets/TEMP/920430fbdf8e30589d118b73fe63623ac597477e"
             alt="Meow Meow Logo"
             className={styles.logoImage}
           />
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <div className={`${styles.navLinks} ${styles.desktopOnly}`}>

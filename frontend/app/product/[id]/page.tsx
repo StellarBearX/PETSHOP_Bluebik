@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ProductVariantSelector from "@/Components/ProductVariantSelector";
 import ProductReviews from "@/Components/ProductReviews";
+import StoreProfile from "@/Components/StoreProfile";
 import { HeartIcon } from "@/Components/Icons";
 import { useCatalog, useCart, useFavorites } from "@/app/providers";
 import type { ProductVariantSelection } from "@/lib/catalog";
@@ -29,6 +30,16 @@ export default function ProductDetailPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
 
+  // Map productId to storeId (mock logic - different products have different stores)
+  const getStoreIdForProduct = (prodId: string): string => {
+    // Use simple hash to assign different stores to different products
+    const stores = ["store1", "store2", "store3", "store4"];
+    const hash = prodId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return stores[hash % stores.length];
+  };
+
+  const storeId = productId ? getStoreIdForProduct(productId) : "store1";
+
   const sku = useMemo(() => (product ? findSku(product, selection) : null), [product, selection]);
 
   const priceText = useMemo(() => {
@@ -46,12 +57,6 @@ export default function ProductDetailPage() {
   // Calculate discount percentage (mock data)
   const discountPercent = sku ? Math.floor(Math.random() * 20) + 10 : 15;
   const originalPrice = sku ? Math.floor(sku.price * (1 + discountPercent / 100)) : 0;
-
-  // Mock coupons
-  const coupons = [
-    { id: 1, title: "รับโค้ดส่วนลด฿100", minSpend: 200, code: "MEGAMMEOW2024" },
-    { id: 2, title: "ส่วนลด฿500", minSpend: 800, code: "SAVE500" },
-  ];
 
   // Recommendations - get random products excluding current
   const recommendations = useMemo(() => {
@@ -299,26 +304,8 @@ export default function ProductDetailPage() {
               <div className={styles.descriptionText}>{product.description}</div>
             </div>
 
-            {/* Coupons Section */}
-            <div className={styles.couponsSection}>
-              <div className={styles.sectionTitle}>รับโค้ดส่วนลด</div>
-              <div className={styles.couponsGrid}>
-                {coupons.map((coupon) => (
-                  <div key={coupon.id} className={styles.couponCard}>
-                    <div className={styles.couponLeft}>
-                      <div className={styles.couponIcon}>🎫</div>
-                      <div>
-                        <div className={styles.couponTitle}>{coupon.title}</div>
-                        <div className={styles.couponCondition}>
-                          สั่งซื้อขั้นต่ำ ฿{coupon.minSpend}
-                        </div>
-                      </div>
-                    </div>
-                    <button className={styles.couponButton}>เก็บ</button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Store Profile Section - Shows store info and store coupons */}
+            <StoreProfile storeId={storeId} />
 
             {/* Recommendations Section */}
             <div className={styles.recommendationsSection}>

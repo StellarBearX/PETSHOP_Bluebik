@@ -65,3 +65,5 @@ export default function SimpleBannerCarousel({ images, autoPlayInterval = 5000 }
 
 
 
+
+

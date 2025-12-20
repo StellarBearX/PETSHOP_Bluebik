@@ -10,6 +10,21 @@ import ProductVariantSelector from "./ProductVariantSelector";
 import { HeartIcon } from "./Icons";
 import styles from "./ProductQuickViewModal.module.css";
 
+// Store data (same as StoreProfile component)
+const mockStoresData = {
+  "store1": { name: "Pet Shop Official" },
+  "store2": { name: "Happy Pets Mall" },
+  "store3": { name: "Pet Paradise Store" },
+  "store4": { name: "PetCare Pro" },
+};
+
+// Get store for product (same logic as Product Detail page)
+function getStoreIdForProduct(productId: string): string {
+  const stores = ["store1", "store2", "store3", "store4"];
+  const hash = productId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return stores[hash % stores.length];
+}
+
 type Props = {
   isOpen: boolean;
   product: Product | null;
@@ -50,6 +65,8 @@ export default function ProductQuickViewModal({ isOpen, product, onClose }: Prop
   if (!isOpen || !product) return null;
 
   const currentFavoriteStatus = isFavorite(product.id);
+  const storeId = getStoreIdForProduct(product.id);
+  const storeName = mockStoresData[storeId as keyof typeof mockStoresData]?.name || "Pet Shop";
 
   return (
     <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Product quick view">
@@ -115,7 +132,7 @@ export default function ProductQuickViewModal({ isOpen, product, onClose }: Prop
           </div>
 
           <div className={styles.infoSection}>
-            <div className={styles.shopName}>ร้าน: {product.shopName}</div>
+            <div className={styles.shopName}>ร้าน: {storeName}</div>
             <div className={styles.price}>{priceText}</div>
 
             {selectionText ? (

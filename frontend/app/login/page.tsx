@@ -21,10 +21,6 @@ export default function LoginPage() {
               setShowLogin(false);
               setShowRegister(true);
             }}
-            onLoginSuccess={() => {
-              // login แล้วกลับไปหน้า home
-              window.location.href = "/";
-            }}
           />
         )}
 

@@ -1,18 +1,21 @@
 "use client";
-import { useState } from "react";
 import { useAuth } from "@/app/providers";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object({
+  email: yup
+    .string()
+    .required("กรุณากรอกอีเมลล์")
+    .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "กรุณากรอกอีเมลล์ที่ถูกต้อง"),
+  password: yup.string().required("กรุณากรอกรหัสผ่าน"),
+});
 
 export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
+  const router = useRouter();
   const { handleLogin } = useAuth();
-
-  if (!isOpen) return null;
-
-  const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
   const getRegisteredUser = () => {
     try {
@@ -23,11 +26,27 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    clearErrors,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onSubmit",
+  });
 
+  if (!isOpen) return null;
+
+  const onSubmit = (data) => {
     const registered = getRegisteredUser();
 
+    // ✅ ไม่เคยสมัคร
     if (!registered) {
       alert("กรุณาสมัครสมาชิกก่อนเข้าสู่ระบบ");
       onClose?.();
@@ -35,20 +54,21 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
       return;
     }
 
-    if (!email) return setEmailError("กรุณากรอกอีเมลล์");
-    if (!validateEmail(email)) return setEmailError("กรุณากรอกอีเมลล์ที่ถูกต้อง");
-    if (!password) return setPasswordError("กรุณากรอกรหัสผ่าน");
+    // ✅ อีเมล/รหัสผ่านไม่ถูกต้อง (กันอาการ “กดแล้วนิ่ง”)
+    if (data.email !== registered.email || data.password !== registered.password) {
+      alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
 
-    setEmailError("");
-    setPasswordError("");
-
-    if (email !== registered.email || password !== registered.password) {
-      setPasswordError("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+      // ใส่ error ให้ทั้งสองช่อง เพื่อให้เห็นชัดขึ้น (ไม่เปลี่ยนดีไซน์)
+      setError("email", { type: "manual", message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" });
+      setError("password", { type: "manual", message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" });
       return;
     }
 
+    // ✅ สำเร็จ
     handleLogin();
     onClose?.();
+    router.refresh();
+    window.location.reload();
   };
 
   return (
@@ -69,7 +89,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
           />
         </div>
 
-        <form onSubmit={handleSubmit} className="w-[303px]" noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-[303px]" noValidate>
           <div className="mb-6">
             <div className="flex items-center gap-3">
               <img
@@ -79,22 +99,21 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
               />
               <input
                 type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (emailError) setEmailError("");
-                }}
-                onBlur={(e) => {
-                  const v = e.target.value;
-                  if (v && !validateEmail(v)) setEmailError("กรุณากรอกอีเมลล์ที่ถูกต้อง");
-                }}
                 placeholder="อีเมลล์"
                 className="w-full bg-transparent text-[16px] text-black outline-none placeholder:text-gray-400"
                 required
+                {...register("email", {
+                  onChange: () => {
+                    if (errors.email) clearErrors("email");
+                  },
+                  onBlur: () => {},
+                })}
               />
             </div>
             <div className="mt-2 h-px bg-gray-300" />
-            {emailError && <p className="mt-1 text-[12px] text-red-500">{emailError}</p>}
+            {errors.email?.message && (
+              <p className="mt-1 text-[12px] text-red-500">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="mb-8">
@@ -106,21 +125,20 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
               />
               <input
                 type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (passwordError) setPasswordError("");
-                }}
-                onBlur={(e) => {
-                  if (!e.target.value) setPasswordError("กรุณากรอกรหัสผ่าน");
-                }}
                 placeholder="รหัสผ่าน"
                 className="w-full bg-transparent text-[16px] text-black outline-none placeholder:text-gray-400"
                 required
+                {...register("password", {
+                  onChange: () => {
+                    if (errors.password) clearErrors("password");
+                  },
+                })}
               />
             </div>
             <div className="mt-2 h-px bg-gray-300" />
-            {passwordError && <p className="mt-1 text-[12px] text-red-500">{passwordError}</p>}
+            {errors.password?.message && (
+              <p className="mt-1 text-[12px] text-red-500">{errors.password.message}</p>
+            )}
           </div>
 
           <button

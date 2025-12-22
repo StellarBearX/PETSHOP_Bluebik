@@ -1,72 +1,52 @@
 "use client";
-import { useState } from "react";
 import { useAuth } from "@/app/providers";
 import SuccessModal from "./SuccessModal";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object({
+  email: yup
+    .string()
+    .required("กรุณากรอกอีเมลล์")
+    .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "กรุณากรอกอีเมลล์ที่ถูกต้อง"),
+  password: yup
+    .string()
+    .required("กรุณากรอกรหัสผ่าน")
+    .min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร")
+    .max(20, "รหัสผ่านต้องไม่เกิน 20 ตัวอักษร"),
+});
 
 export default function RegisterModal({ isOpen, onClose }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const router = useRouter();
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
 
   const { handleLogin } = useAuth();
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    clearErrors,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onSubmit",
+  });
+
+  const passwordValue = watch("password") || "";
+
   if (!isOpen) return null;
 
-  const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-
-  const validatePassword = (v) => {
-    if (v.length < 6) return "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร";
-    if (v.length > 20) return "รหัสผ่านต้องไม่เกิน 20 ตัวอักษร";
-    return "";
-  };
-
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    setEmail(value);
-    if (value && !validateEmail(value)) setEmailError("กรุณากรอกอีเมลล์ที่ถูกต้อง");
-    else setEmailError("");
-  };
-
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-    setPassword(value);
-    setPasswordError(validatePassword(value));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    let hasError = false;
-
-    if (!email) {
-      setEmailError("กรุณากรอกอีเมลล์");
-      hasError = true;
-    } else if (!validateEmail(email)) {
-      setEmailError("กรุณากรอกอีเมลล์ที่ถูกต้อง");
-      hasError = true;
-    } else {
-      setEmailError("");
-    }
-
-    if (!password) {
-      setPasswordError("กรุณากรอกรหัสผ่าน");
-      hasError = true;
-    } else {
-      const pwdError = validatePassword(password);
-      if (pwdError) {
-        setPasswordError(pwdError);
-        hasError = true;
-      } else {
-        setPasswordError("");
-      }
-    }
-
-    if (hasError) return;
-
+  const onSubmit = (data) => {
     try {
-      localStorage.setItem("registeredUser", JSON.stringify({ email, password }));
+      localStorage.setItem("registeredUser", JSON.stringify({ email: data.email, password: data.password }));
       localStorage.setItem("hasRegistered", "true");
     } catch {}
 
@@ -77,6 +57,8 @@ export default function RegisterModal({ isOpen, onClose }) {
     setIsSuccessOpen(false);
     handleLogin();
     onClose?.();
+    router.refresh();
+    window.location.reload(); 
   };
 
   return (
@@ -99,7 +81,7 @@ export default function RegisterModal({ isOpen, onClose }) {
               />
             </div>
 
-            <form onSubmit={handleSubmit} className="w-[303px]" noValidate>
+            <form onSubmit={handleSubmit(onSubmit)} className="w-[303px]" noValidate>
               <div className="mb-6">
                 <div className="flex items-center gap-3">
                   <img
@@ -109,16 +91,20 @@ export default function RegisterModal({ isOpen, onClose }) {
                   />
                   <input
                     type="email"
-                    value={email}
-                    onChange={handleEmailChange}
-                    onBlur={handleEmailChange}
                     placeholder="อีเมลล์"
                     className="w-full bg-transparent text-[16px] text-black outline-none placeholder:text-gray-400"
                     required
+                    {...register("email", {
+                      onChange: () => {
+                        if (errors.email) clearErrors("email");
+                      },
+                    })}
                   />
                 </div>
                 <div className="mt-2 h-px bg-gray-300" />
-                {emailError && <p className="mt-1 text-[12px] text-red-500">{emailError}</p>}
+                {errors.email?.message && (
+                  <p className="mt-1 text-[12px] text-red-500">{errors.email.message}</p>
+                )}
               </div>
 
               <div className="mb-8">
@@ -130,19 +116,21 @@ export default function RegisterModal({ isOpen, onClose }) {
                   />
                   <input
                     type="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    onBlur={handlePasswordChange}
                     placeholder="รหัสผ่าน"
                     className="w-full bg-transparent text-[16px] text-black outline-none placeholder:text-gray-400"
                     required
+                    {...register("password", {
+                      onChange: () => {
+                        if (errors.password) clearErrors("password");
+                      },
+                    })}
                   />
                 </div>
                 <div className="mt-2 h-px bg-gray-300" />
-                {passwordError ? (
-                  <p className="mt-1 text-[12px] text-red-500">{passwordError}</p>
+                {errors.password?.message ? (
+                  <p className="mt-1 text-[12px] text-red-500">{errors.password.message}</p>
                 ) : (
-                  password && (
+                  passwordValue && (
                     <p className="mt-1 text-[11px] text-gray-500">
                       รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร
                     </p>

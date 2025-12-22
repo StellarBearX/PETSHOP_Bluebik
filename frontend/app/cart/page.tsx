@@ -15,7 +15,7 @@ export default function CartPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showCouponModal, setShowCouponModal] = useState(false);
 
-  const allIds = useMemo(() => state.lines.map((l) => l.id), [state.lines]);
+  const allIds = useMemo(() => state.lines.map((line) => line.id), [state.lines]);
 
   const selectAll = selectedIds.length > 0 && selectedIds.length === allIds.length;
 
@@ -24,13 +24,13 @@ export default function CartPage() {
   };
 
   const toggleItem = (id: string) => {
-    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((selectedId) => selectedId !== id) : [...prev, id]));
   };
 
   const selectedSubtotal = useMemo(() => {
     return state.lines
-      .filter((l) => selectedIds.includes(l.id))
-      .reduce((sum, l) => sum + l.price * l.quantity, 0);
+      .filter((line) => selectedIds.includes(line.id))
+      .reduce((sum, line) => sum + line.price * line.quantity, 0);
   }, [state.lines, selectedIds]);
 
   const handleSelectCoupon = (coupon: UserCoupon | null) => {

@@ -1,6 +1,7 @@
 "use client"
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { IMAGES } from "@/lib/images";
 import styles from './page.module.css'
 
 type PromotionType = {
@@ -20,56 +21,56 @@ export default function NotificationsPage() {
   const promotions: PromotionType[] = [
     {
       id: 1,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/8151e0349402460e6ba5195dce270226f36ba8a4",
+      image: IMAGES.notifications.notif1,
       title: "ส่วนลด สมาชิกใหม่",
       isNew: true,
       promotionType: "ส่วนลด สมาชิกใหม่"
     },
     {
       id: 2,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/6723024e148c86b34fdc0adbac69f5a40b85f4cc",
+      image: IMAGES.notifications.notif2,
       title: "Flash Sale",
       isNew: true,
       promotionType: "Flash Sale"
     },
     {
       id: 3,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/3fc07f0b4daf5f29c83cbf6759ebf42f9c48a2a4",
+      image: IMAGES.notifications.notif3,
       title: "ส่วนลด ส่งฟรี",
       isNew: false,
       promotionType: "ส่วนลด ส่งฟรี"
     },
     {
       id: 4,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/26b07e9b32f4d7aea69be409170252b8d4ea0db0",
+      image: IMAGES.notifications.notif4,
       title: "ลดแรง ซื้อครั้งแรก",
       isNew: false,
       promotionType: "ลดแรง ซื้อครั้งแรก"
     },
     {
       id: 5,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/5bf7f32e2ef6cce40d0a941c717b981adcdf5600",
+      image: IMAGES.notifications.notif5,
       title: "ราคาดีที่สุด",
       isNew: true,
       promotionType: "ราคาดีที่สุด"
     },
     {
       id: 6,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/bb3a28ba9039618b69881db370b61e75f546b037",
+      image: IMAGES.notifications.notif6,
       title: "จ่ายผ่านบัตร สะสมแต้ม",
       isNew: false,
       promotionType: "จ่ายผ่านบัตร สะสมแต้ม"
     },
     {
       id: 7,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/74f973b279dda068ab202a9895608f6509cf7647",
+      image: IMAGES.notifications.notif7,
       title: "ส่วนลด 10%/15%/20%",
       isNew: false,
       promotionType: "ส่วนลด 10%/15%/20%"
     },
     {
       id: 8,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/44864f2efa986b73b671344ee16868c0bf260cca",
+      image: IMAGES.notifications.notif8,
       title: "อาหารสัตว์",
       isNew: false,
       category: "food"

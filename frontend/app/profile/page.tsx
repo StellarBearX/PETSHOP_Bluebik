@@ -2,8 +2,10 @@
 // Profile Page - แก้ไขข้อมูลส่วนตัว
 // Features: Form validation, Image upload, Save to localStorage, Auto-update ProfileDropdown & ProfileSidebar
 import { useState, useRef, useEffect } from 'react'
-import ProfileSidebar from '@/Components/ProfileSidebar'
+import ProfileSidebar from '@/Components/Profile/ProfileSidebar/ProfileSidebar'
 import { useToast } from '@/contexts/ToastContext'
+import { IMAGES } from '@/lib/images'
+import LoadingSpinner from '@/Components/UI/LoadingSpinner/LoadingSpinner'
 import styles from './page.module.css'
 
 export default function ProfilePage() {
@@ -20,9 +22,11 @@ export default function ProfilePage() {
   })
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [profileImage, setProfileImage] = useState<string>('https://api.builder.io/api/v1/image/assets/TEMP/4af760aa421324ef2f06ed9aaab02411ae07cf1e')
+  const [profileImage, setProfileImage] = useState<string>(IMAGES.profile.defaultImage)
   const [imageError, setImageError] = useState<string>('')
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Load profile data from localStorage on mount
@@ -83,18 +87,24 @@ export default function ProfilePage() {
     }
   }
 
-  const handleConfirmSave = () => {
+  const handleConfirmSave = async () => {
+    setIsLoading(true)
+    
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
     // Handle save logic here
     console.log('Saving profile data:', formData)
     // Save to localStorage (mock)
     localStorage.setItem('petshop_profile', JSON.stringify(formData))
-    if (profileImage && profileImage !== 'https://api.builder.io/api/v1/image/assets/TEMP/4af760aa421324ef2f06ed9aaab02411ae07cf1e') {
+    if (profileImage && profileImage !== IMAGES.profile.defaultImage) {
       localStorage.setItem('petshop_profile_image', profileImage)
     }
     
     // Dispatch custom event to update other components
     window.dispatchEvent(new Event('profileUpdated'))
     
+    setIsLoading(false)
     setShowConfirmModal(false)
     setShowSuccessModal(true)
     showToast('บันทึกข้อมูลสำเร็จ', 'success')
@@ -106,17 +116,20 @@ export default function ProfilePage() {
     if (!file) return
 
     setImageError('')
+    setIsUploading(true)
 
     // Validate file type
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png']
     if (!validTypes.includes(file.type)) {
       setImageError('กรุณาเลือกไฟล์ .JPEG หรือ .PNG เท่านั้น')
+      setIsUploading(false)
       return
     }
 
     // Validate file size (1 MB = 1048576 bytes)
     if (file.size > 1048576) {
       setImageError('ขนาดไฟล์ต้องไม่เกิน 1 MB')
+      setIsUploading(false)
       return
     }
 
@@ -124,10 +137,12 @@ export default function ProfilePage() {
     const reader = new FileReader()
     reader.onloadend = () => {
       setProfileImage(reader.result as string)
+      setIsUploading(false)
       showToast('อัปโหลดรูปภาพสำเร็จ', 'success')
     }
     reader.onerror = () => {
       setImageError('เกิดข้อผิดพลาดในการอ่านไฟล์')
+      setIsUploading(false)
       showToast('เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ', 'error')
     }
     reader.readAsDataURL(file)
@@ -336,7 +351,7 @@ export default function ProfilePage() {
                           ))}
                         </select>
                         <img 
-                          src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
+                          src={IMAGES.settingsIcon}
                           alt=""
                           className={styles.selectIcon}
                         />
@@ -361,7 +376,7 @@ export default function ProfilePage() {
                           <option value="ธันวาคม">ธันวาคม</option>
                         </select>
                         <img 
-                          src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
+                          src={IMAGES.settingsIcon}
                           alt=""
                           className={styles.selectIcon}
                         />
@@ -379,7 +394,7 @@ export default function ProfilePage() {
                           ))}
                         </select>
                         <img 
-                          src="https://api.builder.io/api/v1/image/assets/TEMP/bb809fb3c9fe712e8079abddeae346b474b9a2ed"
+                          src={IMAGES.settingsIcon}
                           alt=""
                           className={styles.selectIcon}
                         />
@@ -392,8 +407,10 @@ export default function ProfilePage() {
                     <button 
                       onClick={handleSave}
                       className={styles.saveButton}
+                      disabled={isLoading}
+                      style={{ opacity: isLoading ? 0.6 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}
                     >
-                      บันทึก
+                      {isLoading ? 'กำลังบันทึก...' : 'บันทึก'}
                     </button>
                   </div>
                 </div>
@@ -416,8 +433,10 @@ export default function ProfilePage() {
                     type="button"
                     onClick={handleUploadClick}
                     className={styles.uploadButton}
+                    disabled={isUploading}
+                    style={{ opacity: isUploading ? 0.6 : 1, cursor: isUploading ? 'not-allowed' : 'pointer' }}
                   >
-                    เลือกรูป
+                    {isUploading ? 'กำลังอัปโหลด...' : 'เลือกรูป'}
                   </button>
                   {imageError && (
                     <p style={{ color: '#ff4444', fontSize: '12px', marginTop: '0.5rem', textAlign: 'center' }}>
@@ -460,14 +479,17 @@ export default function ProfilePage() {
               <button 
                 onClick={handleCancelSave}
                 className={styles.cancelSaveButton}
+                disabled={isLoading}
               >
                 ยกเลิก
               </button>
               <button 
                 onClick={handleConfirmSave}
                 className={styles.confirmSaveButton}
+                disabled={isLoading}
+                style={{ opacity: isLoading ? 0.6 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}
               >
-                ตกลง
+                {isLoading ? <LoadingSpinner size="small" /> : 'ตกลง'}
               </button>
             </div>
           </div>

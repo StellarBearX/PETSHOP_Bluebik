@@ -1,11 +1,13 @@
 "use client"
 import { useState } from 'react'
+import { IMAGES } from "@/lib/images";
 import Link from 'next/link'
-import ProductCard from '@/Components/ProductCard'
-import ProductQuickViewModal from '@/Components/ProductQuickViewModal'
-import { ChevronRightIcon } from '@/Components/Icons'
+import ProductCard from '@/Components/Product/ProductCard/ProductCard'
+import ProductQuickViewModal from '@/Components/Modals/ProductQuickViewModal/ProductQuickViewModal'
+import { ChevronRightIcon } from '@/Components/UI/Icons/Icons'
 import { useCatalog } from '@/app/providers'
 import { getProductPriceRange, type Product } from '@/lib/catalog'
+import styles from './page.module.css'
 
 export default function ShopeeMallPage() {
   const { products } = useCatalog()
@@ -15,45 +17,45 @@ export default function ShopeeMallPage() {
   const displayProducts = products.slice(0, 6)
 
   return (
-    <main className="min-h-screen bg-[#F7F7F7]">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+    <main className={styles.pageMain}>
+      <div className={styles.pageContainer}>
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 py-4 sm:py-6 text-sm sm:text-base lg:text-[20px] font-['Kanit']">
-          <Link href="/" className="text-black hover:text-[#FF4D00]">Home</Link>
-          <ChevronRightIcon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-[22px] lg:h-[22px] text-gray-500" />
-          <span className="text-[#FF4D00]">Shopee Mall</span>
+        <div className={styles.breadcrumb}>
+          <Link href="/" className={styles.breadcrumbLink}>Home</Link>
+          <ChevronRightIcon className={styles.breadcrumbIcon} />
+          <span className={styles.breadcrumbCurrent}>Shopee Mall</span>
         </div>
 
         {/* Flash Deal Banner - Separated Section */}
-        <div className="mb-8 sm:mb-12">
-          <div className="bg-gradient-to-r from-[#FF4D00] to-[#F99D20] rounded-xl h-[120px] sm:h-[140px] lg:h-[163px] flex flex-col items-center justify-center shadow-lg">
-            <div className="flex items-center gap-2 sm:gap-4 mb-2 sm:mb-4">
+        <div className={styles.bannerSection}>
+          <div className={styles.bannerContainer}>
+            <div className={styles.bannerContent}>
               <img 
-                src="https://api.builder.io/api/v1/image/assets/TEMP/83093067aa3555f0fa4daef7e8df7e8f9abe6c61"
+                src={IMAGES.mallBannerIcon}
                 alt="Flash Deal"
-                className="w-[50px] h-[50px] sm:w-[65px] sm:h-[65px] lg:w-[83px] lg:h-[83px]"
+                className={styles.bannerIcon}
               />
-              <h1 className="text-white text-xl sm:text-2xl lg:text-[32px] font-bold font-['Kanit'] leading-normal -tracking-[0.333px]">
+              <h1 className={styles.bannerTitle}>
                 Flash Deal
               </h1>
             </div>
-            <p className="text-white text-sm sm:text-base lg:text-[20px] font-['Kanit'] leading-normal -tracking-[0.333px]">
+            <p className={styles.bannerSubtitle}>
               00:00 | 12:00 | 18:00 | 21:00 น.
             </p>
           </div>
         </div>
 
         {/* Shopee Mall Products Section - Separated */}
-        <div className="mb-8">
+        <div className={styles.productsSection}>
           {/* Header */}
-          <div className="bg-white h-[40px] sm:h-[45px] flex items-center justify-between px-4 rounded-t mb-0 shadow-[0_1px_4px_0_rgba(0,0,0,0.25)]">
-            <h2 className="text-[#FF4D00] text-base sm:text-lg lg:text-[20px] font-bold font-['Kanit'] leading-normal -tracking-[0.333px]">
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>
               Shopee Mall สินค้าขายดี
             </h2>
           </div>
 
           {/* Products Grid */}
-          <div className="bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.25)] rounded-b-lg p-4 sm:p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6">
+          <div className={styles.productsGrid}>
             {displayProducts.map((product) => {
               const range = getProductPriceRange(product)
               return (

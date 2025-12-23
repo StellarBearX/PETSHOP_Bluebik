@@ -1,8 +1,9 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import ProductQuickViewModal from "@/Components/ProductQuickViewModal"
-import { HeartIcon, StarRatingIcon } from "@/Components/Icons"
+import { IMAGES } from "@/lib/images";
+import ProductQuickViewModal from "@/Components/Modals/ProductQuickViewModal/ProductQuickViewModal"
+import { HeartIcon, StarRatingIcon } from "@/Components/UI/Icons/Icons"
 import { useFavorites, useSearch } from "../providers"
 import { getProductPriceRange, type Product } from "@/lib/catalog"
 import { formatPriceRangeTHB } from "@/lib/format"
@@ -16,27 +17,27 @@ export default function FavoritePage() {
 
   const favoriteProducts = useMemo(() => {
     const favorites = getFavorites()
-    const q = query.trim().toLowerCase()
-    if (!q) return favorites
-    return favorites.filter((p) => p.name.toLowerCase().includes(q) || p.shopName.toLowerCase().includes(q))
+    const searchQuery = query.trim().toLowerCase()
+    if (!searchQuery) return favorites
+    return favorites.filter((product) => product.name.toLowerCase().includes(searchQuery) || product.shopName.toLowerCase().includes(searchQuery))
   }, [getFavorites, query])
 
   return (
-    <main className="min-h-screen bg-[#F7F7F7] overflow-auto">
-      <div className="container-responsive max-w-[1440px] py-4 md:py-8">
-        <div className="bg-gradient-to-r from-[#FF4D00] to-[#F99D20] rounded-lg p-4 mb-6 md:mb-8 flex items-center gap-4">
+    <main className={styles.pageMain}>
+      <div className={`container-responsive ${styles.pageContainer}`}>
+        <div className={styles.headerBanner}>
           <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/b80de9f65b94d83c27755ef14a0def9a5307a069"
+            src={IMAGES.nav.notification}
             alt="Favorite"
-            className="w-10 h-10 md:w-[50px] md:h-[50px]"
+            className={styles.headerIcon}
           />
-          <h1 className="text-white text-2xl md:text-[32px] font-bold font-['Kanit'] overflow-wrap-break">รายการโปรด</h1>
+          <h1 className={styles.headerTitle}>รายการโปรด</h1>
         </div>
-        <div className="max-w-[1200px] mx-auto px-4">
+        <div className={styles.contentContainer}>
           {favoriteProducts.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <p className="text-gray-500 text-lg">ยังไม่มีสินค้าในรายการโปรด</p>
-              <p className="text-gray-400 text-sm mt-2">กดปุ่มหัวใจที่สินค้าที่คุณชอบเพื่อเพิ่มในรายการโปรด</p>
+            <div className={styles.emptyStateContainer}>
+              <p className={styles.emptyStateText}>ยังไม่มีสินค้าในรายการโปรด</p>
+              <p className={styles.emptyStateSubtext}>กดปุ่มหัวใจที่สินค้าที่คุณชอบเพื่อเพิ่มในรายการโปรด</p>
             </div>
           ) : (
             <div className={styles.productGrid}>
@@ -66,7 +67,7 @@ export default function FavoritePage() {
                       >
                         <HeartIcon 
                           filled={true}
-                          className="w-5 h-5 text-red-500"
+                          className={styles.heartIcon}
                         />
                       </button>
                     </div>

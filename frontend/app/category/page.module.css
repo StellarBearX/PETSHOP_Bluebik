@@ -951,3 +951,62 @@
     display: none;
   }
 }
+
+/* Highlight Text */
+.highlightText {
+  font-weight: 600;
+  color: #FF4D00;
+}
+
+/* Loading Fallback */
+.loadingFallback {
+  min-height: 100vh;
+  background-color: #F7F7F7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon Sizes */
+.breadcrumbChevron {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin: 0 0.25rem;
+  color: #9CA3AF;
+}
+
+.paginationChevron {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.paginationChevronPrev {
+  transform: rotate(180deg);
+}
+
+/* Text Sizes */
+.textXs {
+  font-size: 0.75rem;
+}
+
+.textSm {
+  font-size: 0.875rem;
+}
+
+/* Rating Filter Item */
+.ratingFilterItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.ratingLabel {
+  font-size: 11px;
+  color: #666;
+}
+
+.ratingLabelActive {
+  color: #FF4D00;
+}

@@ -73,7 +73,7 @@
 }
 
 /* Primary Button uses global class: btn-primary (from globals.css) */
-.primaryButton {
+.primaryButton, .secondaryButton {
   height: 45px;
   padding: 0 1.25rem;
   display: flex;
@@ -81,19 +81,9 @@
   justify-content: center;
   font-size: 1rem;
   text-decoration: none;
+  background-color: #E5E7EB;
+  color: #374151;
 }
-
-/* Secondary Button uses global class: btn-outline-primary (from globals.css) */
-.secondaryButton {
-  height: 45px;
-  padding: 0 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  text-decoration: none;
-}
-
 .footer {
   margin-top: 1.5rem;
   font-size: 0.75rem;

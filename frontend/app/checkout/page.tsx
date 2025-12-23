@@ -1,11 +1,13 @@
 "use client"
 import { useState, useEffect, useMemo } from 'react'
+import { IMAGES } from "@/lib/images";
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { QRCodeSVG } from 'qrcode.react'
-import SuccessModal from '@/Components/SuccessModal'
-import CouponSelectionModal from '@/Components/CouponSelectionModal'
-import PaymentCardModal from '@/Components/PaymentCardModal'
+import SuccessModal from '@/Components/Modals/SuccessModal/SuccessModal'
+import CouponSelectionModal from '@/Components/Modals/CouponSelectionModal/CouponSelectionModal'
+import PaymentCardModal from '@/Components/Modals/PaymentCardModal/PaymentCardModal'
+import LoadingSpinner from '@/Components/UI/LoadingSpinner/LoadingSpinner'
 import { useCart, useCatalog } from '../providers'
 import { useToast } from '@/contexts/ToastContext'
 import { formatSelection } from '@/lib/format'
@@ -43,6 +45,23 @@ export default function CheckoutPage() {
   const [qrExpiry, setQrExpiry] = useState(15 * 60) // 15 minutes in seconds
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null)
   const [isMounted, setIsMounted] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([])
+
+  // Load selected items from localStorage on mount
+  useEffect(() => {
+    const savedSelectedIds = localStorage.getItem('petshop_selected_cart_items');
+    if (savedSelectedIds) {
+      try {
+        const parsed = JSON.parse(savedSelectedIds);
+        if (Array.isArray(parsed)) {
+          setSelectedItemIds(parsed);
+        }
+      } catch (e) {
+        console.error('Error loading selected items:', e);
+      }
+    }
+  }, []);
 
   // Function to load cards
   const loadCards = () => {
@@ -178,24 +197,26 @@ export default function CheckoutPage() {
     return typeMap[card.type] || card.name || 'บัตรเครดิต'
   }
 
-  // Convert cart lines to order items format
+  // Convert cart lines to order items format (only selected items)
   const orderItems = useMemo(() => {
-    return state.lines.map((line) => {
-      const product = getProductById(line.productId)
-      const variantText = product ? formatSelection(product, line.selection) : ''
-      
-      return {
-        id: line.id,
-        shop: product?.shopName || 'Unknown Shop',
-        shopType: 'recommended', // Default shop type
-        name: line.name,
-        variant: variantText,
-        price: line.price,
-        quantity: line.quantity,
-        image: line.image
-      }
-    })
-  }, [state.lines, getProductById])
+    return state.lines
+      .filter(line => selectedItemIds.length === 0 || selectedItemIds.includes(line.id))
+      .map((line) => {
+        const product = getProductById(line.productId)
+        const variantText = product ? formatSelection(product, line.selection) : ''
+        
+        return {
+          id: line.id,
+          shop: product?.shopName || 'Unknown Shop',
+          shopType: 'recommended', // Default shop type
+          name: line.name,
+          variant: variantText,
+          price: line.price,
+          quantity: line.quantity,
+          image: line.image
+        }
+      })
+  }, [state.lines, getProductById, selectedItemIds])
 
   // Use subtotal from Cart Context instead of calculating from mock data
   const orderSubtotal = subtotal
@@ -269,7 +290,7 @@ export default function CheckoutPage() {
     setShowConfirmModal(true)
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     // Check if address is selected
     if (!selectedAddress) {
       showToast('กรุณาเลือกที่อยู่ในการจัดส่ง', 'error')
@@ -281,6 +302,9 @@ export default function CheckoutPage() {
       showToast('กรุณาเลือกบัตรการชำระเงิน', 'error')
       return
     }
+    
+    setIsProcessing(true)
+    await new Promise(resolve => setTimeout(resolve, 800))
     
     // Save order to localStorage (mock)
     const order = {
@@ -301,6 +325,7 @@ export default function CheckoutPage() {
     // Clear cart
     clear()
     
+    setIsProcessing(false)
     setShowConfirmModal(false)
     setShowSuccessModal(true)
     showToast('ทำรายการสั่งซื้อสำเร็จ', 'success')
@@ -361,7 +386,7 @@ export default function CheckoutPage() {
           {/* Header */}
           <div className={styles.header}>
             <img 
-              src="https://api.builder.io/api/v1/image/assets/TEMP/470f79eeeab9db1552d26be46901547ffc5caa1b" 
+              src={IMAGES.checkout.locationPin} 
               alt="Payment"
               className={styles.headerIcon}
             />
@@ -372,13 +397,13 @@ export default function CheckoutPage() {
           <div className={styles.addressSection}>
             <div className={styles.addressHeader}>
               <img 
-                src="https://api.builder.io/api/v1/image/assets/TEMP/b8ef727977f108caf154f7275db1c51b9e619bfe"
+                src={IMAGES.checkout.shopIcon}
                 alt="Home"
                 className={styles.addressIcon}
               />
               <h2 className={styles.addressTitle}>ที่อยู่</h2>
               <button
-                onClick={() => router.push('/profile-address')}
+                onClick={() => router.push('/profile/address')}
                 style={{
                   marginLeft: 'auto',
                   padding: '0.5rem 1rem',
@@ -456,13 +481,13 @@ export default function CheckoutPage() {
                       <div className={styles.variantSelector}>
                         <span className={styles.variantText}>{item.variant}</span>
                         <img 
-                          src="https://api.builder.io/api/v1/image/assets/TEMP/12fc36706518dfae295152ffa0b0fdb14dd2b5a2"
+                          src={IMAGES.checkout.creditCardIcon}
                           alt="dropdown"
                           className={styles.dropdownIcon}
                         />
                       </div>
                       <img 
-                        src="https://api.builder.io/api/v1/image/assets/TEMP/1a84f6dfdd398c7628939c37745abc70204d83ef"
+                        src={IMAGES.checkout.deliveryIcon}
                         alt="badges"
                         className={styles.badgeImage}
                       />
@@ -554,7 +579,7 @@ export default function CheckoutPage() {
             <div className={styles.paymentInfoSection}>
               <div className={styles.paymentInfoHeader}>
                 <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/cd56be3f878321fa1cf48fd2996b12b69b9485f2"
+                  src={IMAGES.checkout.checkboxChecked}
                   alt="Payment"
                   className={styles.paymentInfoIcon}
                 />
@@ -581,7 +606,7 @@ export default function CheckoutPage() {
             <div className={styles.paymentInfoSection}>
               <div className={styles.paymentInfoHeader}>
                 <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/cd56be3f878321fa1cf48fd2996b12b69b9485f2"
+                  src={IMAGES.checkout.checkboxChecked}
                   alt="Payment"
                   className={styles.paymentInfoIcon}
                 />
@@ -607,7 +632,7 @@ export default function CheckoutPage() {
                     onClick={() => setShowCardModal(true)}
                   >
                     <img 
-                      src="https://api.builder.io/api/v1/image/assets/TEMP/d83ca65e259bb78dd9793cd40aeae177c9bf6c4c"
+                      src={IMAGES.checkout.coinIcon}
                       alt="edit"
                       className={styles.editIcon}
                     />
@@ -639,7 +664,7 @@ export default function CheckoutPage() {
                   </button>
                   <button
                     onClick={() => {
-                      router.push('/profile-cards')
+                      router.push('/profile/cards')
                     }}
                     style={{
                       padding: '0.5rem 1rem',
@@ -662,7 +687,7 @@ export default function CheckoutPage() {
             <div className={styles.paymentInfoSection}>
               <div className={styles.paymentInfoHeader}>
                 <img 
-                  src="https://api.builder.io/api/v1/image/assets/TEMP/cd56be3f878321fa1cf48fd2996b12b69b9485f2"
+                  src={IMAGES.checkout.checkboxChecked}
                   alt="Payment"
                   className={styles.paymentInfoIcon}
                 />
@@ -800,7 +825,7 @@ export default function CheckoutPage() {
           <div className={styles.modalContent}>
             <div className={styles.modalInner}>
               <img 
-                src="https://api.builder.io/api/v1/image/assets/TEMP/6eab73d84e06b64781e693f78a66f72436d12186"
+                src={IMAGES.coinGoldIcon}
                 alt="Warning"
                 className={styles.modalIcon}
               />
@@ -811,14 +836,24 @@ export default function CheckoutPage() {
                 <button
                   onClick={() => setShowConfirmModal(false)}
                   className={styles.modalButtonCancel}
+                  disabled={isProcessing}
                 >
                   ยกเลิก
                 </button>
                 <button
                   onClick={handleConfirm}
                   className={styles.modalButtonConfirm}
+                  disabled={isProcessing}
+                  style={{ opacity: isProcessing ? 0.6 : 1, cursor: isProcessing ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
-                  ตกลง
+                  {isProcessing ? (
+                    <>
+                      <LoadingSpinner size="small" />
+                      <span>กำลังประมวลผล...</span>
+                    </>
+                  ) : (
+                    'ตกลง'
+                  )}
                 </button>
               </div>
             </div>
@@ -829,9 +864,11 @@ export default function CheckoutPage() {
       {/* Success Modal */}
       <SuccessModal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        title="ทำรายการสั่งซื้อสำเร็จ"
-        redirectUrl="/profile-orders"
+        onClose={() => {
+          setShowSuccessModal(false)
+          router.push('/profile/orders')
+        }}
+        message="ทำรายการสั่งซื้อสำเร็จ"
       />
 
       {/* Coupon Selection Modal */}

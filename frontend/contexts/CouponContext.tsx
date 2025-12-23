@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useMemo, useReducer } from "react";
+import { IMAGES } from "@/lib/images";
 import type { Coupon, UserCoupon, CouponState } from "@/lib/coupon";
 
 // Mock Data - Initial Available Coupons
@@ -16,7 +17,7 @@ const initialCoupons: Coupon[] = [
     status: "available",
     expiryDate: "2025-12-20T23:59:59Z",
     color: "red",
-    badgeIcon: "https://api.builder.io/api/v1/image/assets/TEMP/40c595824b97fee337663ced1df45b782130fab1",
+    badgeIcon: IMAGES.coupons.badge1,
     conditions: [
       "ใช้ได้สำหรับสมาชิกทุกท่าน",
       "สั่งซื้อขั้นต่ำ ฿200",
@@ -36,7 +37,7 @@ const initialCoupons: Coupon[] = [
     status: "available",
     expiryDate: "2025-12-20T23:59:59Z",
     color: "green",
-    badgeIcon: "https://api.builder.io/api/v1/image/assets/TEMP/a68ec0128b9f0a77b2a805f55c92a55214e6120e",
+    badgeIcon: IMAGES.coupons.badge2,
     conditions: [
       "ใช้ได้เฉพาะสินค้าในร้านโค้ดคุ้ม",
       "สั่งซื้อขั้นต่ำ ฿100",
@@ -56,7 +57,7 @@ const initialCoupons: Coupon[] = [
     status: "available",
     expiryDate: "2025-12-30T23:59:59Z",
     color: "red",
-    badgeIcon: "https://api.builder.io/api/v1/image/assets/TEMP/920430fbdf8e30589d118b73fe63623ac597477e",
+    badgeIcon: IMAGES.logo,
     conditions: [
       "ใช้ได้สำหรับสมาชิกทุกท่าน",
       "ไม่มีขั้นต่ำ",
@@ -76,7 +77,7 @@ const initialCoupons: Coupon[] = [
     status: "expired",
     expiryDate: "2025-12-01T23:59:59Z",
     color: "green",
-    badgeIcon: "https://api.builder.io/api/v1/image/assets/TEMP/a68ec0128b9f0a77b2a805f55c92a55214e6120e",
+    badgeIcon: IMAGES.coupons.badge2,
     conditions: [
       "ใช้ได้เฉพาะวันที่ 1 ธันวาคม 2025",
       "ไม่มีขั้นต่ำ",

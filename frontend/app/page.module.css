@@ -195,3 +195,7 @@
   }
 }
 
+/* Container with max width */
+.pageContainer {
+  max-width: 1440px;
+}

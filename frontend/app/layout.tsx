@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import Navbar from "@/Components/Navbar";
-import Footer from "@/Components/Footer";
-import AuthModals from "@/Components/AuthModals";
+import Navbar from "@/Components/Layout/Navbar/Navbar";
+import Footer from "@/Components/Layout/Footer/Footer";
+import AuthModals from "@/Components/Modals/AuthModals/AuthModals";
 import ErrorBoundary from "@/Components/ErrorBoundary";
 import { AppProviders } from "./providers";
 import { ToastProvider } from "@/contexts/ToastContext";
+import { logo } from "@/lib/images";
 import "./globals.css";
 import styles from "./layout.module.css";
 
@@ -12,9 +13,9 @@ export const metadata: Metadata = {
   title: "Meow Meow",
   description: "Pet Shop Application",
   icons: {
-    icon: "https://api.builder.io/api/v1/image/assets/TEMP/920430fbdf8e30589d118b73fe63623ac597477e",
-    shortcut: "https://api.builder.io/api/v1/image/assets/TEMP/920430fbdf8e30589d118b73fe63623ac597477e",
-    apple: "https://api.builder.io/api/v1/image/assets/TEMP/920430fbdf8e30589d118b73fe63623ac597477e",
+    icon: logo,
+    shortcut: logo,
+    apple: logo,
     
   },
 };

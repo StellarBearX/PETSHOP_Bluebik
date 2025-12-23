@@ -65,10 +65,10 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     case "ADD": {
       const { product, sku, selection, quantity } = action.payload;
       const id = toLineId(product.id, sku.skuId);
-      const existing = state.lines.find((l) => l.id === id);
+      const existing = state.lines.find((line) => line.id === id);
       if (existing) {
         return {
-          lines: state.lines.map((l) => (l.id === id ? { ...l, quantity: l.quantity + quantity } : l)),
+          lines: state.lines.map((line) => (line.id === id ? { ...line, quantity: line.quantity + quantity } : line)),
         };
       }
 
@@ -86,10 +86,10 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       return { lines: [...state.lines, line] };
     }
     case "REMOVE":
-      return { lines: state.lines.filter((l) => l.id !== action.payload.lineId) };
+      return { lines: state.lines.filter((line) => line.id !== action.payload.lineId) };
     case "SET_QTY": {
       const qty = Math.max(1, action.payload.quantity);
-      return { lines: state.lines.map((l) => (l.id === action.payload.lineId ? { ...l, quantity: qty } : l)) };
+      return { lines: state.lines.map((line) => (line.id === action.payload.lineId ? { ...line, quantity: qty } : line)) };
     }
     case "CLEAR":
       return { lines: [] };
@@ -145,8 +145,8 @@ function loadCartFromStorage(): CartState {
     if (!parsed?.lines || !Array.isArray(parsed.lines)) return { lines: [] };
     return {
       lines: parsed.lines
-        .filter((l) => l && typeof l.id === "string")
-        .map((l) => ({ ...l, quantity: Math.max(1, Number(l.quantity) || 1) })),
+        .filter((line) => line && typeof line.id === "string")
+        .map((line) => ({ ...line, quantity: Math.max(1, Number(line.quantity) || 1) })),
     };
   } catch {
     return { lines: [] };
@@ -199,7 +199,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   }, []);
 
   const getProductById = useMemo(() => {
-    const map = new Map(products.map((p) => [p.id, p] as const));
+    const map = new Map(products.map((product) => [product.id, product] as const));
     return (id: string) => map.get(id);
   }, [products]);
 
@@ -323,7 +323,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   const isFavorite = (productId: string) => favoriteIds.has(productId);
 
-  const getFavorites = () => products.filter((p) => favoriteIds.has(p.id));
+  const getFavorites = () => products.filter((product) => favoriteIds.has(product.id));
 
   const favoritesValue = useMemo<FavoritesContextValue>(
     () => ({

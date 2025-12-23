@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { IMAGES } from "@/lib/images";
 import Link from "next/link";
 import { useCart, useCatalog } from "../providers";
 import { formatPriceTHB, formatSelection } from "@/lib/format";
-import CouponSelectionModal from "@/Components/CouponSelectionModal";
+import CouponSelectionModal from "@/Components/Modals/CouponSelectionModal/CouponSelectionModal";
 import type { UserCoupon } from "@/lib/coupon";
 import styles from "./page.module.css";
 
@@ -14,6 +15,33 @@ export default function CartPage() {
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showCouponModal, setShowCouponModal] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true);
+    // Load selected items from localStorage
+    const savedSelectedIds = localStorage.getItem('petshop_selected_cart_items');
+    if (savedSelectedIds) {
+      try {
+        const parsed = JSON.parse(savedSelectedIds);
+        if (Array.isArray(parsed)) {
+          // Filter to only include IDs that exist in current cart
+          const validIds = parsed.filter(id => allIds.includes(id));
+          setSelectedIds(validIds);
+        }
+      } catch (e) {
+        console.error('Error loading selected items:', e);
+      }
+    }
+  }, []);
+
+  // Save selected items to localStorage whenever they change
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem('petshop_selected_cart_items', JSON.stringify(selectedIds));
+    }
+  }, [selectedIds, isMounted]);
 
   const allIds = useMemo(() => state.lines.map((line) => line.id), [state.lines]);
 
@@ -37,12 +65,30 @@ export default function CartPage() {
     setSelectedCoupon(coupon);
   };
 
+  // Prevent hydration mismatch by showing loading state on server
+  if (!isMounted) {
+    return (
+      <main className={styles.main}>
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <img
+              src={IMAGES.emptyCartIcon}
+              alt="Cart"
+              className={styles.headerIcon}
+            />
+            <h1 className={styles.headerTitle}>รถเข็น</h1>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
         <div className={styles.header}>
           <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/ef5106e8c1589916161d078d5360bd31312755ca"
+            src={IMAGES.emptyCartIcon}
             alt="Cart"
             className={styles.headerIcon}
           />
@@ -94,13 +140,17 @@ export default function CartPage() {
                               className={styles.itemCheckbox}
                               aria-label={`Select ${line.name}`}
                             />
-                            <div className={styles.itemImage}>
-                              <img src={line.image} alt={line.name} />
-                            </div>
+                            <Link href={`/product/${line.productId}`} className={styles.itemImageLink}>
+                              <div className={styles.itemImage}>
+                                <img src={line.image} alt={line.name} />
+                              </div>
+                            </Link>
                             <div className={styles.itemDetails}>
-                              <h3 className={styles.itemName}>
-                                {line.name}
-                              </h3>
+                              <Link href={`/product/${line.productId}`} className={styles.itemNameLink}>
+                                <h3 className={styles.itemName}>
+                                  {line.name}
+                                </h3>
+                              </Link>
                               {variantText ? (
                                 <div className={styles.itemVariant}>{variantText}</div>
                               ) : null}
@@ -222,7 +272,12 @@ export default function CartPage() {
                 </div>
 
                 <Link href="/checkout">
-                  <button className={styles.buyNowButton}>Buy Now</button>
+                  <button 
+                    className={styles.buyNowButton}
+                    disabled={selectedIds.length === 0}
+                  >
+                    Buy Now {selectedIds.length > 0 && `(${selectedIds.length})`}
+                  </button>
                 </Link>
               </div>
             </div>

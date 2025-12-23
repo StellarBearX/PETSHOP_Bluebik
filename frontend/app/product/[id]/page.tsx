@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import ProductVariantSelector from "@/Components/ProductVariantSelector";
-import ProductReviews from "@/Components/ProductReviews";
-import StoreProfile from "@/Components/StoreProfile";
-import { HeartIcon } from "@/Components/Icons";
+import ProductVariantSelector from "@/Components/Product/ProductVariantSelector/ProductVariantSelector";
+import ProductReviews from "@/Components/Product/ProductReviews/ProductReviews";
+import StoreProfile from "@/Components/Product/StoreProfile/StoreProfile";
+import { HeartIcon } from "@/Components/UI/Icons/Icons";
 import { useCatalog, useCart, useFavorites } from "@/app/providers";
 import type { ProductVariantSelection } from "@/lib/catalog";
 import { findSku, getProductPriceRange, isSelectionComplete } from "@/lib/catalog";
@@ -62,7 +62,7 @@ export default function ProductDetailPage() {
   const recommendations = useMemo(() => {
     if (!product) return [];
     return products
-      .filter(p => p.id !== product.id)
+      .filter(prod => prod.id !== product.id)
       .slice(0, 8);
   }, [products, product]);
 
@@ -82,7 +82,7 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <main className={styles.main}>
-        <div className="container-responsive py-8">
+        <div className={`container-responsive ${styles.loadingContainer}`}>
           <div className={styles.loadingCard}>Loading...</div>
         </div>
       </main>
@@ -92,7 +92,7 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <main className={styles.main}>
-        <div className="container-responsive py-8">
+        <div className={`container-responsive ${styles.notFoundContainer}`}>
           <div className={styles.notFoundCard}>
             <div className={styles.notFoundTitle}>ไม่พบสินค้า</div>
             <button
@@ -110,7 +110,7 @@ export default function ProductDetailPage() {
 
   return (
     <main className={styles.main}>
-      <div className="container-responsive py-4 md:py-8">
+      <div className={`container-responsive ${styles.contentContainer}`}>
         <div className={styles.container}>
           {/* Breadcrumb */}
           <div className={styles.breadcrumb}>
@@ -137,7 +137,6 @@ export default function ProductDetailPage() {
                 <div 
                   className={styles.mainImage}
                   onClick={() => setShowLightbox(true)}
-                  style={{ cursor: 'pointer' }}
                 >
                   <img
                     src={product.images[selectedImageIndex]}
@@ -150,7 +149,6 @@ export default function ProductDetailPage() {
                       key={img} 
                       className={`${styles.thumbnail} ${idx === selectedImageIndex ? styles.thumbnailActive : ''}`}
                       onClick={() => setSelectedImageIndex(idx)}
-                      style={{ cursor: 'pointer' }}
                     >
                       <img src={img} alt="" />
                     </div>
@@ -177,7 +175,7 @@ export default function ProductDetailPage() {
                     className={styles.iconButton}
                     aria-label="Share"
                   >
-                    <Share2 className="w-6 h-6 text-gray-400" />
+                    <Share2 className={styles.shareIcon} />
                   </button>
                 </div>
 
@@ -350,7 +348,7 @@ export default function ProductDetailPage() {
             onClick={() => setShowLightbox(false)}
             aria-label="Close"
           >
-            <X className="w-8 h-8" />
+            <X className={styles.closeIcon} />
           </button>
           
           <button 
@@ -361,7 +359,7 @@ export default function ProductDetailPage() {
             }}
             aria-label="Previous image"
           >
-            <ChevronLeft className="w-12 h-12" />
+            <ChevronLeft className={styles.navIcon} />
           </button>
 
           <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
@@ -380,7 +378,7 @@ export default function ProductDetailPage() {
             }}
             aria-label="Next image"
           >
-            <ChevronRight className="w-12 h-12" />
+            <ChevronRight className={styles.navIcon} />
           </button>
         </div>
       )}

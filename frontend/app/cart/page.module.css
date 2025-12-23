@@ -212,6 +212,12 @@
   flex-shrink: 0;
 }
 
+.itemImageLink {
+  display: block;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
 .itemImage {
   width: 110px;
   height: 110px;
@@ -220,6 +226,11 @@
   overflow: hidden;
   flex-shrink: 0;
   background-color: #F9FAFB;
+  transition: border-color 0.2s ease;
+}
+
+.itemImageLink:hover .itemImage {
+  border-color: #FF4D00;
 }
 
 .itemImage img {
@@ -234,6 +245,16 @@
   gap: 0.5rem;
   min-width: 0;
   flex: 1;
+}
+
+.itemNameLink {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.itemNameLink:hover {
+  color: #FF4D00;
 }
 
 .itemName {
@@ -517,6 +538,19 @@
 .buyNowButton:active {
   transform: translateY(0);
   box-shadow: 0 1px 2px 0 rgba(255, 77, 0, 0.2);
+}
+
+.buyNowButton:disabled {
+  background: #D9D9D9;
+  color: #999;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.buyNowButton:disabled:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Responsive adjustments */

@@ -1,12 +1,13 @@
 "use client"
 import { useState, useMemo, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { IMAGES } from "@/lib/images";
 import Link from 'next/link'
 import { useCatalog, useSearch, useFavorites } from '@/app/providers'
 import { getProductPriceRange, type Product, CATEGORIES, BRANDS, CAT_AGES, PROMOTIONS } from '@/lib/catalog'
-import { HeartIcon, StarRatingIcon, ChevronRightIcon } from '@/Components/Icons'
-import ProductQuickViewModal from '@/Components/ProductQuickViewModal'
-import SimpleBannerCarousel from '@/Components/SimpleBannerCarousel'
+import { HeartIcon, StarRatingIcon, ChevronRightIcon } from '@/Components/UI/Icons/Icons'
+import ProductQuickViewModal from '@/Components/Modals/ProductQuickViewModal/ProductQuickViewModal'
+import SimpleBannerCarousel from '@/Components/Carousels/SimpleBannerCarousel/SimpleBannerCarousel'
 import styles from './page.module.css'
 
 function CategoryPageContent() {
@@ -41,9 +42,9 @@ function CategoryPageContent() {
   const itemsPerPage = 15
   
   const bannerImages = [
-    "https://api.builder.io/api/v1/image/assets/TEMP/0bd2893a763071d0018d40ec3fd0ec2534c33120",
-    "https://api.builder.io/api/v1/image/assets/TEMP/1fd37dc0a9f7a659bc9914b9218685930cf9200f",
-    "https://api.builder.io/api/v1/image/assets/TEMP/abb7edfe50237f94aeaf1a789fa8f6fe60e61085",
+    IMAGES.categoryBanners.banner1,
+    IMAGES.categoryBanners.banner2,
+    IMAGES.categoryBanners.banner3,
   ]
 
   // Filter products based on all criteria
@@ -53,40 +54,40 @@ function CategoryPageContent() {
     // Search filter
     const searchTerm = searchQuery || query
     if (searchTerm) {
-      result = result.filter(p => 
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      result = result.filter(product => 
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
     
     // Category filter
     if (selectedCategory && selectedCategory !== 'all') {
-      result = result.filter(p => p.category === selectedCategory)
+      result = result.filter(product => product.category === selectedCategory)
     }
     
     // Brand filter
     if (selectedBrand) {
-      result = result.filter(p => p.brand === selectedBrand)
+      result = result.filter(product => product.brand === selectedBrand)
     }
     
     // Cat age filter
     if (selectedCatAge) {
-      result = result.filter(p => p.catAge === selectedCatAge)
+      result = result.filter(product => product.catAge === selectedCatAge)
     }
     
     // Location filter
     if (selectedLocation !== 'all') {
-      result = result.filter(p => p.location === selectedLocation)
+      result = result.filter(product => product.location === selectedLocation)
     }
     
     // Rating filter
     if (minRating > 0) {
-      result = result.filter(p => (p.rating || 0) >= minRating)
+      result = result.filter(product => (product.rating || 0) >= minRating)
     }
     
     // Price filter
-    result = result.filter(p => {
-      const range = getProductPriceRange(p)
+    result = result.filter(product => {
+      const range = getProductPriceRange(product)
       return range.min >= minPrice && range.min <= maxPrice
     })
     
@@ -179,7 +180,7 @@ function CategoryPageContent() {
       <div className={styles.breadcrumb}>
         <div className={styles.breadcrumbText}>
           <Link href="/">Home</Link>
-          <ChevronRightIcon className="inline-block w-4 h-4 mx-1 text-gray-400" />
+          <ChevronRightIcon className={styles.breadcrumbChevron} />
           <span>{getDisplayTitle()}</span>
         </div>
       </div>
@@ -248,13 +249,13 @@ function CategoryPageContent() {
 
             {/* Categories */}
             <div className={styles.categoryList}>
-              {CATEGORIES.filter(c => c.id !== 'all').map((cat) => (
+              {CATEGORIES.filter(category => category.id !== 'all').map((category) => (
                 <div 
-                  key={cat.id}
-                  className={`${styles.categoryItem} ${selectedCategory === cat.id ? styles.categoryItemActive : ''}`}
-                  onClick={() => handleCategoryChange(cat.id)}
+                  key={category.id}
+                  className={`${styles.categoryItem} ${selectedCategory === category.id ? styles.categoryItemActive : ''}`}
+                  onClick={() => handleCategoryChange(category.id)}
                 >
-                  {cat.name}
+                  {category.name}
                 </div>
               ))}
             </div>
@@ -284,8 +285,8 @@ function CategoryPageContent() {
               <span className={styles.serviceHeaderText}>บริการสินค้าและโปรโมชั่น</span>
             </div>
             <div className={styles.categoryList}>
-              {PROMOTIONS.map((promo, i) => (
-                <div key={i} className={styles.categoryItem}>{promo}</div>
+              {PROMOTIONS.map((promotion, index) => (
+                <div key={index} className={styles.categoryItem}>{promotion}</div>
               ))}
             </div>
 
@@ -321,12 +322,11 @@ function CategoryPageContent() {
               ].map((rating) => (
                 <div 
                   key={rating.stars}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                  className={`${styles.ratingFilterItem} ${minRating === rating.stars ? styles.categoryItemActive : ''}`}
                   onClick={() => handleRatingChange(rating.stars)}
-                  className={minRating === rating.stars ? styles.categoryItemActive : ''}
                 >
-                  <StarRatingIcon rating={rating.stars} showScore={false} className="text-sm" />
-                  <span style={{ fontSize: '11px', color: minRating === rating.stars ? '#FF4D00' : '#666' }}>{rating.label}</span>
+                  <StarRatingIcon rating={rating.stars} showScore={false} className={styles.textSm} />
+                  <span className={`${styles.ratingLabel} ${minRating === rating.stars ? styles.ratingLabelActive : ''}`}>{rating.label}</span>
                 </div>
               ))}
             </div>
@@ -357,7 +357,7 @@ function CategoryPageContent() {
               <h2 className={styles.headerTitle}>สินค้า</h2>
               <div className={styles.headerInfo}>
                 <span>จำนวนรายการสินค้าทั้งหมด</span>
-                <span className="font-semibold text-[#FF4D00]">{filteredProducts.length}</span>
+                <span className={styles.highlightText}>{filteredProducts.length}</span>
                 <span>รายการ</span>
               </div>
             </div>
@@ -378,8 +378,8 @@ function CategoryPageContent() {
                   value={selectedCategory}
                   onChange={(e) => handleCategoryChange(e.target.value)}
                 >
-                  {CATEGORIES.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  {CATEGORIES.map(category => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
                   ))}
                 </select>
                 
@@ -499,7 +499,7 @@ function CategoryPageContent() {
 
                       <div className={styles.priceRow}>
                         <span className={styles.price}>฿{range.min}</span>
-                        <StarRatingIcon rating={product.rating || 4.5} className="text-xs" />
+                        <StarRatingIcon rating={product.rating || 4.5} className={styles.textXs} />
                       </div>
 
                       <div className={styles.productDetails}>
@@ -538,7 +538,7 @@ function CategoryPageContent() {
                     }}
                     disabled={currentPage === 1}
                   >
-                    <ChevronRightIcon className="w-3 h-3 rotate-180" />
+                    <ChevronRightIcon className={`${styles.paginationChevron} ${styles.paginationChevronPrev}`} />
                   </button>
                   
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -590,7 +590,7 @@ function CategoryPageContent() {
                     }}
                     disabled={currentPage === totalPages}
                   >
-                    <ChevronRightIcon className="w-3 h-3" />
+                    <ChevronRightIcon className={styles.paginationChevron} />
                   </button>
                 </div>
 
@@ -612,8 +612,8 @@ function CategoryPageContent() {
                 value={stagedCategory}
                 onChange={(e) => setStagedCategory(e.target.value)}
               >
-                {CATEGORIES.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                {CATEGORIES.map(category => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
                 ))}
               </select>
               
@@ -663,7 +663,7 @@ function CategoryPageContent() {
                         if (e.target.checked) {
                           setSelectedSizes([...selectedSizes, size])
                         } else {
-                          setSelectedSizes(selectedSizes.filter(s => s !== size))
+                          setSelectedSizes(selectedSizes.filter(selectedSize => selectedSize !== size))
                         }
                       }}
                     />
@@ -704,7 +704,7 @@ function CategoryPageContent() {
 
 export default function CategoryPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F7F7F7] flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<div className={styles.loadingFallback}>Loading...</div>}>
       <CategoryPageContent />
     </Suspense>
   )

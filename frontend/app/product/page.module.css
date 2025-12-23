@@ -97,6 +97,7 @@
   overflow: hidden;
   background-color: #F3F4F6;
   position: relative;
+  cursor: pointer;
 }
 
 .mainImage img {
@@ -685,4 +686,50 @@
 
 .notFoundButton:hover {
   background-color: #F9FAFB;
+}
+
+/* Container with responsive padding */
+.pageContainer {
+  padding: 2rem 0;
+}
+
+@media (min-width: 768px) {
+  .pageContainer {
+    padding: 2rem 0;
+  }
+}
+
+.loadingContainer {
+  padding: 2rem 0;
+}
+
+.notFoundContainer {
+  padding: 2rem 0;
+}
+
+.contentContainer {
+  padding: 1rem 0;
+}
+
+@media (min-width: 768px) {
+  .contentContainer {
+    padding: 2rem 0;
+  }
+}
+
+/* Icon Sizes */
+.shareIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #9CA3AF;
+}
+
+.closeIcon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.navIcon {
+  width: 3rem;
+  height: 3rem;
 }

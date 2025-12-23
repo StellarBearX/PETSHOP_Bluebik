@@ -124,10 +124,11 @@ export default function CouponsPage() {
                     </span>
                   ) : (
                     <button 
-                      onClick={() => toggleCollect(coupon.id)}
+                      onClick={() => !isCollected && toggleCollect(coupon.id)}
                       className={`${styles.saveBtn} ${
                         coupon.type === 'freeship' ? styles.saveBtnGreen : ''
                       } ${isCollected ? styles.saveBtnSaved : ''}`}
+                      disabled={isCollected}
                     >
                       {isCollected ? 'บันทึกแล้ว' : 'เก็บ'}
                     </button>

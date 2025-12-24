@@ -466,8 +466,16 @@ export default function AddressPage() {
                 <button
                   type="submit"
                   className={styles.submitButton}
+                  disabled={isLoading}
                 >
-                  บันทึก
+                  {isLoading ? (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <LoadingSpinner size="small" />
+                      กำลังบันทึก...
+                    </span>
+                  ) : (
+                    'บันทึก'
+                  )}
                 </button>
               </div>
             </form>
@@ -573,8 +581,16 @@ export default function AddressPage() {
                 <button
                   type="submit"
                   className={styles.submitButton}
+                  disabled={isLoading}
                 >
-                  บันทึก
+                  {isLoading ? (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <LoadingSpinner size="small" />
+                      กำลังบันทึก...
+                    </span>
+                  ) : (
+                    'บันทึก'
+                  )}
                 </button>
               </div>
             </form>

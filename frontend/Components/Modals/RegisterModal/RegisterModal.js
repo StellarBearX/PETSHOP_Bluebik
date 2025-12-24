@@ -1,4 +1,5 @@
 "use client";
+import React, { useState } from "react";
 import { useAuth } from "@/app/providers";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,8 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
 
   const { handleLogin } = useAuth();
 
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -42,13 +45,20 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
   if (!isOpen) return null;
 
   const onSubmit = (data) => {
+    if (loading) return;
+    setLoading(true);
     try {
       localStorage.setItem("registeredUser", JSON.stringify({ email: data.email, password: data.password }));
       localStorage.setItem("hasRegistered", "true");
     } catch {}
 
-    handleLogin();
-    onSuccess?.();
+    try {
+      handleLogin();
+      onSuccess?.();
+    } finally {
+      // If component stays mounted, clear loading. If it unmounts (navigation/login), this will be a no-op.
+      setLoading(false);
+    }
   };
 
   return (
@@ -87,6 +97,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                         if (errors.email) clearErrors("email");
                       },
                     })}
+                    disabled={loading}
                   />
                 </div>
                 <div className="mt-2 h-px bg-gray-300" />
@@ -112,6 +123,7 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
                         if (errors.password) clearErrors("password");
                       },
                     })}
+                    disabled={loading}
                   />
                 </div>
                 <div className="mt-2 h-px bg-gray-300" />
@@ -128,10 +140,11 @@ export default function RegisterModal({ isOpen, onClose, onSuccess }) {
 
               <button
                 type="submit"
-                className="w-[303px] h-[50px] rounded-full text-[18px] font-normal text-white"
+                className={`w-[303px] h-[50px] rounded-full text-[18px] font-normal text-white ${loading ? 'opacity-60 pointer-events-none' : ''}`}
                 style={{ background: "linear-gradient(90deg, #FF4D00 0%, #FBA01A 100%)" }}
+                disabled={loading}
               >
-                ลงทะเบียน
+                {loading ? 'กำลังลงทะเบียน...' : 'ลงทะเบียน'}
               </button>
             </form>
           </div>

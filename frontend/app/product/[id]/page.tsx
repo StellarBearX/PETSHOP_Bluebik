@@ -29,6 +29,7 @@ export default function ProductDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
+  const [loadingAction, setLoadingAction] = useState(false);
 
   // Map productId to storeId (mock logic - different products have different stores)
   const getStoreIdForProduct = (prodId: string): string => {
@@ -257,40 +258,49 @@ export default function ProductDetailPage() {
                 <div className={styles.actions}>
                   <button
                     type="button"
-                    className={`${styles.actionButton} btn-outline-primary`}
+                    className={`${styles.actionButton} btn-outline-primary ${loadingAction ? 'opacity-60 pointer-events-none' : ''}`}
                     onClick={() => {
+                      if (loadingAction) return;
                       if (!isSelectionComplete(product, selection)) {
                         setError("กรุณาเลือกตัวเลือกสินค้าให้ครบ");
                         return;
                       }
+                      setLoadingAction(true);
                       const result = addToCart({ product, selection, quantity });
                       if (!result.ok) {
                         setError(result.reason);
+                        setLoadingAction(false);
                         return;
                       }
                       alert("เพิ่มสินค้าลงตะกร้าแล้ว");
+                      setLoadingAction(false);
                     }}
+                    disabled={loadingAction}
                   >
-                    Add To Cart
+                    {loadingAction ? 'กำลังดำเนินการ...' : 'Add To Cart'}
                   </button>
 
                   <button
                     type="button"
-                    className={`${styles.actionButton} btn-primary`}
+                    className={`${styles.actionButton} btn-primary ${loadingAction ? 'opacity-60 pointer-events-none' : ''}`}
                     onClick={() => {
+                      if (loadingAction) return;
                       if (!isSelectionComplete(product, selection)) {
                         setError("กรุณาเลือกตัวเลือกสินค้าให้ครบ");
                         return;
                       }
+                      setLoadingAction(true);
                       const result = addToCart({ product, selection, quantity });
                       if (!result.ok) {
                         setError(result.reason);
+                        setLoadingAction(false);
                         return;
                       }
                       router.push("/checkout");
                     }}
+                    disabled={loadingAction}
                   >
-                    Buy Now
+                    {loadingAction ? 'กำลังดำเนินการ...' : 'Buy Now'}
                   </button>
                 </div>
               </div>

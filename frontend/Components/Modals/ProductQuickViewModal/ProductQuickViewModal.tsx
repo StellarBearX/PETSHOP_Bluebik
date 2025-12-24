@@ -40,6 +40,7 @@ export default function ProductQuickViewModal({ isOpen, product, onClose }: Prop
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setSelection({});
@@ -178,41 +179,49 @@ export default function ProductQuickViewModal({ isOpen, product, onClose }: Prop
             <div className={styles.actionButtons}>
               <button
                 type="button"
-                className={`${styles.actionButton} btn-outline-primary text-base`}
+                className={`${styles.actionButton} btn-outline-primary text-base ${loading ? 'opacity-60 pointer-events-none' : ''}`}
                 onClick={() => {
+                  if (loading) return;
                   if (!isSelectionComplete(product, selection)) {
                     setError("กรุณาเลือกตัวเลือกสินค้าให้ครบ");
                     return;
                   }
+                  setLoading(true);
                   const result = addToCart({ product, selection, quantity });
                   if (!result.ok) {
                     setError(result.reason);
+                    setLoading(false);
                     return;
                   }
                   onClose();
                 }}
+                disabled={loading}
               >
-                เพิ่มลงรถเข็น
+                {loading ? 'กำลังดำเนินการ...' : 'เพิ่มลงรถเข็น'}
               </button>
 
               <button
                 type="button"
-                className={`${styles.actionButton} btn-primary text-base`}
+                className={`${styles.actionButton} btn-primary text-base ${loading ? 'opacity-60 pointer-events-none' : ''}`}
                 onClick={() => {
+                  if (loading) return;
                   if (!isSelectionComplete(product, selection)) {
                     setError("กรุณาเลือกตัวเลือกสินค้าให้ครบ");
                     return;
                   }
+                  setLoading(true);
                   const result = addToCart({ product, selection, quantity });
                   if (!result.ok) {
                     setError(result.reason);
+                    setLoading(false);
                     return;
                   }
                   onClose();
                   router.push("/cart");
                 }}
+                disabled={loading}
               >
-                ซื้อเลย
+                {loading ? 'กำลังดำเนินการ...' : 'ซื้อเลย'}
               </button>
             </div>
 

@@ -1,12 +1,15 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "@/app/providers";
+import { loginUser } from "@/lib/api";
 
 export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const { handleLogin } = useAuth();
 
@@ -14,41 +17,43 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
 
   const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-  const getRegisteredUser = () => {
-    try {
-      const raw = localStorage.getItem("registeredUser");
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const registered = getRegisteredUser();
-
-    if (!registered) {
-      alert("กรุณาสมัครสมาชิกก่อนเข้าสู่ระบบ");
-      onClose?.();
-      onSwitchToRegister?.();
+    if (!email) {
+      setEmailError("กรุณากรอกอีเมลล์");
       return;
     }
-
-    if (!email) return setEmailError("กรุณากรอกอีเมลล์");
-    if (!validateEmail(email)) return setEmailError("กรุณากรอกอีเมลล์ที่ถูกต้อง");
-    if (!password) return setPasswordError("กรุณากรอกรหัสผ่าน");
+    if (!validateEmail(email)) {
+      setEmailError("กรุณากรอกอีเมลล์ที่ถูกต้อง");
+      return;
+    }
+    if (!password) {
+      setPasswordError("กรุณากรอกรหัสผ่าน");
+      return;
+    }
 
     setEmailError("");
     setPasswordError("");
+    setError("");
+    setIsLoading(true);
 
-    if (email !== registered.email || password !== registered.password) {
-      setPasswordError("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
-      return;
+    try {
+      const response = await loginUser({ email, password });
+      
+      // Store token and user info
+      localStorage.setItem("authToken", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+      localStorage.setItem("isLoggedIn", "true");
+      
+      handleLogin();
+      onClose?.();
+    } catch (err) {
+      setError(err.message || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
+      setPasswordError(err.message || "อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+    } finally {
+      setIsLoading(false);
     }
-
-    handleLogin();
-    onClose?.();
   };
 
   return (
@@ -94,10 +99,10 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
               />
             </div>
             <div className="mt-2 h-px bg-gray-300" />
-            {emailError && <p className="mt-1 text-[12px] text-red-500">{emailError}</p>}
+              {emailError && <p className="mt-1 text-[12px] text-red-500">{emailError}</p>}
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6">
             <div className="flex items-center gap-3">
               <img
                 src="https://api.builder.io/api/v1/image/assets/TEMP/9f0a45bb2b764c9eccaa361dc89c8ddf0644c367"
@@ -110,6 +115,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
                 onChange={(e) => {
                   setPassword(e.target.value);
                   if (passwordError) setPasswordError("");
+                  if (error) setError("");
                 }}
                 onBlur={(e) => {
                   if (!e.target.value) setPasswordError("กรุณากรอกรหัสผ่าน");
@@ -123,12 +129,15 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
             {passwordError && <p className="mt-1 text-[12px] text-red-500">{passwordError}</p>}
           </div>
 
+          {error && <p className="mb-4 text-[12px] text-red-500 text-center">{error}</p>}
+
           <button
             type="submit"
-            className="w-[303px] h-[50px] text-white rounded-full text-[18px] font-normal"
+            disabled={isLoading}
+            className="w-[303px] h-[50px] text-white rounded-full text-[18px] font-normal disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ background: "linear-gradient(90deg, #FF4D00 0%, #FBA01A 100%)" }}
           >
-            เข้าสู่ระบบ
+            {isLoading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
           </button>
 
           <button

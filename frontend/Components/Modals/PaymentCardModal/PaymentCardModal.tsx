@@ -103,9 +103,14 @@ export default function PaymentCardModal({ isOpen, onClose, onSelectCard, select
     }
   }
 
+  const [loading, setLoading] = useState(false)
+
   const handleCardSelect = (card: Card) => {
+    if (loading) return
+    setLoading(true)
     onSelectCard(card)
     onClose()
+    // component likely unmounts after onClose/navigation; no need to setLoading(false)
   }
 
   return (
@@ -150,13 +155,16 @@ export default function PaymentCardModal({ isOpen, onClose, onSelectCard, select
           </div>
         )}
         <button 
-          className={styles.addCardButton}
+          className={`${styles.addCardButton} ${loading ? 'opacity-60 pointer-events-none' : ''}`}
           onClick={() => {
+            if (loading) return
+            setLoading(true)
             onClose()
             router.push('/profile/cards')
           }}
+          disabled={loading}
         >
-          + เพิ่มบัตรใหม่
+          {loading ? 'กำลังดำเนินการ...' : '+ เพิ่มบัตรใหม่'}
         </button>
       </div>
     </div>

@@ -7,7 +7,7 @@ data class CartItem(
     val id: UUID = UUID.randomUUID(),
     val cartId: UUID,
     val productId: UUID,
-    val skuId: UUID,
+    val stockId: UUID,
     val quantity: Int = 1,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now()

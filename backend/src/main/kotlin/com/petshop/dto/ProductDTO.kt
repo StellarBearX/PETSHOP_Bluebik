@@ -12,7 +12,7 @@ data class ProductResponse(
     val images: List<String>,
     val shopName: String?,
     val dimensions: List<ProductDimensionDTO>,
-    val skus: List<ProductSkuDTO>,
+    val stocks: List<ProductStockDTO>,
     val badges: List<String>,
     val rating: Double?,
     val sold: Int?,
@@ -37,8 +37,8 @@ data class ProductOptionDTO(
 )
 
 @Serializable
-data class ProductSkuDTO(
-    val skuId: String,
+data class ProductStockDTO(
+    val stockId: String,
     val selection: Map<String, String>,
     val price: Double,
     val stock: Int

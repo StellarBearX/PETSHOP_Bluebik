@@ -66,12 +66,12 @@ object ProductService {
                 options = options
             )
         }
-        val skus = ProductDAO.getProductSkus(product.id).map { sku ->
-            ProductSkuDTO(
-                skuId = sku.skuCode,
-                selection = sku.selection,
-                price = sku.price.toDouble(),
-                stock = sku.stock
+        val stocks = ProductDAO.getProductStocks(product.id).map { stock ->
+            ProductStockDTO(
+                id = stock.id.toString(),
+                selection = stock.selection,
+                price = stock.price.toDouble(),
+                stock = stock.stock
             )
         }
         val store = product.storeId?.let { ProductDAO.getStoreById(it) }
@@ -83,7 +83,7 @@ object ProductService {
             images = images,
             shopName = store?.name,
             dimensions = dimensions,
-            skus = skus,
+            stocks = stocks,
             badges = product.badges,
             rating = if (product.rating > 0) product.rating else null,
             sold = if (product.soldCount > 0) product.soldCount else null,

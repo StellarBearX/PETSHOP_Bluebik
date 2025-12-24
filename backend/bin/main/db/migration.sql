@@ -83,11 +83,11 @@ CREATE TABLE IF NOT EXISTS product_options (
     image_url TEXT
 );
 
--- Product SKUs Table
-CREATE TABLE IF NOT EXISTS product_skus (
+-- Product Stocks Table
+CREATE TABLE IF NOT EXISTS product_stocks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     product_id UUID REFERENCES products(id) ON DELETE CASCADE,
-    sku_code VARCHAR(100) UNIQUE NOT NULL,
+    stock_code VARCHAR(100) UNIQUE NOT NULL,
     selection JSONB NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     stock INT DEFAULT 0,
@@ -109,11 +109,11 @@ CREATE TABLE IF NOT EXISTS cart_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     cart_id UUID REFERENCES carts(id) ON DELETE CASCADE,
     product_id UUID REFERENCES products(id),
-    sku_id UUID REFERENCES product_skus(id),
+    stock_id UUID REFERENCES product_stocks(id),
     quantity INT NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(cart_id, sku_id)
+    UNIQUE(cart_id, stock_id)
 );
 
 -- Addresses Table
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
     product_id UUID REFERENCES products(id),
-    sku_id UUID REFERENCES product_skus(id),
+    stock_id UUID REFERENCES product_stocks(id),
     product_name VARCHAR(500) NOT NULL,
     variant_selection JSONB,
     price DECIMAL(10,2) NOT NULL,
@@ -233,7 +233,7 @@ CREATE TABLE IF NOT EXISTS reviews (
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
 CREATE INDEX IF NOT EXISTS idx_products_brand ON products(brand_id);
 CREATE INDEX IF NOT EXISTS idx_products_store ON products(store_id);
-CREATE INDEX IF NOT EXISTS idx_product_skus_product ON product_skus(product_id);
+CREATE INDEX IF NOT EXISTS idx_product_stocks_product ON product_stocks(product_id);
 CREATE INDEX IF NOT EXISTS idx_cart_items_cart ON cart_items(cart_id);
 CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);

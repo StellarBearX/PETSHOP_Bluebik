@@ -62,14 +62,14 @@ object CartDAO {
             }
         }
     }
-    
-    fun addCartItem(cartId: UUID, productId: UUID, skuId: UUID, quantity: Int) {
-        val existingItem = getCartItemBySku(cartId, skuId)
+
+    fun addCartItem(cartId: UUID, productId: UUID, stockId: UUID, quantity: Int) {
+        val existingItem = getCartItemByStock(cartId, stockId)
         if (existingItem != null) {
             updateCartItemQuantity(existingItem.id, existingItem.quantity + quantity)
         } else {
             val sql = """
-                INSERT INTO cart_items (id, cart_id, product_id, sku_id, quantity, created_at, updated_at)
+                INSERT INTO cart_items (id, cart_id, product_id, stock_id, quantity, created_at, updated_at)
                 VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
             """.trimIndent()
             DatabaseFactory.getConnection().use { conn ->
@@ -77,7 +77,7 @@ object CartDAO {
                     stmt.setObject(1, UUID.randomUUID())
                     stmt.setObject(2, cartId)
                     stmt.setObject(3, productId)
-                    stmt.setObject(4, skuId)
+                    stmt.setObject(4, stockId)
                     stmt.setInt(5, quantity)
                     stmt.executeUpdate()
                 }
@@ -116,13 +116,13 @@ object CartDAO {
             }
         }
     }
-    
-    private fun getCartItemBySku(cartId: UUID, skuId: UUID): CartItem? {
-        val sql = "SELECT * FROM cart_items WHERE cart_id = ? AND sku_id = ?"
+
+    private fun getCartItemByStock(cartId: UUID, stockId: UUID): CartItem? {
+        val sql = "SELECT * FROM cart_items WHERE cart_id = ? AND stock_id = ?"
         return DatabaseFactory.getConnection().use { conn ->
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setObject(1, cartId)
-                stmt.setObject(2, skuId)
+                stmt.setObject(2, stockId)
                 stmt.executeQuery().use { rs ->
                     if (rs.next()) {
                         mapRowToCartItem(rs)
@@ -158,7 +158,7 @@ object CartDAO {
             id = UUID.fromString(rs.getString("id")),
             cartId = UUID.fromString(rs.getString("cart_id")),
             productId = UUID.fromString(rs.getString("product_id")),
-            skuId = UUID.fromString(rs.getString("sku_id")),
+            stockId = UUID.fromString(rs.getString("stock_id")),
             quantity = rs.getInt("quantity"),
             createdAt = rs.getTimestamp("created_at").toLocalDateTime(),
             updatedAt = rs.getTimestamp("updated_at").toLocalDateTime()

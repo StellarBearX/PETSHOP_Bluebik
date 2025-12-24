@@ -48,7 +48,7 @@ object OrderDAO {
                 
                 // Insert order items
                 val itemSql = """
-                    INSERT INTO order_items (id, order_id, product_id, sku_id, product_name, variant_selection, price, quantity, subtotal)
+                    INSERT INTO order_items (id, order_id, product_id, stock_id, product_name, variant_selection, price, quantity, subtotal)
                     VALUES (?, ?, ?, ?, ?, ?::jsonb, ?, ?, ?)
                 """.trimIndent()
                 
@@ -57,7 +57,7 @@ object OrderDAO {
                         stmt.setObject(1, item.id)
                         stmt.setObject(2, item.orderId)
                         stmt.setObject(3, item.productId)
-                        stmt.setObject(4, item.skuId)
+                        stmt.setObject(4, item.stockId)
                         stmt.setString(5, item.productName)
                         stmt.setString(6, JsonUtils.toJsonString(item.variantSelection))
                         stmt.setBigDecimal(7, item.price)
@@ -158,7 +158,7 @@ object OrderDAO {
             id = UUID.fromString(rs.getString("id")),
             orderId = UUID.fromString(rs.getString("order_id")),
             productId = UUID.fromString(rs.getString("product_id")),
-            skuId = UUID.fromString(rs.getString("sku_id")),
+            stockId = UUID.fromString(rs.getString("stock_id")),
             productName = rs.getString("product_name"),
             variantSelection = JsonUtils.fromJsonString(rs.getString("variant_selection") ?: "{}"),
             price = rs.getBigDecimal("price"),

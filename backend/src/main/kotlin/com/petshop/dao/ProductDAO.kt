@@ -137,19 +137,19 @@ object ProductDAO {
             }
         }
     }
-    
-    fun getProductSkus(productId: UUID): List<ProductSku> {
-        val sql = "SELECT * FROM product_skus WHERE product_id = ?"
+
+    fun getProductStocks(productId: UUID): List<ProductStock> {
+        val sql = "SELECT * FROM product_stocks WHERE product_id = ?"
         return DatabaseFactory.getConnection().use { conn ->
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setObject(1, productId)
                 stmt.executeQuery().use { rs ->
                     buildList {
                         while (rs.next()) {
-                            add(ProductSku(
+                            add(ProductStock(
                                 id = UUID.fromString(rs.getString("id")),
                                 productId = UUID.fromString(rs.getString("product_id")),
-                                skuCode = rs.getString("sku_code"),
+                                stockCode = rs.getString("stock_code"),
                                 selection = JsonUtils.fromJsonString(rs.getString("selection") ?: "{}"),
                                 price = rs.getBigDecimal("price"),
                                 stock = rs.getInt("stock"),
@@ -162,18 +162,18 @@ object ProductDAO {
             }
         }
     }
-    
-    fun getProductSkuById(skuId: UUID): ProductSku? {
-        val sql = "SELECT * FROM product_skus WHERE id = ?"
+
+    fun getProductStockById(stockId: UUID): ProductStock? {
+        val sql = "SELECT * FROM product_stocks WHERE id = ?"
         return DatabaseFactory.getConnection().use { conn ->
             conn.prepareStatement(sql).use { stmt ->
-                stmt.setObject(1, skuId)
+                stmt.setObject(1, stockId)
                 stmt.executeQuery().use { rs ->
                     if (rs.next()) {
-                        ProductSku(
+                        ProductStock(
                             id = UUID.fromString(rs.getString("id")),
                             productId = UUID.fromString(rs.getString("product_id")),
-                            skuCode = rs.getString("sku_code"),
+                            stockCode = rs.getString("stock_code"),
                             selection = JsonUtils.fromJsonString(rs.getString("selection") ?: "{}"),
                             price = rs.getBigDecimal("price"),
                             stock = rs.getInt("stock"),

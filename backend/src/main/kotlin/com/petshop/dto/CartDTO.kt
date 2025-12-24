@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class CartLineDTO(
     val id: String,
     val productId: String,
-    val skuId: String,
+    val stockId: String,
     val name: String,
     val image: String,
     val selection: Map<String, String>,
@@ -22,7 +22,7 @@ data class CartResponse(
 @Serializable
 data class AddToCartRequest(
     val productId: String,
-    val skuId: String,
+    val stockId: String,
     val quantity: Int = 1
 )
 

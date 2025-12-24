@@ -20,18 +20,18 @@ object OrderService {
         var subtotal = BigDecimal.ZERO
         val orderItems = cartItems.map { cartItem ->
             val product = ProductDAO.getProductById(cartItem.productId) ?: return null
-            val sku = ProductDAO.getProductSkuById(cartItem.skuId) ?: return null
-            val itemSubtotal = sku.price.multiply(BigDecimal(cartItem.quantity))
+            val stock = ProductDAO.getProductStockById(cartItem.stockId) ?: return null
+            val itemSubtotal = stock.price.multiply(BigDecimal(cartItem.quantity))
             subtotal = subtotal.add(itemSubtotal)
             
             com.petshop.models.OrderItem(
                 id = UUID.randomUUID(),
                 orderId = UUID.randomUUID(), // Will be set properly
                 productId = cartItem.productId,
-                skuId = cartItem.skuId,
+                stockId = cartItem.stockId,
                 productName = product.name,
-                variantSelection = sku.selection,
-                price = sku.price,
+                variantSelection = stock.selection,
+                price = stock.price,
                 quantity = cartItem.quantity,
                 subtotal = itemSubtotal
             )
@@ -115,7 +115,7 @@ object OrderService {
             OrderItemDTO(
                 id = item.id.toString(),
                 productId = item.productId.toString(),
-                skuId = item.skuId.toString(),
+                stockId = item.stockId.toString(),
                 productName = item.productName,
                 variant = item.variantSelection.entries.joinToString(", ") { "${it.key}: ${it.value}" },
                 price = item.price.toDouble(),

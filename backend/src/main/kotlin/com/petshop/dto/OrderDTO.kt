@@ -15,7 +15,7 @@ data class CreateOrderRequest(
 data class OrderItemDTO(
     val id: String,
     val productId: String,
-    val skuId: String,
+    val stockId: String,
     val productName: String,
     val variant: String,
     val price: Double,

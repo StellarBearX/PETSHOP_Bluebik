@@ -12,17 +12,17 @@ object CartService {
         
         val lines = cartItems.map { item ->
             val product = ProductDAO.getProductById(item.productId)
-            val sku = ProductDAO.getProductSkuById(item.skuId)
+            val stock = ProductDAO.getProductStockById(item.stockId)
             val images = ProductDAO.getProductImages(item.productId)
             
             CartLineDTO(
                 id = item.id.toString(),
                 productId = item.productId.toString(),
-                skuId = item.skuId.toString(),
+                stockId = item.stockId.toString(),
                 name = product?.name ?: "Unknown Product",
                 image = images.firstOrNull()?.imageUrl ?: "",
-                selection = sku?.selection ?: emptyMap(),
-                price = sku?.price?.toDouble() ?: 0.0,
+                selection = stock?.selection ?: emptyMap(),
+                price = stock?.price?.toDouble() ?: 0.0,
                 quantity = item.quantity
             )
         }
@@ -33,15 +33,15 @@ object CartService {
     fun addToCart(userId: UUID, request: AddToCartRequest): Boolean {
         val cart = CartDAO.getOrCreateCart(userId)
         val productId = UUID.fromString(request.productId)
-        val skuId = UUID.fromString(request.skuId)
+        val stockId = UUID.fromString(request.stockId)
         
-        // Verify SKU exists and has stock
-        val sku = ProductDAO.getProductSkuById(skuId)
-        if (sku == null || sku.stock < request.quantity) {
+        // Verify stock exists and has stock
+        val stock = ProductDAO.getProductStockById(stockId)
+        if (stock == null || stock.stock < request.quantity) {
             return false
         }
         
-        CartDAO.addCartItem(cart.id, productId, skuId, request.quantity)
+        CartDAO.addCartItem(cart.id, productId, stockId, request.quantity)
         return true
     }
     

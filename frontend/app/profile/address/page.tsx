@@ -1,6 +1,4 @@
 "use client"
-// Profile Address Page - จัดการที่อยู่
-// Features: Add/Edit/Delete addresses, Set default, Form validation, Data persistence, เชื่อมกับ Checkout
 import { useState, useEffect } from 'react'
 import { IMAGES } from "@/lib/images";
 import ProfileSidebar from '@/Components/Profile/ProfileSidebar/ProfileSidebar'
@@ -17,7 +15,6 @@ interface Address {
   isDefault: boolean
 }
 
-// Mock data for Thai provinces, districts, roads, and postal codes
 interface LocationData {
   province: string
   districts: {
@@ -100,12 +97,10 @@ export default function AddressPage() {
     postalCode: ''
   })
 
-  // Get available districts based on selected province
   const availableDistricts = formData.province
     ? locationData.find(loc => loc.province === formData.province)?.districts || []
     : []
 
-  // Get available roads and postal codes based on selected district
   const selectedDistrictData = formData.district
     ? availableDistricts.find(dist => dist.name === formData.district)
     : null
@@ -113,7 +108,6 @@ export default function AddressPage() {
   const availableRoads = selectedDistrictData?.roads || []
   const availablePostalCodes = selectedDistrictData?.postalCodes || []
 
-  // Load addresses from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem('petshop_addresses')
     if (saved) {
@@ -122,7 +116,6 @@ export default function AddressPage() {
         if (Array.isArray(parsed) && parsed.length > 0) {
           setAddresses(parsed)
         } else {
-          // Use default mock data if empty
           setAddresses(getDefaultAddresses())
         }
       } catch (e) {
@@ -130,19 +123,16 @@ export default function AddressPage() {
         setAddresses(getDefaultAddresses())
       }
     } else {
-      // Use default mock data
       setAddresses(getDefaultAddresses())
     }
   }, [])
 
-  // Save addresses to localStorage whenever addresses change
   useEffect(() => {
     if (addresses.length > 0) {
       localStorage.setItem('petshop_addresses', JSON.stringify(addresses))
     }
   }, [addresses])
 
-  // Default mock addresses
   const getDefaultAddresses = (): Address[] => [
     {
       id: 1,
@@ -162,11 +152,9 @@ export default function AddressPage() {
     }
   ]
 
-  // Handle delete address
   const handleDelete = (id: number) => {
     if (confirm('คุณต้องการลบที่อยู่นี้หรือไม่?')) {
       const updatedAddresses = addresses.filter(addr => addr.id !== id)
-      // If deleted address was default, set first address as default
       const deletedAddress = addresses.find(addr => addr.id === id)
       if (deletedAddress?.isDefault && updatedAddresses.length > 0) {
         updatedAddresses[0].isDefault = true
@@ -177,7 +165,6 @@ export default function AddressPage() {
     }
   }
 
-  // Handle set default address
   const handleSetDefault = (id: number) => {
     const updatedAddresses = addresses.map(addr => ({
       ...addr,
@@ -188,16 +175,12 @@ export default function AddressPage() {
     showToast('ตั้งเป็นที่อยู่หลักสำเร็จ', 'success')
   }
 
-  // Handle edit
   const handleEdit = (id: number) => {
     const address = addresses.find(addr => addr.id === id)
     if (address) {
       setSelectedAddress(id)
-      // Parse name to firstName and lastName
       const nameParts = address.name.split(' ')
       
-      // Try to parse address to extract province, district, road, postal code
-      // Format: address road district province postalCode
       const addressParts = address.address.split(' ')
       let province = ''
       let district = ''
@@ -205,14 +188,12 @@ export default function AddressPage() {
       let postalCode = ''
       let mainAddress = address.address
 
-      // Try to find postal code (5 digits at the end)
       const postalCodeMatch = address.address.match(/\b\d{5}\b/)
       if (postalCodeMatch) {
         postalCode = postalCodeMatch[0]
         mainAddress = address.address.replace(postalCode, '').trim()
       }
 
-      // Try to find province
       const foundProvince = locationData.find(loc => 
         address.address.includes(loc.province)
       )
@@ -220,7 +201,6 @@ export default function AddressPage() {
         province = foundProvince.province
         mainAddress = mainAddress.replace(province, '').trim()
         
-        // Try to find district
         const foundDistrict = foundProvince.districts.find(dist =>
           mainAddress.includes(dist.name)
         )
@@ -228,7 +208,6 @@ export default function AddressPage() {
           district = foundDistrict.name
           mainAddress = mainAddress.replace(district, '').trim()
           
-          // Try to find road
           const foundRoad = foundDistrict.roads.find(r =>
             mainAddress.includes(r)
           )
@@ -253,11 +232,9 @@ export default function AddressPage() {
     }
   }
 
-  // Handle add submit
   const handleAddSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Validate
     if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.phone.trim() || !formData.address.trim()) {
       showToast('กรุณากรอกข้อมูลให้ครบถ้วน', 'error')
       return
@@ -271,7 +248,6 @@ export default function AddressPage() {
     setIsLoading(true)
     await new Promise(resolve => setTimeout(resolve, 500))
 
-    // Build full address string
     const fullAddress = `${formData.address} ${formData.road} ${formData.district} ${formData.province} ${formData.postalCode}`
 
     const newAddress: Address = {
@@ -279,12 +255,10 @@ export default function AddressPage() {
       name: `${formData.firstName} ${formData.lastName}`,
       phone: formData.phone,
       address: fullAddress,
-      addressEn: fullAddress, // Use same address for now
-      isDefault: addresses.length === 0 // First address is default
+      addressEn: fullAddress, 
+      isDefault: addresses.length === 0 
     }
 
-    // If this is first address, set as default
-    // Otherwise, if no default exists, set this as default
     if (addresses.length === 0 || !addresses.some(addr => addr.isDefault)) {
       newAddress.isDefault = true
     }
@@ -293,7 +267,6 @@ export default function AddressPage() {
     setAddresses(updatedAddresses)
     localStorage.setItem('petshop_addresses', JSON.stringify(updatedAddresses))
     
-    // Reset form
     setFormData({
       firstName: '',
       lastName: '',
@@ -309,13 +282,11 @@ export default function AddressPage() {
     showToast('เพิ่มที่อยู่สำเร็จ', 'success')
   }
 
-  // Handle edit submit
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!selectedAddress) return
 
-    // Validate
     if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.phone.trim() || !formData.address.trim()) {
       showToast('กรุณากรอกข้อมูลให้ครบถ้วน', 'error')
       return
@@ -326,7 +297,6 @@ export default function AddressPage() {
       return
     }
 
-    // Build full address string
     const fullAddress = `${formData.address} ${formData.road} ${formData.district} ${formData.province} ${formData.postalCode}`
 
     const updatedAddresses = addresses.map(addr => 
@@ -344,7 +314,6 @@ export default function AddressPage() {
     setAddresses(updatedAddresses)
     localStorage.setItem('petshop_addresses', JSON.stringify(updatedAddresses))
     
-    // Reset
     setSelectedAddress(null)
     setFormData({
       firstName: '',
@@ -360,13 +329,10 @@ export default function AddressPage() {
     showToast('แก้ไขที่อยู่สำเร็จ', 'success')
   }
 
-  // Handle save button (main page)
   const handleSave = () => {
-    // Addresses are already saved to localStorage via useEffect
     showToast('บันทึกข้อมูลเรียบร้อยแล้ว', 'success')
   }
 
-  // Reset form when opening add modal
   const handleOpenAddModal = () => {
     setFormData({
       firstName: '',

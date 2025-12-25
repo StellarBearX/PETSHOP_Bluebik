@@ -17,6 +17,69 @@ interface Address {
   isDefault: boolean
 }
 
+// Mock data for Thai provinces, districts, roads, and postal codes
+interface LocationData {
+  province: string
+  districts: {
+    name: string
+    roads: string[]
+    postalCodes: string[]
+  }[]
+}
+
+const locationData: LocationData[] = [
+  {
+    province: 'กรุงเทพมหานคร',
+    districts: [
+      {
+        name: 'จตุจักร',
+        roads: ['วิภาวดีรังสิต', 'พหลโยธิน', 'เสนานิคม', 'จตุจักร'],
+        postalCodes: ['10900', '10901', '10902']
+      },
+      {
+        name: 'บางรัก',
+        roads: ['สีลม', 'สุรวงศ์', 'เจริญกรุง', 'บางรัก'],
+        postalCodes: ['10500', '10501']
+      },
+      {
+        name: 'สาทร',
+        roads: ['สาทรเหนือ', 'สาทรใต้', 'เจริญกรุง', 'สีลม'],
+        postalCodes: ['10120', '10121']
+      }
+    ]
+  },
+  {
+    province: 'นนทบุรี',
+    districts: [
+      {
+        name: 'เมืองนนทบุรี',
+        roads: ['บางกรวย-ไทรน้อย', 'รัตนาธิเบศร์', 'ติวานนท์'],
+        postalCodes: ['11000', '11001']
+      },
+      {
+        name: 'บางกรวย',
+        roads: ['บางกรวย', 'บางไผ่', 'บางบัวทอง'],
+        postalCodes: ['11130']
+      }
+    ]
+  },
+  {
+    province: 'สมุทรปราการ',
+    districts: [
+      {
+        name: 'เมืองสมุทรปราการ',
+        roads: ['สุขุมวิท', 'บางพลี', 'ศรีนครินทร์'],
+        postalCodes: ['10270', '10280']
+      },
+      {
+        name: 'บางพลี',
+        roads: ['สุขุมวิท', 'บางพลี', 'บางบ่อ'],
+        postalCodes: ['10540']
+      }
+    ]
+  }
+]
+
 export default function AddressPage() {
   const { showToast } = useToast()
   const [showAddModal, setShowAddModal] = useState(false)
@@ -36,6 +99,19 @@ export default function AddressPage() {
     road: '',
     postalCode: ''
   })
+
+  // Get available districts based on selected province
+  const availableDistricts = formData.province
+    ? locationData.find(loc => loc.province === formData.province)?.districts || []
+    : []
+
+  // Get available roads and postal codes based on selected district
+  const selectedDistrictData = formData.district
+    ? availableDistricts.find(dist => dist.name === formData.district)
+    : null
+
+  const availableRoads = selectedDistrictData?.roads || []
+  const availablePostalCodes = selectedDistrictData?.postalCodes || []
 
   // Load addresses from localStorage on mount
   useEffect(() => {
@@ -119,15 +195,59 @@ export default function AddressPage() {
       setSelectedAddress(id)
       // Parse name to firstName and lastName
       const nameParts = address.name.split(' ')
+      
+      // Try to parse address to extract province, district, road, postal code
+      // Format: address road district province postalCode
+      const addressParts = address.address.split(' ')
+      let province = ''
+      let district = ''
+      let road = ''
+      let postalCode = ''
+      let mainAddress = address.address
+
+      // Try to find postal code (5 digits at the end)
+      const postalCodeMatch = address.address.match(/\b\d{5}\b/)
+      if (postalCodeMatch) {
+        postalCode = postalCodeMatch[0]
+        mainAddress = address.address.replace(postalCode, '').trim()
+      }
+
+      // Try to find province
+      const foundProvince = locationData.find(loc => 
+        address.address.includes(loc.province)
+      )
+      if (foundProvince) {
+        province = foundProvince.province
+        mainAddress = mainAddress.replace(province, '').trim()
+        
+        // Try to find district
+        const foundDistrict = foundProvince.districts.find(dist =>
+          mainAddress.includes(dist.name)
+        )
+        if (foundDistrict) {
+          district = foundDistrict.name
+          mainAddress = mainAddress.replace(district, '').trim()
+          
+          // Try to find road
+          const foundRoad = foundDistrict.roads.find(r =>
+            mainAddress.includes(r)
+          )
+          if (foundRoad) {
+            road = foundRoad
+            mainAddress = mainAddress.replace(road, '').trim()
+          }
+        }
+      }
+
       setFormData({
         firstName: nameParts[0] || '',
         lastName: nameParts.slice(1).join(' ') || '',
         phone: address.phone.replace(/[()]/g, '').replace(/\s/g, ''),
-        address: address.address,
-        province: '',
-        district: '',
-        road: '',
-        postalCode: ''
+        address: mainAddress,
+        province: province,
+        district: district,
+        road: road,
+        postalCode: postalCode
       })
       setShowEditModal(true)
     }
@@ -143,15 +263,23 @@ export default function AddressPage() {
       return
     }
 
+    if (!formData.province || !formData.district || !formData.road || !formData.postalCode) {
+      showToast('กรุณาเลือกจังหวัด เขต/อำเภอ ถนน และรหัสไปรษณีย์', 'error')
+      return
+    }
+
     setIsLoading(true)
     await new Promise(resolve => setTimeout(resolve, 500))
+
+    // Build full address string
+    const fullAddress = `${formData.address} ${formData.road} ${formData.district} ${formData.province} ${formData.postalCode}`
 
     const newAddress: Address = {
       id: Date.now(),
       name: `${formData.firstName} ${formData.lastName}`,
       phone: formData.phone,
-      address: formData.address,
-      addressEn: formData.address, // Use same address for now
+      address: fullAddress,
+      addressEn: fullAddress, // Use same address for now
       isDefault: addresses.length === 0 // First address is default
     }
 
@@ -193,14 +321,22 @@ export default function AddressPage() {
       return
     }
 
+    if (!formData.province || !formData.district || !formData.road || !formData.postalCode) {
+      showToast('กรุณาเลือกจังหวัด เขต/อำเภอ ถนน และรหัสไปรษณีย์', 'error')
+      return
+    }
+
+    // Build full address string
+    const fullAddress = `${formData.address} ${formData.road} ${formData.district} ${formData.province} ${formData.postalCode}`
+
     const updatedAddresses = addresses.map(addr => 
       addr.id === selectedAddress
         ? {
             ...addr,
             name: `${formData.firstName} ${formData.lastName}`,
             phone: formData.phone,
-            address: formData.address,
-            addressEn: formData.address
+            address: fullAddress,
+            addressEn: fullAddress
           }
         : addr
     )
@@ -427,29 +563,83 @@ export default function AddressPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>จังหวัด</label>
-                    <select className={styles.select} disabled>
-                      <option>เลือกจังหวัด</option>
+                    <select 
+                      className={styles.select}
+                      value={formData.province}
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          province: e.target.value,
+                          district: '', // Reset district when province changes
+                          road: '', // Reset road when province changes
+                          postalCode: '' // Reset postal code when province changes
+                        })
+                      }}
+                    >
+                      <option value="">เลือกจังหวัด</option>
+                      {locationData.map((loc) => (
+                        <option key={loc.province} value={loc.province}>
+                          {loc.province}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>เขต/อำเภอ</label>
-                    <select className={styles.select} disabled>
-                      <option>เลือกเขต</option>
+                    <select 
+                      className={styles.select}
+                      value={formData.district}
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          district: e.target.value,
+                          road: '', // Reset road when district changes
+                          postalCode: '' // Reset postal code when district changes
+                        })
+                      }}
+                      disabled={!formData.province}
+                    >
+                      <option value="">เลือกเขต</option>
+                      {availableDistricts.map((dist) => (
+                        <option key={dist.name} value={dist.name}>
+                          {dist.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>ถนน</label>
-                    <select className={styles.select} disabled>
-                      <option>เลือกถนน</option>
+                    <select 
+                      className={styles.select}
+                      value={formData.road}
+                      onChange={(e) => setFormData({ ...formData, road: e.target.value })}
+                      disabled={!formData.district}
+                    >
+                      <option value="">เลือกถนน</option>
+                      {availableRoads.map((road) => (
+                        <option key={road} value={road}>
+                          {road}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>รหัสไปรษณีย์</label>
-                    <select className={styles.select} disabled>
-                      <option>เลือกรหัสไปรษณีย์</option>
+                    <select 
+                      className={styles.select}
+                      value={formData.postalCode}
+                      onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                      disabled={!formData.district}
+                    >
+                      <option value="">เลือกรหัสไปรษณีย์</option>
+                      {availablePostalCodes.map((code) => (
+                        <option key={code} value={code}>
+                          {code}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -542,29 +732,83 @@ export default function AddressPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>จังหวัด</label>
-                    <select className={styles.select} disabled>
-                      <option>กรุงเทพมหานคร</option>
+                    <select 
+                      className={styles.select}
+                      value={formData.province}
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          province: e.target.value,
+                          district: '', // Reset district when province changes
+                          road: '', // Reset road when province changes
+                          postalCode: '' // Reset postal code when province changes
+                        })
+                      }}
+                    >
+                      <option value="">เลือกจังหวัด</option>
+                      {locationData.map((loc) => (
+                        <option key={loc.province} value={loc.province}>
+                          {loc.province}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>เขต/อำเภอ</label>
-                    <select className={styles.select} disabled>
-                      <option>จตุจักร</option>
+                    <select 
+                      className={styles.select}
+                      value={formData.district}
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          district: e.target.value,
+                          road: '', // Reset road when district changes
+                          postalCode: '' // Reset postal code when district changes
+                        })
+                      }}
+                      disabled={!formData.province}
+                    >
+                      <option value="">เลือกเขต</option>
+                      {availableDistricts.map((dist) => (
+                        <option key={dist.name} value={dist.name}>
+                          {dist.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>ถนน</label>
-                    <select className={styles.select} disabled>
-                      <option>วิภาวดีรังสิต</option>
+                    <select 
+                      className={styles.select}
+                      value={formData.road}
+                      onChange={(e) => setFormData({ ...formData, road: e.target.value })}
+                      disabled={!formData.district}
+                    >
+                      <option value="">เลือกถนน</option>
+                      {availableRoads.map((road) => (
+                        <option key={road} value={road}>
+                          {road}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>รหัสไปรษณีย์</label>
-                    <select className={styles.select} disabled>
-                      <option>10900</option>
+                    <select 
+                      className={styles.select}
+                      value={formData.postalCode}
+                      onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                      disabled={!formData.district}
+                    >
+                      <option value="">เลือกรหัสไปรษณีย์</option>
+                      {availablePostalCodes.map((code) => (
+                        <option key={code} value={code}>
+                          {code}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
